@@ -8,167 +8,202 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
         
-        .input-field { 
-            background-color: rgba(62, 39, 35, 0.05); 
-            border: 1px solid rgba(62, 39, 35, 0.1); 
-            border-radius: 0.85rem; 
-            padding: 0.65rem 1rem; 
-            font-size: 0.75rem; 
-            font-weight: 800; 
-            width: 100%; 
-            transition: all 0.3s ease; 
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #FAF9F6; 
+            color: #3E2723; 
+            overflow-x: hidden;
         }
-        .input-field:focus { outline: none; border-color: #00796B; background-color: white; box-shadow: 0 0 0 4px rgba(0, 121, 107, 0.05); }
+
+        /* Responsive Background Orbs */
+        .orb {
+            position: fixed;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: -1;
+            opacity: 0.3;
+            animation: float 20s infinite alternate;
+        }
+        @media (min-width: 768px) { .orb { width: 500px; height: 500px; filter: blur(100px); } }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(40px, 60px) scale(1.1); }
+        }
+
+        .glass { 
+            background: rgba(255, 255, 255, 0.75); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(62, 39, 35, 0.04); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Enhanced Input Field */
+        .input-field { 
+            background-color: rgba(62, 39, 35, 0.04); 
+            border: 1px solid rgba(62, 39, 35, 0.08); 
+            border-radius: 1rem; 
+            padding: 0.75rem 1rem; 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+            width: 100%; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+        }
+
+        @media (min-width: 768px) { .input-field { padding: 0.85rem 1.25rem; } }
+
+        .input-field:focus { 
+            outline: none; 
+            border-color: #00796B; 
+            background-color: white; 
+            transform: translateX(4px);
+            box-shadow: -4px 0 0 0 #00796B;
+        }
         
         .label-text { 
             font-size: 8px; 
             font-weight: 900; 
             text-transform: uppercase; 
-            letter-spacing: 0.15em; 
-            color: rgba(62, 39, 35, 0.6); 
-            margin-bottom: 0.4rem; 
+            letter-spacing: 0.2em; 
+            color: rgba(62, 39, 35, 0.4); 
+            margin-bottom: 0.5rem; 
             display: block; 
+            margin-left: 0.2rem;
         }
 
-        /* Preview Image Style */
-        #profile-preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none; /* Hidden until image is uploaded */
+        .section-divider {
+            position: relative;
+            margin: 2rem 0 1rem 0;
         }
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background: #00796B;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade { animation: fadeInUp 0.6s ease forwards; }
     </style>
 </head>
-<body class="min-h-screen py-8 px-4 md:py-12">
+<body class="min-h-screen py-8 px-4 md:py-20 md:px-8">
 
-    <div class="max-w-4xl mx-auto">
-        <header class="text-center mb-10">
-            <div class="flex justify-center items-center gap-2 mb-3">
-                <div class="bg-[#3E2723] p-1 rounded-lg text-white"><i class="fa-solid fa-anchor text-xs"></i></div>
-                <span class="text-lg font-black tracking-tighter uppercase leading-none">Seller<span class="text-[#00796B]">Portal</span></span>
+    <div class="orb bg-[#00796B]/5 -top-10 -left-10"></div>
+    <div class="orb bg-[#3E2723]/5 bottom-20 right-5" style="animation-delay: -5s;"></div>
+
+    <div class="max-w-5xl mx-auto animate-fade">
+        <header class="text-center mb-10 md:mb-16">
+            <div class="flex justify-center items-center gap-2 mb-4">
+                <div class="bg-[#3E2723] p-1.5 rounded-lg text-white shadow-lg"><i class="fa-solid fa-anchor text-xs"></i></div>
+                <span class="text-base md:text-xl font-black tracking-tighter uppercase">Seller<span class="text-[#00796B]">Portal</span></span>
             </div>
-            <h1 class="text-2xl md:text-3xl font-black text-[#3E2723] italic uppercase tracking-tighter leading-tight">Open Your <span class="text-[#00796B]">Store.</span></h1>
-            <p class="text-[#3E2723]/50 text-[10px] font-black uppercase tracking-widest mt-2">Join our premium community of coastal merchants.</p>
+            <h1 class="text-2xl md:text-5xl font-black text-[#3E2723] italic uppercase tracking-tighter leading-none">
+                Open Your <span class="text-[#00796B]">Store.</span>
+            </h1>
+            <p class="text-[#3E2723]/40 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] mt-3">Merchant Terminal Registration</p>
         </header>
 
-        <form class="grid grid-cols-1 lg:grid-cols-12 gap-6" enctype="multipart/form-data" method="POST">
+        <form class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8" enctype="multipart/form-data" method="POST">
             {% csrf_token %}
             
-            <div class="lg:col-span-4 space-y-4">
-                <div class="glass rounded-[1.5rem] md:rounded-[2rem] p-6 text-center shadow-sm">
-                    <span class="label-text">Profile Image</span>
-                    <div class="relative w-24 h-24 mx-auto mt-3 group">
-                        <div class="w-full h-full rounded-full bg-[#3E2723]/5 border-2 border-dashed border-[#3E2723]/20 flex items-center justify-center overflow-hidden transition group-hover:border-[#00796B]">
-                            <img id="profile-preview" src="#" alt="Preview">
-                            <i id="camera-icon" class="fa-solid fa-camera text-xl text-[#3E2723]/20 group-hover:text-[#00796B]"></i>
+            <div class="lg:col-span-4 space-y-6">
+                <div class="glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 text-center">
+                    <span class="label-text text-center ml-0">Store Logo / Profile</span>
+                    <div class="relative w-28 h-28 md:w-32 md:h-32 mx-auto mt-5 group">
+                        <div class="w-full h-full rounded-[1.5rem] md:rounded-[2rem] bg-[#3E2723]/5 border-2 border-dashed border-[#3E2723]/10 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#00796B]/40 group-hover:bg-white shadow-inner">
+                            <img id="profile-preview" src="#" alt="Preview" class="hidden w-full h-full object-cover">
+                            <i id="camera-icon" class="fa-solid fa-camera text-2xl text-[#3E2723]/10 group-hover:text-[#00796B]"></i>
                             <input type="file" name="profile_image" id="image-input" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*">
                         </div>
-                        <div class="absolute -bottom-1 -right-1 bg-white w-8 h-8 rounded-full shadow-lg flex items-center justify-center border border-[#3E2723]/5">
-                            <i class="fa-solid fa-plus text-[#00796B] text-[10px]"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-[#00796B] w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl shadow-xl flex items-center justify-center text-white border-4 border-[#FAF9F6]">
+                            <i class="fa-solid fa-plus text-[10px]"></i>
                         </div>
                     </div>
-                    <p class="text-[8px] font-black text-[#3E2723]/40 mt-4 uppercase tracking-widest leading-relaxed">Square PNG or JPG preferred</p>
                 </div>
 
-                <div class="glass rounded-[1.5rem] md:rounded-[2rem] p-6 border-l-4 border-[#00796B]">
-                    <h4 class="text-[9px] font-black text-[#3E2723] uppercase mb-1.5 tracking-wider">Security Tip</h4>
-                    <p class="text-[10px] text-[#3E2723]/60 font-black leading-relaxed">Your <span class="text-[#00796B]">username</span> is your unique identifier on the portal and cannot be changed later.</p>
+                <div class="glass rounded-[2rem] p-6 border-l-4 border-[#00796B] hidden lg:block">
+                    <p class="text-[10px] text-[#3E2723]/60 font-bold leading-relaxed">
+                        <i class="fa-solid fa-shield-halved mr-1 text-[#00796B]"></i> 
+                        Usernames are permanent terminal IDs and cannot be changed after deployment.
+                    </p>
                 </div>
             </div>
 
             <div class="lg:col-span-8">
-                <div class="glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm space-y-8">
+                <div class="glass rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 space-y-10">
                     
-                    <div>
-                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-5">Shop Identity</h3>
+                    <section>
+                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Shop Identity</h3></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="sm:col-span-1">
                                 <label class="label-text">Store Name</label>
                                 <input type="text" name="store_name" placeholder="PACIFIC SURF STUDIO" class="input-field" required>
                             </div>
                             <div class="sm:col-span-1">
-                                <label class="label-text">Store Slug (Unique URL)</label>
+                                <label class="label-text">Store Slug (URL)</label>
                                 <input type="text" name="store_slug" placeholder="pacific-surf-studio" class="input-field" required>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <div>
-                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-5">Account & Security</h3>
+                    <section>
+                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Merchant Credentials</h3></div>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div class="sm:col-span-2">
                                 <label class="label-text">Username</label>
-                                <input type="text" name="username" placeholder="merchant_james" class="input-field" required>
+                                <input type="text" name="username" placeholder="merchant_id" class="input-field" required>
                             </div>
-                            <div>
-                                <label class="label-text">First Name</label>
-                                <input type="text" name="first_name" placeholder="JAMES" class="input-field" required>
+                            <div class="sm:col-span-1">
+                                <label class="label-text">Email</label>
+                                <input type="email" name="email" placeholder="hello@store.com" class="input-field" required>
                             </div>
-                            <div>
-                                <label class="label-text">Last Name</label>
-                                <input type="text" name="last_name" placeholder="CARTER" class="input-field" required>
+                            <div class="sm:col-span-1">
+                                <label class="label-text">Phone</label>
+                                <input type="tel" name="phone_number" placeholder="+91..." class="input-field" required>
                             </div>
-                            <div>
-                                <label class="label-text">Email Address</label>
-                                <input type="email" name="email" placeholder="JAMES@STUDIO.COM" class="input-field" required>
-                            </div>
-                            <div>
-                                <label class="label-text">Phone Number</label>
-                                <input type="tel" name="phone_number" placeholder="+91 00000 00000" class="input-field" required>
-                            </div>
-                            <div>
+                            <div class="sm:col-span-1">
                                 <label class="label-text">Password</label>
                                 <input type="password" name="password" placeholder="••••••••" class="input-field" required>
                             </div>
-                            <div>
+                            <div class="sm:col-span-1">
                                 <label class="label-text">Confirm Password</label>
                                 <input type="password" name="confirm_password" placeholder="••••••••" class="input-field" required>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <div>
-                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-5">Tax & Verification</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
+                    <section>
+                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Compliance</h3></div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="col-span-2 sm:col-span-1">
                                 <label class="label-text">GST Number</label>
-                                <input type="text" name="gst_number" placeholder="22AAAAA0000A1Z5" class="input-field" required>
+                                <input type="text" name="gst_number" placeholder="GSTIN" class="input-field" required>
                             </div>
-                            <div>
+                            <div class="col-span-2 sm:col-span-1">
                                 <label class="label-text">PAN Number</label>
-                                <input type="text" name="pan_number" placeholder="ABCDE1234F" class="input-field" required>
+                                <input type="text" name="pan_number" placeholder="PAN" class="input-field" required>
                             </div>
                         </div>
-                    </div>
+                    </section>
 
-                    <div>
-                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-5">Payout Information</h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="sm:col-span-1">
-                                <label class="label-text">Bank Account Number</label>
-                                <input type="text" name="bank_account_number" placeholder="0000 0000 0000 0000" class="input-field" required>
-                            </div>
-                            <div class="sm:col-span-1">
-                                <label class="label-text">IFSC Code</label>
-                                <input type="text" name="ifsc_code" placeholder="HDFC0000123" class="input-field" required>
-                            </div>
-                        </div>
-                    </div>
+                    <section>
+                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Business Address</h3></div>
+                        <textarea name="business_address" rows="3" placeholder="Full registered address..." class="input-field resize-none h-28" required></textarea>
+                    </section>
 
-                    <div>
-                        <h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em] border-b border-[#3E2723]/5 pb-3 mb-5">Business Address</h3>
-                        <div class="space-y-3">
-                            <label class="label-text">Full Registered Address</label>
-                            <textarea name="business_address" rows="3" placeholder="Enter complete business location details..." class="input-field resize-none" required></textarea>
-                        </div>
-                    </div>
-
-                    <div class="pt-4">
-                        <button type="submit" class="w-full bg-[#3E2723] text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-[0.2em] hover:bg-[#00796B] transition-all transform hover:-translate-y-0.5 active:scale-95 shadow-lg shadow-[#3E2723]/10">
-                            Apply for Merchant Account
+                    <div class="pt-6">
+                        <button type="submit" class="w-full bg-[#3E2723] text-white py-4 md:py-5 rounded-2xl font-black uppercase text-[10px] md:text-[11px] tracking-[0.2em] hover:bg-[#00796B] transition-all shadow-xl shadow-[#3E2723]/10 active:scale-[0.98] flex items-center justify-center gap-3">
+                            Deploy Store Account
+                            <i class="fa-solid fa-arrow-right-long text-[10px]"></i>
                         </button>
                     </div>
                 </div>
@@ -185,11 +220,10 @@
             const [file] = imageInput.files;
             if (file) {
                 profilePreview.src = URL.createObjectURL(file);
-                profilePreview.style.display = 'block';
-                cameraIcon.style.display = 'none';
+                profilePreview.classList.remove('hidden');
+                cameraIcon.classList.add('hidden');
             }
         }
     </script>
-
 </body>
 </html>

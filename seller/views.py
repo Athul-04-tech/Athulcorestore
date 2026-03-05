@@ -8,6 +8,9 @@ from django.contrib.auth import authenticate, login ,logout
 from core.decorator import seller_required
 from django.contrib import messages
 
+
+
+
 def selleregis(request):
     if request.method=="POST":
         username=request.POST.get("username")
@@ -51,7 +54,7 @@ def sellerlogin(request):
                 return redirect("/sellerhome/")
                 
             else:
-                messages.error(request,"you are not allowed")
+                messages.error(request,"invalid username or password")
         else:
             return redirect("/regis/")    
     return render(request,"seller/sellerlogin.html")
@@ -60,7 +63,7 @@ def sellerlogin(request):
 @seller_required
 def sellerhome(request):
     seller=SellerProfile.objects.get(user=request.user)
-    products=(Product.objects.filter(seller=seller).prefetch_related("variants__images").order_by("-created_at"))
+    products=(Product.objects.filter(seller=seller,is_active=True).prefetch_related("variants__images").order_by("-created_at"))
     return render(request, "seller/sellerhome.html", {"products": products,"seller":seller})
 
 
@@ -78,35 +81,36 @@ def seller_logout(request):
 def sellerproduct(request):
     sub=SubCategory.objects.all()
     if request.method=="POST":
-        data=Product()
-        datas=ProductVariant()
-        data.seller=SellerProfile.objects.get(user=request.user)
+        # data=Product()
+        # datas=ProductVariant()
         m=SubCategory.objects.get(id=request.POST.get("subcategory"))
-        data.subcategory=m
-        data.name=request.POST.get("name")
-        data.slug=request.POST.get("slug")
-        data.description=request.POST.get("description")
-        data.brand=request.POST.get("brand")
-        data.model_number=request.POST.get("model_number")
-        data.return_days=request.POST.get("return_days")
-        data.approval_status=request.POST.get("approval_status")
-        data.is_cancellable=request.POST.get("is_cancellable") is not None
-        data.is_returnable=request.POST.get("is_returnable") is not None
+        data=Product.objects.create(
+            seller=SellerProfile.objects.get(user=request.user),
+            subcategory=m,
+            name=request.POST.get("name"),
+            description=request.POST.get("description"),
+            brand=request.POST.get("brand"),
+            model_number=request.POST.get("model_number"),
+            return_days=request.POST.get("return_days"),
+            approval_status=request.POST.get("approval_status"),
+            is_cancellable=bool(request.POST.get("is_cancellable")) ,
+            is_returnable=bool(request.POST.get("is_returnable")), 
+            )
         data.save()
-        datas.product=data
-        datas.sku_code=request.POST.get("sku_code")
-        datas.mrp=request.POST.get("mrp")
-        datas.selling_price=request.POST.get("selling_price")
-        datas.cost_price=request.POST.get("cost_price")
-        datas.stock_quantity=request.POST.get("stock_quantity")
-        datas.weight=request.POST.get("weight")
-        datas.length=request.POST.get("length")
-        datas.width=request.POST.get("width")
-        datas.height=request.POST.get("height")
-        datas.tax_percentage=request.POST.get("tax_percentage")
-
+        datas=ProductVariant.objects.create(
+            product=data,
+            sku_code=request.POST.get("sku_code"),
+            mrp=request.POST.get("mrp"),
+            selling_price=request.POST.get("selling_price"),
+            cost_price=request.POST.get("cost_price"),
+            stock_quantity=request.POST.get("stock_quantity"),
+            weight=request.POST.get("weight"),
+            length=request.POST.get("length"),
+            width=request.POST.get("width"),
+            height=request.POST.get("height"),
+            tax_percentage=request.POST.get("tax_percentage"),
+        )
         datas.save()
-
         return redirect("/sellerhome/")
 
     return render(request,"seller/sellerproduct.html",{"sub":sub})    
@@ -117,30 +121,30 @@ def sellerproduct_update(request, id):
     product = Product.objects.get(id=id)
     variant = ProductVariant.objects.get(product=product)
     if request.method == "POST":
-        product.seller = SellerProfile.objects.get(user=request.user)
-        m = SubCategory.objects.get(id=request.POST.get("subcategory"))
-        product.subcategory = m
-        product.name = request.POST.get("name")
-        product.slug = request.POST.get("slug")
-        product.description = request.POST.get("description")
-        product.brand = request.POST.get("brand")
-        product.model_number = request.POST.get("model_number")
-        product.return_days = request.POST.get("return_days")
-        product.approval_status = request.POST.get("approval_status")
-        product.is_cancellable = request.POST.get("is_cancellable") is not None
-        product.is_returnable = request.POST.get("is_returnable") is not None
+        product.seller=SellerProfile.objects.get(user=request.user)
+        m=SubCategory.objects.get(id=request.POST.get("subcategory"))
+        product.subcategory=m
+        product.name=request.POST.get("name")
+        product.slug=request.POST.get("slug")
+        product.description=request.POST.get("description")
+        product.brand=request.POST.get("brand")
+        product.model_number=request.POST.get("model_number")
+        product.return_days=request.POST.get("return_days")
+        product.approval_status=request.POST.get("approval_status")
+        product.is_cancellable=bool(request.POST.get("is_cancellable")) 
+        product.is_returnable=bool(request.POST.get("is_returnable")) 
         product.save()
-        variant.product = product
-        variant.sku_code = request.POST.get("sku_code")
-        variant.mrp = request.POST.get("mrp")
-        variant.selling_price = request.POST.get("selling_price")
-        variant.cost_price = request.POST.get("cost_price")
-        variant.stock_quantity = request.POST.get("stock_quantity")
-        variant.weight = request.POST.get("weight")
-        variant.length = request.POST.get("length")
-        variant.width = request.POST.get("width")
-        variant.height = request.POST.get("height")
-        variant.tax_percentage = request.POST.get("tax_percentage")
+        variant.product=product
+        variant.sku_code=request.POST.get("sku_code")
+        variant.mrp =request.POST.get("mrp")
+        variant.selling_price=request.POST.get("selling_price")
+        variant.cost_price=request.POST.get("cost_price")
+        variant.stock_quantity=request.POST.get("stock_quantity")
+        variant.weight=request.POST.get("weight")
+        variant.length= request.POST.get("length")
+        variant.width=request.POST.get("width")
+        variant.height=request.POST.get("height")
+        variant.tax_percentage=request.POST.get("tax_percentage")
         variant.save()
 
         return redirect("/sellerhome/")
