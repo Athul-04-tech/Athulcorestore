@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Intelligence | CORE STORE Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .user-row:hover { background: rgba(0, 121, 107, 0.03); }
+        .badge-vip { background: linear-gradient(90deg, #3E2723, #00796B); color: white; }
+        
+        /* Hide scrollbar for mobile nav */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="flex flex-col lg:flex-row min-h-screen">
+
+    <aside class="w-full lg:w-56 bg-[#3E2723] flex lg:flex-col sticky top-0 z-50 lg:h-screen text-white border-b lg:border-b-0 lg:border-r border-white/5">
+        <div class="p-4 lg:p-6 border-r lg:border-r-0 lg:border-b border-white/5 flex items-center gap-2 shrink-0">
+            <div class="bg-[#00796B] p-1 rounded-lg text-white"><i class="fa-solid fa-screwdriver-wrench text-[10px]"></i></div>
+            <span class="text-lg font-black tracking-tighter uppercase">ADMIN<span class="text-[#00796B]">PRO</span></span>
+        </div>
+        <nav class="flex-1 flex lg:flex-col p-2 lg:p-4 gap-1 overflow-x-auto no-scrollbar whitespace-nowrap lg:mt-4">
+           <a href="adminpanel.html" class="flex items-center gap-3 px-4 py-2.5 text-white/40 hover:text-white hover:bg-white/5 rounded-xl transition font-black text-[10px] uppercase">
+                <i class="fa-solid fa-chart-line"></i> <span class="hidden sm:inline lg:inline">Dashboard</span>
+            </a>
+            <a href="adminshipments.html" class="flex items-center gap-3 px-4 py-2.5 text-white/40 hover:text-white hover:bg-white/5 rounded-xl transition font-black text-[10px] uppercase">
+                <i class="fa-solid fa-truck"></i> <span class="hidden sm:inline lg:inline">Shipments</span>
+            </a>
+            <a href="admincustomers.html"class="flex items-center gap-3 px-4 py-2.5 bg-[#00796B] text-white rounded-xl font-black text-[10px] uppercase shadow-lg shadow-[#00796B]/20">
+                <i class="fa-solid fa-users"></i> <span class="hidden sm:inline lg:inline">Customers</span>
+            </a>
+            <a href="adminseller.html" class="flex items-center gap-3 px-4 py-2.5 text-white/40 hover:text-white hover:bg-white/5 rounded-xl transition font-black text-[10px] uppercase">
+                <i class="fa-solid fa-users"></i> <span class="hidden sm:inline lg:inline">sellers</span>
+            </a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-4 md:p-6 lg:p-8 overflow-y-auto">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+            <div>
+                <h1 class="text-2xl font-black italic uppercase tracking-tighter text-[#3E2723]">Customer <span class="text-[#00796B]">Database</span></h1>
+                <p class="text-[#3E2723]/50 text-[9px] font-black uppercase tracking-[0.2em] mt-0.5">12,402 Active Members</p>
+            </div>
+            <div class="flex flex-wrap gap-2 w-full sm:w-auto">
+                <div class="glass flex-1 sm:flex-none flex items-center px-3 py-1.5 rounded-lg border-[#3E2723]/10">
+                    <i class="fa-solid fa-magnifying-glass text-[#3E2723]/40 mr-2 text-[10px]"></i>
+                    <input type="text" placeholder="SEARCH..." class="bg-transparent border-none outline-none text-[10px] font-black w-full sm:w-40 text-[#3E2723] placeholder:text-[#3E2723]/30 uppercase">
+                </div>
+                <button class="bg-[#3E2723] text-white px-4 py-1.5 rounded-lg font-black uppercase text-[9px] tracking-widest hover:bg-[#00796B] transition shadow-md">
+                    Export
+                </button>
+            </div>
+        </header>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-8">
+            <div class="glass p-4 rounded-2xl shadow-sm border-b-2 border-[#3E2723]/5">
+                <p class="text-[#3E2723]/50 text-[8px] font-black uppercase tracking-widest">Total Users</p>
+                <h3 class="text-xl font-black mt-0.5 text-[#3E2723]">14.2K</h3>
+            </div>
+            <div class="glass p-4 rounded-2xl shadow-sm border-b-2 border-[#00796B]/20">
+                <p class="text-[#3E2723]/50 text-[8px] font-black uppercase tracking-widest">New Today</p>
+                <h3 class="text-xl font-black mt-0.5 text-[#00796B]">+142</h3>
+            </div>
+            <div class="glass p-4 rounded-2xl shadow-sm border-b-2 border-[#3E2723]/5">
+                <p class="text-[#3E2723]/50 text-[8px] font-black uppercase tracking-widest">Active Now</p>
+                <h3 class="text-xl font-black mt-0.5 text-[#3E2723]">892</h3>
+            </div>
+            <div class="glass p-4 rounded-2xl shadow-sm border-b-2 border-[#00796B]/20">
+                <p class="text-[#3E2723]/50 text-[8px] font-black uppercase tracking-widest">VIP Members</p>
+                <h3 class="text-xl font-black mt-0.5 text-[#00796B]">640</h3>
+            </div>
+        </div>
+
+        <div class="glass rounded-[1.5rem] md:rounded-[2rem] p-4 md:p-6 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left min-w-[700px]">
+                    <thead>
+                        <tr class="text-[#3E2723]/40 text-[8px] uppercase tracking-[0.2em] border-b border-[#3E2723]/5">
+                            <th class="pb-4 font-black px-2">Member</th>
+                            <th class="pb-4 font-black px-2">Contact Info</th>
+                            <th class="pb-4 font-black px-2">Total Spent</th>
+                            <th class="pb-4 font-black px-2">Join Date</th>
+                            <th class="pb-4 font-black px-2">Status</th>
+                            <th class="pb-4 font-black text-right px-2">Manage</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-[11px] font-black text-[#3E2723]">
+                        <tr class="border-b border-[#3E2723]/5 user-row transition-all">
+                            <td class="py-3 px-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full border-2 border-[#00796B] p-0.5 shrink-0">
+                                        <img src="https://ui-avatars.com/api/?name=James+Carter&background=00796B&color=fff" class="w-full h-full rounded-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="font-black uppercase tracking-tight">James Carter</p>
+                                        <span class="badge-vip text-[7px] px-1.5 py-0.5 rounded-md font-black uppercase">Elite VIP</span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 text-[#3E2723]/70">
+                                <p class="text-[10px]">james.c@gmail.com</p>
+                                <p class="text-[8px] font-black opacity-60">+1 555-0123</p>
+                            </td>
+                            <td class="py-3 px-2 font-black text-[#00796B]">$12,450.00</td>
+                            <td class="py-3 px-2 text-[#3E2723]/50 text-[10px]">JAN 12, 2024</td>
+                            <td class="py-3 px-2">
+                                <span class="bg-green-100 text-green-700 text-[7px] px-2 py-0.5 rounded-md font-black uppercase">Active</span>
+                            </td>
+                            <td class="py-3 px-2 text-right">
+                                <button class="text-[#3E2723]/30 hover:text-[#00796B] p-1"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            </td>
+                        </tr>
+
+                        <tr class="border-b border-[#3E2723]/5 user-row transition-all">
+                            <td class="py-3 px-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-full border border-[#3E2723]/10 p-0.5 shrink-0">
+                                        <img src="https://ui-avatars.com/api/?name=Sarah+Miller&background=3E2723&color=fff" class="w-full h-full rounded-full object-cover">
+                                    </div>
+                                    <div>
+                                        <p class="font-black uppercase tracking-tight text-[#3E2723]">Sarah Miller</p>
+                                        <p class="text-[7px] text-[#3E2723]/50 font-black uppercase">Regular</p>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-3 px-2 text-[#3E2723]/70">
+                                <p class="text-[10px]">smiller.99@yahoo.com</p>
+                                <p class="text-[8px] font-black opacity-60">+1 555-8821</p>
+                            </td>
+                            <td class="py-3 px-2 font-black">$890.00</td>
+                            <td class="py-3 px-2 text-[#3E2723]/50 text-[10px]">FEB 04, 2026</td>
+                            <td class="py-3 px-2">
+                                <span class="bg-orange-100 text-orange-700 text-[7px] px-2 py-0.5 rounded-md font-black uppercase">Pending</span>
+                            </td>
+                            <td class="py-3 px-2 text-right">
+                                <button class="text-[#3E2723]/30 hover:text-[#00796B] p-1"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="flex flex-col sm:flex-row justify-between items-center mt-6 gap-4">
+                <p class="text-[8px] font-black text-[#3E2723]/40 uppercase tracking-widest">Page 1 of 1,240</p>
+                <div class="flex gap-1.5">
+                    <button class="w-6 h-6 rounded-md glass flex items-center justify-center hover:bg-[#00796B] hover:text-white transition"><i class="fa-solid fa-chevron-left text-[8px]"></i></button>
+                    <button class="w-6 h-6 rounded-md bg-[#3E2723] text-white flex items-center justify-center font-black text-[9px]">1</button>
+                    <button class="w-6 h-6 rounded-md glass flex items-center justify-center hover:bg-[#00796B] hover:text-white transition text-[9px]">2</button>
+                    <button class="w-6 h-6 rounded-md glass flex items-center justify-center hover:bg-[#00796B] hover:text-white transition"><i class="fa-solid fa-chevron-right text-[8px]"></i></button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CORE STORE | Coastal Collection</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap");
+      
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #faf9f6;
+        color: #3e2723;
+        overflow-x: hidden;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(62, 39, 35, 0.1);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .product-card {
+        transition: all 0.5s ease;
+      }
+      .product-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 40px rgba(62, 39, 35, 0.1);
+      }
+
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      
+      .dropdown-animate {
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+      }
+      .group:hover .dropdown-animate {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      input:focus { border-color: #00796B !important; }
+
+      .carousel-slide {
+        display: none;
+        animation: fadeEffect 1s;
+      }
+      .carousel-slide.active {
+        display: block;
+      }
+      @keyframes fadeEffect {
+        from {opacity: 0.4;} 
+        to {opacity: 1;}
+      }
+      .carousel-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background-color: rgba(255,255,255,0.5);
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .carousel-dot.active {
+        width: 24px;
+        border-radius: 4px;
+        background-color: white;
+      }
+      .carousel-dot:hover:not(.active) {
+        background-color: rgba(255,255,255,0.8);
+      }
+    </style>
+  </head>
+  <body>
+
+    {% include 'core-templates/navbar.html' %}
+
+    {% include 'includes/message-toast.html' %}
+
+    <header class="container mx-auto px-4 md:px-6 py-6 md:py-12">
+      <div class="grid lg:grid-cols-3 gap-6">
+        
+        <div class="lg:col-span-2 relative rounded-[2.5rem] overflow-hidden bg-[#3E2723] h-[400px] md:h-[500px] shadow-2xl group">
+          
+          <div class="carousel-slide active absolute inset-0 transition-opacity duration-1000">
+            <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1200" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Tech">
+            <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 text-white">
+              <span class="bg-[#00796B] text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 w-fit">Tech Drop 2026</span>
+              <h1 class="text-4xl md:text-6xl font-black italic uppercase leading-tight mb-6">Neural <br><span class="text-[#00796B]">Performance.</span></h1>
+              <button class="bg-white text-[#3E2723] px-8 py-3 rounded-xl font-black uppercase text-xs w-fit hover:bg-[#00796B] hover:text-white transition-all">Explore Gear</button>
+            </div>
+          </div>
+
+          <div class="carousel-slide absolute inset-0 transition-opacity duration-1000">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1200" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Watch">
+            <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 text-white">
+              <span class="bg-amber-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 w-fit">Limited Edition</span>
+              <h1 class="text-4xl md:text-6xl font-black italic uppercase leading-tight mb-6">Timeless <br><span class="text-amber-500">Precision.</span></h1>
+              <button class="bg-white text-[#3E2723] px-8 py-3 rounded-xl font-black uppercase text-xs w-fit hover:bg-amber-500 hover:text-white transition-all">View Watch</button>
+            </div>
+          </div>
+
+          <div class="carousel-slide absolute inset-0 transition-opacity duration-1000">
+            <img src="https://images.unsplash.com/photo-1593991339748-46637a7f1221?auto=format&fit=crop&q=80&w=1200" class="absolute inset-0 w-full h-full object-cover opacity-60" alt="Coastal">
+            <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-16 text-white">
+              <span class="bg-blue-500 text-[9px] font-black px-3 py-1 rounded-full uppercase tracking-widest mb-4 w-fit">Coastal Soul</span>
+              <h1 class="text-4xl md:text-6xl font-black italic uppercase leading-tight mb-6">Freedom <br><span class="text-blue-400">Defined.</span></h1>
+              <button class="bg-white text-[#3E2723] px-8 py-3 rounded-xl font-black uppercase text-xs w-fit hover:bg-blue-500 hover:text-white transition-all">Shop Collection</button>
+            </div>
+          </div>
+
+          <div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+            <div class="carousel-dot active" onclick="currentSlide(0)"></div>
+            <div class="carousel-dot" onclick="currentSlide(1)"></div>
+            <div class="carousel-dot" onclick="currentSlide(2)"></div>
+          </div>
+        </div>
+
+        <div class="flex flex-col gap-6">
+          <div class="relative flex-1 rounded-[2rem] overflow-hidden group cursor-pointer shadow-xl">
+            <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&q=80&w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-r from-[#00796B]/90 to-transparent p-8 flex flex-col justify-center text-white">
+              <p class="text-[10px] font-black uppercase tracking-widest mb-1">Bundle Offer</p>
+              <h3 class="text-2xl font-black italic uppercase">Save 30% <br>on Sets</h3>
+            </div>
+          </div>
+          <div class="relative flex-1 rounded-[2rem] overflow-hidden group cursor-pointer shadow-xl">
+            <img src="https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?auto=format&fit=crop&q=80&w=600" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+            <div class="absolute inset-0 bg-gradient-to-r from-[#3E2723]/90 to-transparent p-8 flex flex-col justify-center text-white">
+              <p class="text-[10px] font-black uppercase tracking-widest mb-1">Member Exclusive</p>
+              <h3 class="text-2xl font-black italic uppercase">Free <br>Shipping</h3>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </header>
+
+    <section class="container mx-auto px-4 md:px-6 py-12 reveal">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-xl md:text-2xl font-black italic uppercase border-l-4 border-[#00796B] pl-4">
+          Browse <span class="text-[#00796B]">Categories</span>
+        </h2>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+        {% for category in categories %}
+        <a href="{% url 'category_view' category.slug %}" class="group flex flex-col items-center gap-3">
+          <div class="w-20 h-20 md:w-28 md:h-28 rounded-full p-1 border-2 border-transparent group-hover:border-[#00796B] transition-all duration-500 overflow-hidden shadow-lg group-active:scale-90">
+            <div class="w-full h-full rounded-full overflow-hidden bg-[#EFEBE9] glass">
+              {% if category.image %}
+                <img src="{{ category.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ category.name }}">
+              {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ category.name }}&background=3E2723&color=fff" class="w-full h-full object-cover">
+              {% endif %}
+            </div>
+          </div>
+          <span class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/60 group-hover:text-[#00796B] transition-colors">
+            {{ category.name }}
+          </span>
+        </a>
+        {% empty %}
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400">No categories mapped</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="container mx-auto px-4 md:px-6 pb-20 reveal">
+      <h2 class="text-xl md:text-2xl font-black italic uppercase mb-8 border-l-4 border-[#00796B] pl-4">
+        Collection <span class="text-[#00796B]">2026</span>
+      </h2>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+        {% for product in products %}
+        <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-[2rem] p-3 group block">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#EFEBE9] mb-4">
+            {% with product.images.all|first as img %}
+              {% if img %}
+                <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
+              {% else %}
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
+              {% endif %}
+            {% endwith %}
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button class="bg-white p-3 rounded-full text-[#3E2723] translate-y-4 group-hover:translate-y-0 transition-transform"><i class="fa-solid fa-cart-plus"></i></button>
+            </div>
+          </div>
+          <h3 class="text-[10px] font-bold truncate px-1 text-[#3E2723]">{{ product.product.name }}</h3>
+          <p class="text-sm font-black text-[#00796B] px-1">${{ product.selling_price }}</p>
+        </a>
+        {% empty %}
+        <p class="col-span-full text-center text-gray-400 py-10 uppercase font-black text-xs tracking-widest">No products found</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section id="about" class="container mx-auto px-4 md:px-6 py-20 border-t border-[#3E2723]/5 reveal">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="text-center lg:text-left">
+          <h2 class="text-4xl font-black italic uppercase mb-6 text-[#3E2723]">About <span class="text-[#00796B]">Core Store</span></h2>
+          <p class="text-gray-500 leading-relaxed mb-6">Curating high-performance equipment for the modern elite. We blend aesthetic precision with technical superiority.</p>
+        </div>
+        <div class="glass p-10 rounded-[3rem] text-center">
+            <i class="fa-solid fa-quote-left text-3xl text-[#00796B] mb-4"></i>
+            <p class="text-lg italic font-semibold">"Curating the future of gear."</p>
+        </div>
+      </div>
+    </section>
+
+    {% include 'core-templates/footer.html' %}
+
+    <script>
+      function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+          var windowHeight = window.innerHeight;
+          var elementTop = reveals[i].getBoundingClientRect().top;
+          if (elementTop < windowHeight - 100) {
+            reveals[i].classList.add("active");
+          }
+        }
+      }
+      window.addEventListener("scroll", reveal);
+      reveal();
+
+      let currentSlideIndex = 0;
+      const slides = document.querySelectorAll(".carousel-slide");
+      const dots = document.querySelectorAll(".carousel-dot");
+
+      function showSlide(index) {
+        slides.forEach(s => s.classList.remove("active"));
+        dots.forEach(d => d.classList.remove("active"));
+        
+        slides[index].classList.add("active");
+        dots[index].classList.add("active");
+        currentSlideIndex = index;
+      }
+
+      function nextSlide() {
+        let index = (currentSlideIndex + 1) % slides.length;
+        showSlide(index);
+      }
+
+      function currentSlide(index) {
+        showSlide(index);
+      }
+
+      setInterval(nextSlide, 5000);
+    </script>
+  </body>
+</html>

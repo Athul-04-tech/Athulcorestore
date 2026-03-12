@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CORE STORE | Products</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap");
+      
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #faf9f6;
+        color: #3e2723;
+        overflow-x: hidden;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(62, 39, 35, 0.1);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .product-card {
+        transition: all 0.5s ease;
+      }
+      .product-card:hover {
+        transform: translateY(-12px);
+        box-shadow: 0 20px 40px rgba(62, 39, 35, 0.1);
+      }
+
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      
+      .dropdown-animate {
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+      }
+      .group:hover .dropdown-animate {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      input:focus { border-color: #00796B !important; }
+    </style>
+  </head>
+  <body>
+
+    {% include 'core-templates/navbar.html' %}
+
+    <!-- Page Header -->
+    <div class="bg-[#3E2723] py-12">
+      <div class="container mx-auto px-4 md:px-6">
+        <h1 class="text-3xl md:text-5xl font-black italic uppercase text-white">
+          Our <span class="text-[#00796B]">Products</span>
+        </h1>
+        <p class="text-white/60 mt-2 text-sm font-medium">Browse our complete collection of elite gear</p>
+      </div>
+    </div>
+
+    <!-- New Arrivals Section -->
+    <section class="container mx-auto px-4 md:px-6 py-12 reveal">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-xl md:text-2xl font-black italic uppercase border-l-4 border-[#00796B] pl-4">
+          <i class="fa-solid fa-fire text-orange-500 mr-2"></i> New <span class="text-[#00796B]">Arrivals</span>
+        </h2>
+        <span class="text-xs font-bold uppercase tracking-widest text-gray-400">Recently Added</span>
+      </div>
+
+      {% if new_arrivals %}
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+        {% for product in new_arrivals %}
+        <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-[2rem] p-3 group block">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#EFEBE9] mb-4">
+            {% with product.images.all|first as img %}
+              {% if img %}
+                <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
+              {% else %}
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
+              {% endif %}
+            {% endwith %}
+            <div class="absolute top-3 left-3 bg-[#00796B] text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest">NEW</div>
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button class="bg-white p-3 rounded-full text-[#3E2723] translate-y-4 group-hover:translate-y-0 transition-transform"><i class="fa-solid fa-cart-plus"></i></button>
+            </div>
+          </div>
+          <h3 class="text-[10px] font-bold truncate px-1 text-[#3E2723]">{{ product.product.name }}</h3>
+          <p class="text-sm font-black text-[#00796B] px-1">${{ product.selling_price }}</p>
+        </a>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="text-center py-12 glass rounded-[2rem]">
+        <i class="fa-solid fa-box-open text-4xl text-gray-300 mb-4"></i>
+        <p class="text-gray-400 text-sm font-bold uppercase tracking-widest">No new arrivals yet</p>
+        <p class="text-gray-400 text-xs mt-2">Check back soon for new products</p>
+      </div>
+      {% endif %}
+    </section>
+
+    <!-- All Products Section -->
+    <section class="container mx-auto px-4 md:px-6 pb-20 reveal">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-xl md:text-2xl font-black italic uppercase border-l-4 border-[#00796B] pl-4">
+          <i class="fa-solid fa-layer-group text-[#00796B] mr-2"></i> All <span class="text-[#00796B]">Products</span>
+        </h2>
+        <span class="text-xs font-bold uppercase tracking-widest text-gray-400">{{ all_products.count }} Products</span>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
+        {% for product in all_products %}
+        <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-[2rem] p-3 group block">
+          <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#EFEBE9] mb-4">
+            {% with product.images.all|first as img %}
+              {% if img %}
+                <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
+              {% else %}
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
+              {% endif %}
+            {% endwith %}
+            {% if product.stock_quantity == 0 %}
+            <div class="absolute top-3 left-3 bg-red-500 text-white text-[8px] font-black px-2 py-1 rounded-full uppercase tracking-widest">OUT OF STOCK</div>
+            {% endif %}
+            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button class="bg-white p-3 rounded-full text-[#3E2723] translate-y-4 group-hover:translate-y-0 transition-transform"><i class="fa-solid fa-cart-plus"></i></button>
+            </div>
+          </div>
+          <h3 class="text-[10px] font-bold truncate px-1 text-[#3E2723]">{{ product.product.name }}</h3>
+          <p class="text-sm font-black text-[#00796B] px-1">${{ product.selling_price }}</p>
+        </a>
+        {% empty %}
+        <p class="col-span-full text-center text-gray-400 py-10 uppercase font-black text-xs tracking-widest">No products found</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section class="container mx-auto px-4 md:px-6 py-12 reveal">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-xl md:text-2xl font-black italic uppercase border-l-4 border-[#00796B] pl-4">
+          Browse <span class="text-[#00796B]">Categories</span>
+        </h2>
+      </div>
+
+      <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+        {% for category in categories %}
+        <a href="{% url 'category_view' category.slug %}" class="group flex flex-col items-center gap-3">
+          <div class="w-20 h-20 md:w-28 md:h-28 rounded-full p-1 border-2 border-transparent group-hover:border-[#00796B] transition-all duration-500 overflow-hidden shadow-lg group-active:scale-90">
+            <div class="w-full h-full rounded-full overflow-hidden bg-[#EFEBE9] glass">
+              {% if category.image %}
+                <img src="{{ category.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" alt="{{ category.name }}">
+              {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ category.name }}&background=3E2723&color=fff" class="w-full h-full object-cover">
+              {% endif %}
+            </div>
+          </div>
+          <span class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/60 group-hover:text-[#00796B] transition-colors">
+            {{ category.name }}
+          </span>
+        </a>
+        {% empty %}
+        <p class="text-[10px] font-black uppercase tracking-widest text-gray-400">No categories mapped</p>
+        {% endfor %}
+      </div>
+    </section>
+
+    {% include 'core-templates/footer.html' %}
+
+    <script>
+      function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+          var windowHeight = window.innerHeight;
+          var elementTop = reveals[i].getBoundingClientRect().top;
+          if (elementTop < windowHeight - 100) {
+            reveals[i].classList.add("active");
+          }
+        }
+      }
+      window.addEventListener("scroll", reveal);
+      reveal();
+    </script>
+  </body>
+</html>
+

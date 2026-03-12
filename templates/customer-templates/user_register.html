@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join BUYME | Premium Collective</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .input-field:focus { border-color: #00796B; box-shadow: 0 0 0 4px rgba(0, 121, 107, 0.1); }
+        .btn-facebook { background-color: #1877F2; transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-6">
+
+    <div class="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 bg-white rounded-[2.5rem] overflow-hidden shadow-2xl min-h-[750px]">
+        
+        <div class="relative hidden md:block">
+            <img src="https://images.unsplash.com/photo-1559128010-7c1ad6e1b6a5?auto=format&fit=crop&q=80&w=1000" class="absolute inset-0 w-full h-full object-cover" alt="Coastal View">
+            <div class="absolute inset-0 bg-gradient-to-t from-[#00796B]/80 to-transparent flex flex-col justify-end p-12 text-white">
+                <div class="bg-white/10 backdrop-blur-lg p-8 rounded-[2rem] border border-white/20">
+                    <h2 class="text-3xl font-black italic uppercase leading-tight mb-2">Join the <br>BUYME Collective</h2>
+                    <p class="text-xs font-bold uppercase tracking-widest opacity-80">Exclusive access. Premium gear. Coastal soul.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-8 sm:p-12 md:p-16 flex flex-col justify-center bg-[#FAF9F6]">
+            
+            <a href="/" class="text-xl font-extrabold tracking-tighter flex items-center gap-2 mb-8">
+                <div class="bg-[#00796B] p-1.5 rounded-lg text-white">
+                    <i class="fa-solid fa-bolt-lightning"></i>
+                </div>
+                <span class="text-[#3E2723]">BUY<span class="text-[#00796B]">ME</span></span>
+            </a>
+
+            <div class="mb-6">
+                <h1 class="text-3xl font-black italic uppercase text-[#3E2723] tracking-tighter">Create <span class="text-[#00796B]">Account</span></h1>
+            </div>
+
+            {% include 'includes/message-toast.html' %}
+
+            {% if error_message %}
+                <div class="mb-6 flex items-center p-4 rounded-2xl bg-amber-50 border border-amber-200 text-amber-800">
+                    <i class="fa-solid fa-triangle-exclamation text-xs mr-3"></i>
+                    <span class="text-[10px] font-black uppercase tracking-widest">{{ error_message }}</span>
+                </div>
+            {% endif %}
+
+            <form method="POST" action="" class="space-y-4">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 ml-1">Username</label>
+                        <input type="text" name="username" required 
+                               value="{{ saved_data.username|default:'' }}"
+                               class="input-field w-full bg-[#EFEBE9]/50 border border-[#3E2723]/10 px-5 py-3.5 rounded-2xl outline-none font-semibold text-sm">
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 ml-1">Email</label>
+                        <input type="email" name="email" required 
+                               value="{{ saved_data.email|default:'' }}"
+                               class="input-field w-full bg-[#EFEBE9]/50 border border-[#3E2723]/10 px-5 py-3.5 rounded-2xl outline-none font-semibold text-sm">
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 ml-1">Phone Number</label>
+                    <input type="text" name="phone_number" required 
+                           value="{{ saved_data.phone_number|default:'' }}"
+                           class="input-field w-full bg-[#EFEBE9]/50 border border-[#3E2723]/10 px-5 py-3.5 rounded-2xl outline-none font-semibold text-sm">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 ml-1">Password</label>
+                        <div class="relative">
+                            <input type="password" name="password" required class="input-field w-full bg-[#EFEBE9]/50 border border-[#3E2723]/10 px-5 py-3.5 pr-12 rounded-2xl outline-none font-semibold text-sm">
+                            <button type="button" onclick="togglePassword('password', 'togglePasswordBtn')" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#3E2723]/40 hover:text-[#00796B] transition-colors">
+                                <i class="fa-solid fa-eye" id="togglePasswordBtn"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="space-y-1">
+                        <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 ml-1">Confirm</label>
+                        <div class="relative">
+                            <input type="password" name="confirm_password" required class="input-field w-full bg-[#EFEBE9]/50 border border-[#3E2723]/10 px-5 py-3.5 pr-12 rounded-2xl outline-none font-semibold text-sm">
+                            <button type="button" onclick="togglePassword('confirm_password', 'toggleConfirmPasswordBtn')" class="absolute right-4 top-1/2 -translate-y-1/2 text-[#3E2723]/40 hover:text-[#00796B] transition-colors">
+                                <i class="fa-solid fa-eye" id="toggleConfirmPasswordBtn"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full bg-[#3E2723] hover:bg-[#00796B] text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest transition-all shadow-xl active:scale-[0.98]">
+                        Complete Registration
+                    </button>
+                </div>
+            </form>
+            
+            <p class="mt-6 text-center text-sm font-bold text-[#3E2723]/40">
+                Already have an account? <a href="{% url 'login' %}" class="text-[#00796B] hover:underline">Sign In</a>
+            </p>
+        </div>
+    </div>
+    <script>
+        function togglePassword(inputName, iconId) {
+            const passwordInput = document.querySelector(`input[name="${inputName}"]`);
+            const icon = document.getElementById(iconId);
+            
+            if (passwordInput.type === "password") {
+                passwordInput.type = "text";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            } else {
+                passwordInput.type = "password";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            }
+        }
+    </script>
+</body>
+</html>
