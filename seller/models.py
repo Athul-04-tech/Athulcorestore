@@ -1,5 +1,7 @@
 import uuid
 from django.db import models
+from core.models import User, SubCategory 
+# from customer.models import OrderItem
 from django.utils.text import slugify
 
 class SellerProfile(models.Model):
@@ -31,7 +33,7 @@ class Product(models.Model):
     is_cancellable = models.BooleanField(default=True)
     is_returnable = models.BooleanField(default=True)
     return_days = models.IntegerField(default=7)
-    approval_status = models.CharField(max_length=20, choices=(('PENDING', 'Pending'), ('APPROVED', 'Approved'), ('REJECTED', 'Rejected')), default='PENDING')
+    approval_status = models.CharField(max_length=20, choices=(('PENDING', 'Pending'), ('APPROVED', 'Approved'), ('REJECTED', 'Rejected')), default='PENDING',null=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     def save(self, *args, **kwargs):
@@ -46,6 +48,20 @@ class Product(models.Model):
         super().save(*args, **kwargs)
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(f"{self.name}")
+            slug = base_slug
+            counter = 1
+
+            while Product.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
 class ProductVariant(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -78,29 +94,35 @@ class ProductVariant(models.Model):
         return f"{self.product.name} - {self.sku_code}"
 
 class ProductImage(models.Model):
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     variant = models.ForeignKey("seller.ProductVariant", on_delete=models.CASCADE, related_name="images")
     image = models.ImageField(upload_to='product_images',null=True)
     alt_text = models.CharField(max_length=255, blank=True)
+
     is_primary = models.BooleanField(default=False)
     
     def __str__(self):
         return f"Image for {self.variant.sku_code}"
 
 class Attribute(models.Model):
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=100)
     
     def __str__(self):
         return self.name
 
+
 class AttributeOption(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     attribute = models.ForeignKey(Attribute, on_delete=models.CASCADE, related_name="options")
+
     value = models.CharField(max_length=100)
     
     def __str__(self):
         return f"{self.attribute.name}: {self.value}"
+
 
 class VariantAttributeBridge(models.Model):
     variant = models.ForeignKey("seller.ProductVariant", on_delete=models.CASCADE)

@@ -51,7 +51,7 @@ class Order(models.Model):
     order_number = models.CharField(max_length=100, unique=True)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     payment_status = models.CharField(max_length=20, default='PENDING')
-    order_status = models.CharField(max_length=20, default='PLACED')
+    order_status = models.CharField(max_length=50,default="placed")
     ordered_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
