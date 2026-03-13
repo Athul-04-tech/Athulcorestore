@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Addresses | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; overflow-x: hidden; }
+        
+        .glass { 
+            background: rgba(255, 255, 255, 0.7); 
+            backdrop-filter: blur(15px); 
+            border: 1px solid rgba(62, 39, 35, 0.08); 
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .address-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(62, 39, 35, 0.1);
+            background: white;
+        }
+
+        .btn-outline { border: 1px solid rgba(62, 39, 35, 0.1); transition: all 0.3s ease; }
+        .btn-outline:hover { background: #3E2723; color: white; border-color: #3E2723; transform: scale(1.02); }
+
+        #delete-modal { display: none; }
+        #delete-modal.active { display: flex; }
+    </style>
+</head>
+<body class="min-h-screen pb-20">
+
+    <nav class="p-6 flex justify-between items-center max-w-7xl mx-auto animate__animated animate__fadeInDown">
+        <a href="{% url 'home' %}" class="text-2xl font-extrabold tracking-tighter flex items-center gap-2 group">
+            <div class="bg-[#3E2723] p-1.5 rounded-lg text-white group-hover:rotate-12 transition-transform">
+                <i class="fa-solid fa-bolt"></i>
+            </div>
+            <span>CORE<span class="text-[#00796B]">STORE</span></span>
+        </a>
+        <div class="flex items-center gap-6">
+            <a href="{% url 'profile' %}" class="text-[10px] font-black uppercase tracking-widest hover:text-[#00796B] transition">Back to Profile</a>
+            <div class="w-10 h-10 rounded-full border-2 border-[#00796B] p-0.5 overflow-hidden shadow-lg">
+                <img src="https://ui-avatars.com/api/?name={{ request.user.username }}&background=3E2723&color=fff" class="rounded-full w-full h-full">
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 mt-10">
+        <header class="mb-12 flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+            <div class="animate__animated animate__slideInLeft">
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-[#00796B] mb-2">Manage Delivery</p>
+                <h1 class="text-5xl font-black text-[#3E2723] tracking-tighter uppercase italic leading-none">Stored <span class="text-[#00796B]">Locations.</span></h1>
+            </div>
+            <a href="{% url 'add_address' %}" class="animate__animated animate__slideInRight">
+                <button class="group bg-[#3E2723] text-white px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:bg-[#00796B] transition-all shadow-xl">
+                    <i class="fa-solid fa-plus mr-2 group-hover:rotate-90 transition-transform"></i> Add New Address
+                </button>
+            </a>
+        </header>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for address in addresses %}
+            <div class="address-card glass rounded-[2.5rem] p-8 relative animate__animated animate__fadeInUp {% if address.is_default %}border-2 border-[#00796B]{% else %}border border-[#3E2723]/5{% endif %}" 
+                 style="animation-delay: {{ forloop.counter0 }}00ms;">
+                
+                {% if address.is_default %}
+                <div class="absolute top-6 right-6">
+                    <span class="bg-[#00796B] text-white text-[8px] px-3 py-1 rounded-full font-black uppercase animate__animated animate__pulse animate__infinite">Primary</span>
+                </div>
+                {% endif %}
+
+                <div class="w-12 h-12 {% if address.is_default %}bg-[#00796B]/10 text-[#00796B]{% else %}bg-[#3E2723]/5 text-[#3E2723]/40{% endif %} rounded-2xl flex items-center justify-center mb-6">
+                    {% if address.address_type == 'HOME' %}
+                        <i class="fa-solid fa-house-chimney text-xl"></i>
+                    {% elif address.address_type == 'WORK' %}
+                        <i class="fa-solid fa-briefcase text-xl"></i>
+                    {% else %}
+                        <i class="fa-solid fa-location-dot text-xl"></i>
+                    {% endif %}
+                </div>
+
+                <h3 class="text-xl font-black text-[#3E2723] mb-1 uppercase tracking-tighter italic">{{ address.address_type }}</h3>
+                <div class="text-sm text-[#3E2723]/60 font-medium leading-relaxed">
+                    <p class="font-black text-[#3E2723] text-xs uppercase mb-1">{{ address.full_name }}</p>
+                    <p class="mb-1">{{ address.phone_number }}</p>
+                    <p class="mb-1">{{ address.house_info }}</p>
+                    <p class="mb-1">{{ address.locality }}</p>
+                    <p class="mb-1">{{ address.city }}, {{ address.state }} - {{ address.pincode }}</p>
+                    <p class="mb-1">{{ address.country }}</p>
+                    {% if address.landmark %}
+                    <p class="text-xs text-[#3E2723]/40 mt-2"><i class="fa-solid fa-location-arrow mr-1"></i>Landmark: {{ address.landmark }}</p>
+                    {% endif %}
+                </div>
+
+                <div class="flex gap-3 mt-8 pt-6 border-t border-[#3E2723]/5">
+                    <a href="{% url 'update_address' address.id %}" class="flex-1">
+                        <button class="w-full btn-outline py-3 rounded-xl text-[10px] font-black uppercase tracking-widest">Edit</button>
+                    </a>
+                    <button onclick="openDeleteModal('{{ address.id }}', '{% url 'delete_address' address.id %}')" class="px-4 btn-outline py-3 rounded-xl text-[10px] text-red-400 hover:text-white hover:bg-red-500 transition-all">
+                        <i class="fa-solid fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full py-20 text-center opacity-30">
+                <i class="fa-solid fa-map-location-dot text-6xl mb-4"></i>
+                <p class="font-black uppercase tracking-widest text-sm">No addresses found.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="mt-12 p-8 rounded-[2.5rem] bg-[#3E2723]/5 border border-[#3E2723]/10 flex flex-col md:flex-row justify-between items-center gap-6 animate__animated animate__fadeIn">
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 rounded-full bg-[#3E2723] text-white flex items-center justify-center animate__animated animate__bounce animate__infinite animate__slow">
+                    <i class="fa-solid fa-truck"></i>
+                </div>
+                <p class="text-xs font-bold text-[#3E2723]/70 italic">Note: Changing address won't affect orders already <span class="text-[#00796B]">In Transit</span>.</p>
+            </div>
+            <a href="#" class="text-[10px] font-black uppercase tracking-widest text-[#3E2723] hover:text-[#00796B] transition">Shipping Policy</a>
+        </div>
+    </main>
+
+    <div id="delete-modal" class="fixed inset-0 z-[300] items-center justify-center bg-[#3E2723]/80 backdrop-blur-sm p-4">
+        <div class="glass max-w-sm w-full rounded-[3rem] p-10 text-center animate__animated animate__zoomIn">
+            <div class="w-20 h-20 bg-red-50 text-red-500 rounded-3xl flex items-center justify-center mx-auto mb-6 rotate-12">
+                <i class="fa-solid fa-trash-can text-3xl"></i>
+            </div>
+            <h3 class="text-2xl font-black uppercase italic tracking-tighter text-[#3E2723]">Confirm <span class="text-red-500">Delete</span></h3>
+            <p class="text-[10px] font-bold text-[#3E2723]/40 mt-2 mb-8 uppercase tracking-[0.2em]">This address will be permanently removed.</p>
+            
+            <div class="flex gap-4">
+                <button onclick="closeDeleteModal()" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40 hover:text-[#3E2723]">Cancel</button>
+                <form id="delete-form" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="px-8 bg-red-500 text-white py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest shadow-xl shadow-red-500/20 hover:bg-red-600 transition">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('delete-modal');
+        const deleteForm = document.getElementById('delete-form');
+
+        function openDeleteModal(id, url) {
+            deleteForm.action = url;
+            modal.classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            modal.classList.remove('active');
+        }
+
+        window.onclick = (e) => { if (e.target == modal) closeDeleteModal(); }
+    </script>
+</body>
+</html>

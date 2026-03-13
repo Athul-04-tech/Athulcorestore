@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buy Again | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 30px 40px -15px rgba(62, 39, 35, 0.08); }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] pb-20">
+
+    <nav class="p-6 md:p-8 flex justify-between items-center max-w-7xl mx-auto">
+        <a href="index.html" class="text-xl font-extrabold tracking-tighter uppercase">
+            Core<span class="text-[#00796B]">Store</span>
+        </a>
+        <div class="flex items-center gap-6">
+            <a href="userorders.html" class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40 hover:text-[#3E2723]">History</a>
+            <div class="relative">
+                <i class="fa-solid fa-cart-shopping text-[#3E2723]"></i>
+                <span class="absolute -top-2 -right-2 bg-[#00796B] text-white text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center">2</span>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 max-w-6xl mt-6">
+        
+        <header class="mb-8">
+            <h1 class="text-3xl font-black italic uppercase tracking-tighter text-[#3E2723]">Quick <span class="text-[#00796B]">Refill</span></h1>
+            <p class="text-[#3E2723]/50 text-[9px] font-black uppercase tracking-[0.2em] mt-1">Based on your recent expeditions</p>
+        </header>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            
+            <div class="glass rounded-[2rem] p-4 card-hover transition-all duration-500 group">
+                <div class="relative aspect-square rounded-[1.5rem] overflow-hidden bg-white mb-4">
+                    <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                    <div class="absolute top-3 right-3 bg-white/90 backdrop-blur px-2 py-0.5 rounded-full shadow-sm">
+                        <p class="text-[7px] font-black uppercase tracking-widest text-[#00796B]">3x Bought</p>
+                    </div>
+                </div>
+                
+                <div class="space-y-0.5 mb-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-black uppercase tracking-tighter truncate pr-2">Vortex Racer X1</h3>
+                        <p class="text-sm font-black text-[#00796B]">$149</p>
+                    </div>
+                    <p class="text-[8px] font-bold text-[#3E2723]/40 uppercase tracking-widest italic">2 days ago</p>
+                </div>
+
+                <div class="flex gap-1.5">
+                    <button class="flex-1 bg-[#3E2723] text-white py-2.5 rounded-xl font-black uppercase text-[8px] tracking-widest hover:bg-[#00796B] transition shadow-md shadow-[#3E2723]/5">
+                        Add to Dock
+                    </button>
+                    <a href="product-details.html" class="px-3 bg-[#3E2723]/5 flex items-center justify-center rounded-xl hover:bg-[#3E2723]/10 transition">
+                        <i class="fa-solid fa-eye text-[#3E2723] text-[10px]"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2rem] p-4 card-hover transition-all duration-500 group">
+                <div class="relative aspect-square rounded-[1.5rem] overflow-hidden bg-white mb-4">
+                    <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                
+                <div class="space-y-0.5 mb-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-black uppercase tracking-tighter truncate pr-2">Stealth Watch</h3>
+                        <p class="text-sm font-black text-[#00796B]">$450</p>
+                    </div>
+                    <p class="text-[8px] font-bold text-[#3E2723]/40 uppercase tracking-widest italic">Jan 12, 2026</p>
+                </div>
+
+                <div class="flex gap-1.5">
+                    <button class="flex-1 bg-[#3E2723] text-white py-2.5 rounded-xl font-black uppercase text-[8px] tracking-widest hover:bg-[#00796B] transition">
+                        Add to Dock
+                    </button>
+                    <button class="px-3 bg-[#3E2723]/5 flex items-center justify-center rounded-xl">
+                        <i class="fa-solid fa-eye text-[#3E2723] text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2rem] p-4 card-hover transition-all duration-500 group">
+                <div class="relative aspect-square rounded-[1.5rem] overflow-hidden bg-white mb-4">
+                    <img src="https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=400" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                
+                <div class="space-y-0.5 mb-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-black uppercase tracking-tighter truncate pr-2">Ghost Mouse</h3>
+                        <p class="text-sm font-black text-[#00796B]">$129</p>
+                    </div>
+                    <p class="text-[8px] font-bold text-[#3E2723]/40 uppercase tracking-widest italic">Dec 20, 2025</p>
+                </div>
+
+                <div class="flex gap-1.5">
+                    <button class="flex-1 bg-[#3E2723] text-white py-2.5 rounded-xl font-black uppercase text-[8px] tracking-widest hover:bg-[#00796B] transition">
+                        Add to Dock
+                    </button>
+                    <button class="px-3 bg-[#3E2723]/5 flex items-center justify-center rounded-xl">
+                        <i class="fa-solid fa-eye text-[#3E2723] text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="glass rounded-[2rem] p-4 card-hover transition-all duration-500 group">
+                <div class="relative aspect-square rounded-[1.5rem] overflow-hidden bg-white mb-4">
+                    <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" class="w-full h-full object-cover transition duration-700 group-hover:scale-110">
+                </div>
+                
+                <div class="space-y-0.5 mb-4">
+                    <div class="flex justify-between items-center">
+                        <h3 class="text-sm font-black uppercase tracking-tighter truncate pr-2">Sonic Cans</h3>
+                        <p class="text-sm font-black text-[#00796B]">$299</p>
+                    </div>
+                    <p class="text-[8px] font-bold text-[#3E2723]/40 uppercase tracking-widest italic">Oct 05, 2025</p>
+                </div>
+
+                <div class="flex gap-1.5">
+                    <button class="flex-1 bg-[#3E2723] text-white py-2.5 rounded-xl font-black uppercase text-[8px] tracking-widest hover:bg-[#00796B] transition">
+                        Add to Dock
+                    </button>
+                    <button class="px-3 bg-[#3E2723]/5 flex items-center justify-center rounded-xl">
+                        <i class="fa-solid fa-eye text-[#3E2723] text-[10px]"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <section class="mt-16">
+            <h2 class="text-[9px] font-black uppercase tracking-[0.3em] text-[#3E2723]/30 mb-6 flex items-center gap-4">
+                Essential Add-ons <span class="h-[1px] bg-[#3E2723]/10 flex-1"></span>
+            </h2>
+            <div class="glass p-6 rounded-[2.5rem] flex flex-col sm:flex-row items-center gap-6">
+                <div class="w-20 h-20 bg-white rounded-2xl overflow-hidden shadow-lg shrink-0">
+                    <img src="https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=300" class="w-full h-full object-cover">
+                </div>
+                <div class="flex-1 text-center sm:text-left">
+                    <h3 class="text-lg font-black uppercase italic tracking-tighter">Hyper-Care Spray</h3>
+                    <p class="text-[9px] font-bold text-[#3E2723]/50 uppercase mt-1">Recommended for your Vortex Racers.</p>
+                </div>
+                <button class="bg-[#00796B] text-white px-6 py-3 rounded-xl font-black uppercase text-[8px] tracking-widest shadow-lg shadow-[#00796B]/20">Get for $19.00</button>
+            </div>
+        </section>
+    </main>
+
+    <footer class="mt-24 text-center pb-10">
+        <p class="text-[9px] font-black uppercase tracking-[0.4em] opacity-20">Core Store • Re-Supply Module • 2026</p>
+    </footer>
+
+</body>
+</html>

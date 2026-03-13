@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CORE STORE | {{ subcategory.name }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap");
+      
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: #faf9f6;
+        color: #3e2723;
+        overflow-x: hidden;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.5);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(62, 39, 35, 0.1);
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+      .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      .product-card {
+        transition: all 0.5s ease;
+      }
+      .product-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 30px rgba(62, 39, 35, 0.08);
+      }
+
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      
+      .dropdown-animate {
+        opacity: 0;
+        transform: translateY(10px);
+        pointer-events: none;
+        transition: all 0.3s ease;
+      }
+      .group:hover .dropdown-animate {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      input:focus { border-color: #00796B !important; }
+    </style>
+  </head>
+  <body>
+
+    <nav class="glass sticky top-0 z-[100] px-4 md:px-6 py-4 animate__animated animate__fadeInDown">
+      <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <div class="flex items-center justify-between w-full md:w-auto">
+          <a href="/" class="text-xl md:text-2xl font-extrabold tracking-tighter flex items-center gap-2 group">
+            <div class="bg-[#00796B] p-1.5 rounded-lg text-white group-hover:rotate-12 transition-transform">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <span>CORE<span class="text-[#00796B]">STORE</span></span>
+          </a>
+
+          <div class="md:hidden flex items-center gap-3">
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="w-8 h-8 rounded-full border-2 border-[#00796B] overflow-hidden">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" class="w-full h-full object-cover">
+                {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=00796B&color=fff" class="w-full h-full">
+                {% endif %}
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="text-[#3E2723] text-2xl"><i class="fa-solid fa-user-circle"></i></a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="flex w-full md:flex-1 md:max-w-2xl bg-[#3E2723]/5 border border-[#3E2723]/10 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#00796B]/20 transition-all">
+          <input type="text" placeholder="Search elite gear..." class="bg-transparent flex-1 px-4 py-2 text-sm outline-none text-[#3E2723]" />
+          <button class="px-5 text-[#00796B] hover:bg-[#00796B] hover:text-white transition-colors">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/products/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#00796B] transition flex items-center gap-2">
+            <i class="fa-solid fa-box-open"></i> Products
+          </a>
+
+          <a href="/cart/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#00796B] transition flex items-center gap-2">
+            <i class="fa-solid fa-shopping-cart"></i> Cart
+          </a>
+
+          <div class="group relative">
+            <button class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#00796B] transition flex items-center gap-1">
+              More <i class="fa-solid fa-chevron-down text-[8px] transition-transform group-hover:rotate-180"></i>
+            </button>
+            <div class="absolute left-0 top-full pt-3 dropdown-animate w-48 z-50">
+              <div class="glass rounded-2xl p-2 shadow-2xl border border-[#00796B]/10">
+                {% if not user.is_authenticated %}
+                <a href="/seller/register/" class="flex items-center gap-3 text-[10px] font-black uppercase p-3 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all">
+                  <i class="fa-solid fa-shop"></i> Become a Vendor
+                </a>
+                {% endif %}
+                <a href="#" class="flex items-center gap-3 text-[10px] font-black uppercase p-3 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all">
+                  <i class="fa-solid fa-bell"></i> Notifications
+                </a>
+                <a href="#" class="flex items-center gap-3 text-[10px] font-black uppercase p-3 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all">
+                  <i class="fa-solid fa-headset"></i> Customer Care
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {% if user.is_authenticated %}
+          <div class="flex items-center gap-4">
+            <div class="text-right hidden sm:block">
+              <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 leading-tight">Welcome,</p>
+              <p class="text-xs font-black text-[#3E2723] uppercase">{{ user.username }}</p>
+            </div>
+
+            <div class="group relative">
+              <a href="{% url 'profile' %}" class="w-10 h-10 rounded-xl border-2 border-[#00796B] p-0.5 flex items-center justify-center hover:bg-[#00796B]/5 transition-all shadow-lg overflow-hidden active:scale-95">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" class="rounded-lg w-full h-full object-cover">
+                {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=00796B&color=fff" class="rounded-lg w-full h-full object-cover">
+                {% endif %}
+              </a>
+              
+              <div class="absolute right-0 top-full pt-3 dropdown-animate w-56 z-[110]">
+                <div class="glass rounded-2xl p-2 shadow-2xl border border-[#00796B]/10 overflow-hidden">
+                  <div class="px-3 py-3 mb-1 border-b border-[#3E2723]/5 bg-[#3E2723]/5 rounded-t-xl">
+                      <p class="text-[10px] font-black text-[#00796B] uppercase truncate leading-tight">{{ user.username }}</p>
+                      <p class="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">Verified Account</p>
+                  </div>
+
+                  <a href="{% url 'profile' %}" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-user-circle w-4 text-[#00796B] group-hover/item:text-white"></i> My Profile
+                  </a>
+                  <a href="/cart" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-shopping-cart w-4 text-[#00796B] group-hover/item:text-white"></i> My Cart
+                  </a>
+                  <a href="/wishlist" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-heart w-4 text-[#00796B] group-hover/item:text-white"></i> Wishlist
+                  </a>
+                  <a href="/orders" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-box w-4 text-[#00796B] group-hover/item:text-white"></i> My Orders
+                  </a>
+                  <a href="/addresses" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-map-location-dot w-4 text-[#00796B] group-hover/item:text-white"></i> Saved Addresses
+                  </a>
+                  <a href="/coupons" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-ticket w-4 text-[#00796B] group-hover/item:text-white"></i> Coupons
+                  </a>
+
+                  <div class="h-px bg-[#3E2723]/5 my-1"></div>
+
+                  <a href="{% url 'logout' %}" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-red-600 hover:bg-red-500 hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-4 group-hover/item:text-white"></i> Sign Out
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="flex items-center gap-3">
+            <a href="{% url 'login' %}">
+              <button class="bg-[#3E2723] text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#00796B] transition-all shadow-xl active:scale-95">
+                Login
+              </button>
+            </a>
+            <a href="{% url 'register' %}">
+              <button class="bg-white border-2 border-[#3E2723] text-[#3E2723] px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#3E2723] hover:text-white transition-all shadow-lg active:scale-95">
+                Join
+              </button>
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
+    <section class="bg-[#3E2723] py-12">
+      <div class="container mx-auto px-4 md:px-6">
+        <div class="flex items-center gap-4 text-white/60 text-xs font-black uppercase tracking-widest mb-4">
+          <a href="/" class="hover:text-white transition-colors">Home</a>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+          <a href="{% url 'category_view' category.slug %}" class="hover:text-white transition-colors">{{ category.name }}</a>
+          <i class="fa-solid fa-chevron-right text-[10px]"></i>
+          <span class="text-[#00796B]">{{ subcategory.name }}</span>
+        </div>
+        <h1 class="text-3xl md:text-5xl font-black italic uppercase text-white">{{ subcategory.name }}</h1>
+        {% if subcategory.description %}
+        <p class="text-white/70 mt-4 max-w-2xl">{{ subcategory.description }}</p>
+        {% endif %}
+      </div>
+    </section>
+
+    <section class="container mx-auto px-4 md:px-6 py-6 border-b border-[#3E2723]/10">
+      <div class="flex flex-wrap gap-3">
+        <a href="{% url 'category_view' category.slug %}" class="text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full bg-[#3E2723]/5 text-[#3E2723] hover:bg-[#00796B] hover:text-white transition-all">
+          <i class="fa-solid fa-arrow-left mr-1"></i> Back to {{ category.name }}
+        </a>
+        {% for cat in categories %}
+        <a href="{% url 'category_view' cat.slug %}" class="text-[10px] font-black uppercase tracking-widest px-4 py-2 rounded-full {% if cat.id == category.id %}bg-[#00796B] text-white{% else %}bg-[#3E2723]/5 text-[#3E2723] hover:bg-[#00796B] hover:text-white{% endif %} transition-all">
+          {{ cat.name }}
+        </a>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section class="container mx-auto px-4 md:px-6 py-12">
+      {% if products %}
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-xl md:text-2xl font-black italic uppercase border-l-4 border-[#00796B] pl-4">
+          {{ subcategory.name }} <span class="text-gray-400 text-base font-normal">({{ products.count }} products)</span>
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        {% for product in products_page %}
+        <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-xl p-2 group block cursor-pointer">
+          <div class="relative aspect-square overflow-hidden rounded-lg bg-[#EFEBE9] mb-2">
+            {% with product.images.all|first as img %}
+              {% if img %}
+                <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="{{ product.product.name }}" />
+              {% else %}
+                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=200" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" alt="{{ product.product.name }}" />
+              {% endif %}
+            {% endwith %}
+            
+            {% if product.stock_quantity <= 0 %}
+            <div class="absolute top-2 left-2 bg-red-500 text-white text-[6px] font-black uppercase px-2 py-1 rounded-sm">
+              Out of Stock
+            </div>
+            {% endif %}
+
+            <div class="absolute inset-0 bg-black/10 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                <button class="bg-white p-2 rounded-full text-[#3E2723] text-xs shadow-sm"><i class="fa-solid fa-cart-plus"></i></button>
+            </div>
+          </div>
+          <h3 class="text-[8px] md:text-[9px] font-extrabold tracking-tight truncate px-1 text-[#3E2723] uppercase">{{ product.product.name }}</h3>
+          <p class="text-xs md:text-sm font-black text-[#00796B] px-1 mt-1">${{ product.selling_price }}</p>
+        </a>
+        {% empty %}
+        <p class="col-span-full text-center text-gray-400 py-10 uppercase font-black text-xs tracking-widest">No products found</p>
+        {% endfor %}
+      </div>
+
+      {% if products_page.has_other_pages %}
+      <div class="flex justify-center items-center gap-2 mt-12 p-4 glass rounded-2xl backdrop-blur-sm mx-auto max-w-md shadow-xl">
+        {% if products_page.has_previous %}
+          <a href="?page=1" class="px-4 py-2 bg-[#00796B]/90 hover:bg-[#00796B] text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-300 min-w-[60px]">First</a>
+          <a href="?page={{ products_page.previous_page_number }}" class="px-4 py-2 bg-white/80 border border-[#00796B]/50 text-[#00796B] rounded-xl font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-300 min-w-[56px]">Prev</a>
+        {% endif %}
+
+        <span class="px-6 py-2 bg-white border border-[#00796B]/30 text-[#3E2723] rounded-xl font-black text-sm uppercase tracking-wider shadow-md">
+          Page {{ products_page.number }} of {{ products_page.paginator.num_pages }}
+          <span class="text-[#00796B] font-black">({{ products_page.paginator.count }} products)</span>
+        </span>
+
+        {% if products_page.has_next %}
+          <a href="?page={{ products_page.next_page_number }}" class="px-4 py-2 bg-white/80 border border-[#00796B]/50 text-[#00796B] rounded-xl font-black text-xs uppercase tracking-wider shadow-md hover:shadow-lg transition-all duration-300 min-w-[56px]">Next</a>
+          <a href="?page={{ products_page.paginator.num_pages }}" class="px-4 py-2 bg-[#00796B]/90 hover:bg-[#00796B] text-white rounded-xl font-black text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all duration-300 min-w-[60px]">Last</a>
+        {% endif %}
+      </div>
+      {% endif %}
+      {% else %}
+      <div class="glass rounded-[2rem] p-12 text-center">
+        <i class="fa-solid fa-box-open text-6xl text-gray-300 mb-6"></i>
+        <h2 class="text-2xl font-black italic uppercase text-[#3E2723] mb-4">No Products Available</h2>
+        <p class="text-gray-500 mb-8">There are no products available in this subcategory yet.</p>
+        <a href="{% url 'category_view' category.slug %}" class="inline-block bg-[#00796B] text-white px-8 py-3 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#3E2723] transition-all">
+          <i class="fa-solid fa-arrow-left mr-2"></i> Back to {{ category.name }}
+        </a>
+      </div>
+      {% endif %}
+    </section>
+
+    <footer class="bg-[#3E2723] py-12 text-center">
+      <div class="container mx-auto px-6">
+        <div class="flex flex-col items-center gap-4 mb-8">
+            <div class="text-white text-2xl font-black tracking-tighter">CORE<span class="text-[#00796B]">STORE</span></div>
+            <div class="flex gap-6 text-white/50 text-xl">
+                <i class="fa-brands fa-instagram hover:text-white transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-x-twitter hover:text-white transition-colors cursor-pointer"></i>
+                <i class="fa-brands fa-tiktok hover:text-white transition-colors cursor-pointer"></i>
+            </div>
+        </div>
+        <p class="text-white/40 text-[10px] font-bold uppercase tracking-widest">© 2026 Core Store Elite Ltd. All Rights Reserved.</p>
+      </div>
+    </footer>
+
+    <script>
+      function reveal() {
+        var reveals = document.querySelectorAll(".reveal");
+        for (var i = 0; i < reveals.length; i++) {
+          var windowHeight = window.innerHeight;
+          var elementTop = reveals[i].getBoundingClientRect().top;
+          if (elementTop < windowHeight - 100) {
+            reveals[i].classList.add("active");
+          }
+        }
+      }
+      window.addEventListener("scroll", reveal);
+      reveal();
+    </script>
+  </body>
+</html>
+

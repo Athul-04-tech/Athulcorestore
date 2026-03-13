@@ -1,7 +1,16 @@
 from django.contrib import admin
-from .models import Category,SubCategory,User
+from .models import (
+    User,
+    Address,
+    Notification,
+    Category,
+    SubCategory,
+    Banner,
+)
 
-# Register your models here.
+admin.site.register(User)
+admin.site.register(Address)
+admin.site.register(Notification)
 admin.site.register(Category)
 admin.site.register(SubCategory)
-admin.site.register(User)
+admin.site.register(Banner)

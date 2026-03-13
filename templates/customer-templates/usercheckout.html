@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; overflow-x: hidden; }
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        
+        /* Address Card Logic */
+        .address-radio { display: none; }
+        .address-card { cursor: pointer; border: 2px solid transparent; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .address-radio:checked + .address-card { 
+            border-color: #00796B; 
+            background-color: rgba(0, 121, 107, 0.05); 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .address-radio:checked + .address-card .check-icon { display: block; }
+
+        .input-field { background: rgba(62, 39, 35, 0.04); border: 1.5px solid rgba(62, 39, 35, 0.08); border-radius: 1rem; padding: 0.8rem 1rem; font-size: 11px; font-weight: 800; width: 100%; transition: all 0.2s ease; }
+        .input-field:focus { outline: none; border-color: #00796B; background: white; transform: scale(1.01); }
+        .label-sm { font-size: 9px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(62, 39, 35, 0.5); margin-bottom: 6px; display: block; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-[#FAF9F6] pb-20">
+
+    <nav class="glass sticky top-0 z-[100] px-4 py-4 mb-8 animate__animated animate__fadeInDown">
+        <div class="container mx-auto flex items-center justify-between">
+            <div class="text-xl font-extrabold tracking-tighter flex items-center gap-2">
+                <div class="bg-[#00796B] p-1.5 rounded-lg text-white"><i class="fa-solid fa-bolt text-xs"></i></div>
+                <span>CORE<span class="text-[#00796B]">STORE</span></span>
+            </div>
+            <div class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 tracking-[0.3em]">Secure Checkout</div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 lg:px-10">
+        <form method="POST" action="{% url 'orders' %}" class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            {% csrf_token %}
+            
+            <div class="lg:col-span-7 space-y-8 animate__animated animate__fadeInLeft">
+                <header>
+                    <h1 class="text-3xl font-black italic uppercase tracking-tighter text-[#3E2723]">Complete <span class="text-[#00796B]">Order.</span></h1>
+                </header>
+
+                <section class="glass rounded-[2.5rem] p-6 md:p-10 shadow-sm border border-white/50">
+                    <div class="flex items-center justify-between mb-8">
+                        <div class="flex items-center gap-3">
+                            <span class="w-6 h-6 rounded-full bg-[#3E2723] text-white flex items-center justify-center text-[10px] font-black">1</span>
+                            <h2 class="text-sm font-black uppercase tracking-widest text-[#3E2723]">Shipping Destination</h2>
+                        </div>
+                        <a href="{% url 'add_address' %}" class="text-[9px] font-black uppercase tracking-widest text-[#00796B] hover:scale-105 transition-transform inline-block">
+                            <i class="fa-solid fa-plus mr-1"></i> New Address
+                        </a>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {% for addr in address %}
+                        <label class="relative block group">
+                            <input type="radio" name="selected_address" value="{{ addr.id }}" class="address-radio" {% if addr.is_default %}checked{% endif %} required>
+                            <div class="address-card glass p-6 rounded-2xl relative h-full">
+                                <div class="check-icon hidden absolute top-4 right-4 text-[#00796B] animate__animated animate__zoomIn">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </div>
+                                <p class="text-[9px] font-black uppercase text-[#3E2723]/40 mb-2 tracking-widest group-hover:text-[#00796B] transition-colors">
+                                    {{ addr.address_type }}
+                                </p>
+                                <h4 class="text-xs font-black text-[#3E2723] uppercase">{{ addr.full_name }}</h4>
+                                <p class="text-[10px] font-bold text-[#3E2723]/60 mt-2 leading-relaxed">
+                                    {{ addr.house_info }}, {{ addr.locality }}<br>
+                                    {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}
+                                </p>
+                                <p class="text-[10px] font-black text-[#3E2723] mt-3 tracking-tighter">
+                                    <i class="fa-solid fa-phone text-[8px] mr-1 opacity-30"></i> {{ addr.phone_number }}
+                                </p>
+                            </div>
+                        </label>
+                        {% empty %}
+                        <div class="col-span-2 py-10 text-center glass rounded-2xl border-dashed border-[#3E2723]/20">
+                            <i class="fa-solid fa-map-location-dot text-2xl text-[#3E2723]/20 mb-3 block"></i>
+                            <p class="text-[10px] font-black uppercase tracking-widest text-[#3E2723]/40">No addresses found</p>
+                            <a href="{% url 'add_address' %}" class="mt-4 inline-block bg-[#3E2723] text-white px-6 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest">Add First Address</a>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="glass rounded-[2.5rem] p-6 md:p-10 shadow-sm border border-white/50 animate__animated animate__fadeInUp">
+                    <div class="flex items-center gap-3 mb-8">
+                        <span class="w-6 h-6 rounded-full bg-[#3E2723] text-white flex items-center justify-center text-[10px] font-black">2</span>
+                        <h2 class="text-sm font-black uppercase tracking-widest text-[#3E2723]">Payment Gateway</h2>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="flex gap-4 mb-6">
+                            <div class="flex-1 p-4 border-2 border-[#00796B] bg-[#00796B]/5 rounded-2xl text-center">
+                                <i class="fa-solid fa-credit-card text-[#00796B] mb-2"></i>
+                                <p class="text-[9px] font-black uppercase text-[#00796B]">Credit/Debit</p>
+                            </div>
+                            <div class="flex-1 p-4 border border-[#3E2723]/10 rounded-2xl text-center opacity-40 hover:opacity-100 transition-opacity cursor-pointer">
+                                <i class="fa-brands fa-paypal mb-2"></i>
+                                <p class="text-[9px] font-black uppercase">PayPal</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="label-sm">Cardholder Name</label>
+                            <input type="text" placeholder="NAME AS PER CARD" class="input-field uppercase">
+                        </div>
+                        <div>
+                            <label class="label-sm">Card Number</label>
+                            <input type="text" placeholder="xxxx xxxx xxxx xxxx" class="input-field">
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="label-sm">Expiry Date</label>
+                                <input type="text" placeholder="MM/YY" class="input-field">
+                            </div>
+                            <div>
+                                <label class="label-sm">Security Code</label>
+                                <input type="text" placeholder="CVV" class="input-field">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="lg:col-span-5 animate__animated animate__fadeInRight">
+                <div class="glass rounded-[3rem] p-8 lg:p-10 sticky top-28 shadow-2xl shadow-[#3E2723]/5 border-t border-white">
+                    <h3 class="text-sm font-black uppercase tracking-widest text-[#3E2723] mb-8 pb-4 border-b border-[#3E2723]/5">Order Review</h3>
+                    
+                    <div class="space-y-6 mb-8 max-h-[200px] overflow-y-auto no-scrollbar">
+                        <div class="flex items-center gap-4 group">
+                            <div class="w-14 h-14 bg-[#EFEBE9] rounded-xl overflow-hidden shrink-0 group-hover:rotate-3 transition-transform">
+                                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-1">
+                                <h4 class="text-[10px] font-black text-[#3E2723] uppercase">Vortex Racer X1</h4>
+                                <p class="text-[9px] font-bold text-[#3E2723]/40">Size: 42 • Qty: 1</p>
+                            </div>
+                            <p class="text-xs font-black text-[#00796B]">$149</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3 pt-6 border-t border-[#3E2723]/5">
+                        <div class="flex justify-between text-[10px] font-bold uppercase text-[#3E2723]/40">
+                            <span>Subtotal</span>
+                            <span>$149.00</span>
+                        </div>
+                        <div class="flex justify-between text-[10px] font-bold uppercase text-[#00796B]">
+                            <span>Shipping</span>
+                            <span>FREE</span>
+                        </div>
+                        <div class="flex justify-between text-xl font-black uppercase italic tracking-tighter text-[#3E2723] pt-4">
+                            <span>Grand Total</span>
+                            <span>$149.00</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-[#3E2723] text-white py-5 rounded-2xl font-black uppercase text-[11px] tracking-[0.2em] mt-10 hover:bg-[#00796B] transition shadow-xl shadow-[#3E2723]/20 active:scale-95 flex items-center justify-center gap-3">
+                        Authorize Payment
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                    
+                    <div class="flex items-center justify-center gap-2 mt-6 text-[#3E2723]/30">
+                        <i class="fa-solid fa-lock text-[10px]"></i>
+                        <span class="text-[8px] font-black uppercase tracking-widest">Encrypted Checkout • 256-bit SSL</span>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <footer class="mt-20 text-center py-10 opacity-30 animate__animated animate__fadeIn">
+        <p class="text-[9px] font-black uppercase tracking-[0.3em]">Core Store • Malibu • 2026</p>
+    </footer>
+
+</body>
+</html>

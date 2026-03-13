@@ -1,0 +1,158 @@
+{% load static %}
+<!-- Reusable Toast Messages Template -->
+<!-- Auto-disappears after 4 seconds with smooth animations -->
+
+{% if messages %}
+<style>
+    .toast-container {
+        position: fixed;
+        top: 80px;
+        right: 20px;
+        z-index: 9999;
+        max-width: 400px;
+        width: 100%;
+    }
+    
+    .toast-message {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 16px 20px;
+        border-radius: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 10px 40px rgba(62, 39, 35, 0.15);
+        backdrop-filter: blur(12px);
+        transform: translateX(120%);
+        transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        border-left: 4px solid;
+    }
+    
+    .toast-message.show {
+        transform: translateX(0);
+    }
+    
+    .toast-message.hiding {
+        transform: translateX(120%);
+        opacity: 0;
+        transition: all 0.4s ease-in;
+    }
+    
+    .toast-success {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #10B981;
+    }
+    
+    .toast-error {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #EF4444;
+    }
+    
+    .toast-warning {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #F59E0B;
+    }
+    
+    .toast-info {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #3B82F6;
+    }
+    
+    .toast-default {
+        background: rgba(255, 255, 255, 0.95);
+        border-color: #00796B;
+    }
+    
+    .toast-icon {
+        font-size: 20px;
+        flex-shrink: 0;
+    }
+    
+    .toast-success .toast-icon { color: #10B981; }
+    .toast-error .toast-icon { color: #EF4444; }
+    .toast-warning .toast-icon { color: #F59E0B; }
+    .toast-info .toast-icon { color: #3B82F6; }
+    .toast-default .toast-icon { color: #00796B; }
+    
+    .toast-content {
+        flex: 1;
+    }
+    
+    .toast-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: #3E2723;
+        line-height: 1.4;
+    }
+    
+    .toast-close {
+        background: none;
+        border: none;
+        color: #9CA3AF;
+        cursor: pointer;
+        padding: 4px;
+        font-size: 16px;
+        transition: color 0.2s;
+        flex-shrink: 0;
+    }
+    
+    .toast-close:hover {
+        color: #3E2723;
+    }
+
+    @media (max-width: 640px) {
+        .toast-container {
+            left: 20px;
+            right: 20px;
+            max-width: none;
+        }
+    }
+</style>
+
+<div class="toast-container" id="toastContainer">
+    {% for message in messages %}
+    <div class="toast-message toast-{{ message.tags|default:'default' }}" data-timeout="4000">
+        <i class="fa-solid toast-icon {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-circle-xmark{% elif message.tags == 'warning' %}fa-triangle-exclamation{% elif message.tags == 'info' %}fa-circle-info{% else %}fa-circle-check{% endif %}"></i>
+        <div class="toast-content">
+            <p class="toast-text">{{ message }}</p>
+        </div>
+        <button class="toast-close" onclick="hideToast(this)">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toasts = document.querySelectorAll('.toast-message');
+        
+        // Show toasts with staggered delay
+        toasts.forEach((toast, index) => {
+            setTimeout(() => {
+                toast.classList.add('show');
+            }, index * 100);
+            
+            // Auto-hide after timeout
+            const timeout = parseInt(toast.dataset.timeout) || 4000;
+            setTimeout(() => {
+                hideToast(toast.querySelector('.toast-close'));
+            }, timeout + 500);
+        });
+    });
+    
+    function hideToast(button) {
+        const toast = button.closest('.toast-message');
+        toast.classList.add('hiding');
+        setTimeout(() => {
+            toast.remove();
+            
+            // Remove container if no more toasts
+            const container = document.getElementById('toastContainer');
+            if (container && container.querySelectorAll('.toast-message').length === 0) {
+                container.remove();
+            }
+        }, 400);
+    }
+</script>
+{% endif %}
+

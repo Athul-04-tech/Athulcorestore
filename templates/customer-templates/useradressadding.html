@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Address | CORE STORE</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
+        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .input-field { background-color: rgba(62, 39, 35, 0.05); border: 1px solid rgba(62, 39, 35, 0.1); border-radius: 1rem; padding: 0.75rem 1.25rem; font-size: 0.75rem; font-weight: 800; width: 100%; transition: all 0.3s ease; color: #3E2723; text-transform: uppercase; letter-spacing: 0.05em; }
+        .input-field:focus { outline: none; border-color: #00796B; background-color: white; box-shadow: 0 8px 15px -8px rgba(0, 121, 107, 0.1); }
+        .label-text { font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.2em; color: rgba(62, 39, 35, 0.5); margin-bottom: 0.4rem; display: block; margin-left: 0.5rem; }
+        .loader { border: 2px solid #f3f3f3; border-top: 2px solid #00796B; border-radius: 50%; width: 12px; height: 12px; animation: spin 1s linear infinite; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .type-radio:checked + label { background-color: #00796B; color: white; border-color: #00796B; }
+    </style>
+</head>
+<body class="min-h-screen py-8 px-4 md:px-6">
+
+    <div class="max-w-xl mx-auto animate__animated animate__fadeIn">
+        <header class="mb-8 text-center">
+            <h1 class="text-3xl font-black text-[#3E2723] italic uppercase tracking-tighter leading-none">
+                Add New <span class="text-[#00796B]">Destination.</span>
+            </h1>
+        </header>
+
+        <form method="POST" class="glass rounded-[2.5rem] p-6 md:p-10 shadow-xl shadow-[#3E2723]/5">
+            {% csrf_token %}
+            
+            <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="label-text">Full Name</label>
+                        <input type="text" name="full_name" required placeholder="JAMES CARTER" class="input-field">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="label-text">Phone Number</label>
+                        <input type="tel" name="phone_number" required placeholder="+91 00000 00000" class="input-field">
+                    </div>
+                </div>
+
+                <hr class="border-[#3E2723]/5">
+
+                <div class="space-y-4">
+                    <div class="relative">
+                        <label class="label-text flex items-center gap-2">
+                            Pincode <span id="pin-loader" class="loader"></span>
+                        </label>
+                        <input type="text" name="pincode" id="pincode" maxlength="6" required placeholder="686563" class="input-field">
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="label-text">House Info / Flat No.</label>
+                            <input type="text" name="house_info" required placeholder="VILLA 402" class="input-field">
+                        </div>
+                        <div>
+                            <label class="label-text">Locality / Area</label>
+                            <input type="text" name="locality" id="locality" required placeholder="E.G. KUMARAKOM" class="input-field">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="label-text">City</label>
+                            <input type="text" name="city" id="city" required placeholder="CITY" class="input-field">
+                        </div>
+                        <div>
+                            <label class="label-text">State</label>
+                            <input type="text" name="state" id="state" required placeholder="STATE" class="input-field">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="label-text">Landmark (Optional)</label>
+                        <input type="text" name="landmark" placeholder="NEAR THE BACKWATERS" class="input-field">
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="label-text">Address Type</label>
+                        <div class="flex gap-3">
+                            <div class="flex-1">
+                                <input type="radio" name="address_type" id="HOME" value="HOME" class="hidden type-radio" checked>
+                                <label for="HOME" class="block text-center py-3 border border-[#3E2723]/10 rounded-xl text-[9px] font-black uppercase cursor-pointer transition-all">Home</label>
+                            </div>
+                            <div class="flex-1">
+                                <input type="radio" name="address_type" id="WORK" value="WORK" class="hidden type-radio">
+                                <label for="WORK" class="block text-center py-3 border border-[#3E2723]/10 rounded-xl text-[9px] font-black uppercase cursor-pointer transition-all">Work</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex items-center gap-3 px-2">
+                        <input type="checkbox" name="is_default" id="is_default" class="w-4 h-4 rounded accent-[#00796B] cursor-pointer">
+                        <label for="is_default" class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/60 cursor-pointer">Set as Primary</label>
+                    </div>
+                </div>
+
+                <div class="pt-4 space-y-3">
+                    <button type="submit" class="w-full bg-[#3E2723] text-white py-4 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#00796B] transition-all shadow-lg active:scale-95">
+                        Save Destination
+                    </button>
+                    <button type="button" onclick="window.history.back()" class="w-full bg-transparent text-[#3E2723] py-4 rounded-xl font-black uppercase text-[10px] tracking-widest border-2 border-[#3E2723]/20 hover:border-[#3E2723]/40 transition-all active:scale-95">
+                        Cancel
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const pinInput = document.getElementById('pincode');
+        const cityInput = document.getElementById('city');
+        const stateInput = document.getElementById('state');
+        const areaInput = document.getElementById('locality');
+        const loader = document.getElementById('pin-loader');
+
+        pinInput.addEventListener('input', async (e) => {
+            const pin = e.target.value.trim();
+            if (pin.length === 6) {
+                loader.style.display = "inline-block";
+                try {
+                    // 1. Try Zippopotam (High Accuracy for Primary Locations)
+                    const res = await fetch(`https://api.zippopotam.us/in/${pin}`);
+                    if (res.ok) {
+                        const data = await res.json();
+                        const place = data.places[0];
+                        areaInput.value = place['place name'].toUpperCase();
+                        cityInput.value = (place['community'] || place['place name']).toUpperCase();
+                        stateInput.value = place['state'].toUpperCase();
+                    } else {
+                        // 2. Fallback to India Post API
+                        const postRes = await fetch(`https://api.postalpincode.in/pincode/${pin}`);
+                        const postData = await postRes.json();
+                        if (postData[0].Status === "Success") {
+                            const detail = postData[0].PostOffice[0];
+                            areaInput.value = detail.Name.toUpperCase();
+                            cityInput.value = detail.District.toUpperCase();
+                            stateInput.value = detail.State.toUpperCase();
+                        }
+                    }
+                } catch (err) {
+                    console.error("Accuracy Engine Failure");
+                } finally {
+                    loader.style.display = "none";
+                }
+            }
+        });
+
+        // Clear pincode if user manually edits the City
+        cityInput.addEventListener('input', () => {
+            if (cityInput.value.length > 0) pinInput.value = "";
+        });
+    </script>
+</body>
+</html>

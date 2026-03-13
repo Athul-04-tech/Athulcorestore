@@ -1,0 +1,132 @@
+<nav class="glass sticky top-0 z-[100] px-4 md:px-6 py-4 animate__animated animate__fadeInDown">
+      <div class="container mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+        
+        <div class="flex items-center justify-between w-full md:w-auto">
+          <a href="/" class="text-xl md:text-2xl font-extrabold tracking-tighter flex items-center gap-2 group">
+            <div class="bg-[#00796B] p-1.5 rounded-lg text-white group-hover:rotate-12 transition-transform">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <span>CORE<span class="text-[#00796B]">STORE</span></span>
+          </a>
+
+          <div class="md:hidden flex items-center gap-3">
+            {% if user.is_authenticated %}
+            <a href="{% url 'profile' %}" class="w-8 h-8 rounded-full border-2 border-[#00796B] overflow-hidden">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" class="w-full h-full object-cover">
+                {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=00796B&color=fff" class="w-full h-full">
+                {% endif %}
+            </a>
+            {% else %}
+            <a href="{% url 'login' %}" class="text-[#3E2723] text-2xl"><i class="fa-solid fa-user-circle"></i></a>
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="flex w-full md:flex-1 md:max-w-2xl bg-[#3E2723]/5 border border-[#3E2723]/10 rounded-2xl overflow-hidden focus-within:ring-2 focus-within:ring-[#00796B]/20 transition-all">
+          <input type="text" placeholder="Search elite gear..." class="bg-transparent flex-1 px-4 py-2 text-sm outline-none text-[#3E2723]" />
+          <button class="px-5 text-[#00796B] hover:bg-[#00796B] hover:text-white transition-colors">
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
+        </div>
+
+        <div class="hidden md:flex items-center gap-6">
+          <a href="/products/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#00796B] transition flex items-center gap-2">
+            <i class="fa-solid fa-box-open"></i> Products
+          </a>
+
+          <a href="/cart/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#00796B] transition flex items-center gap-2">
+            <i class="fa-solid fa-shopping-cart"></i> Cart
+          </a>
+
+          <div class="group relative">
+            <button class="text-xs font-bold uppercase tracking-widest text-gray-500 group-hover:text-[#00796B] transition flex items-center gap-1">
+              More <i class="fa-solid fa-chevron-down text-[8px] transition-transform group-hover:rotate-180"></i>
+            </button>
+            <div class="absolute left-0 top-full pt-3 dropdown-animate w-48 z-50">
+              <div class="glass rounded-2xl p-2 shadow-2xl border border-[#00796B]/10">
+                {% if not user.is_authenticated %}
+                <a href="/seller/register/" class="flex items-center gap-3 text-[10px] font-black uppercase p-3 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all">
+                  <i class="fa-solid fa-shop"></i> Become a Vendor
+                </a>
+                {% endif %}
+                <a href="#" class="flex items-center gap-3 text-[10px] font-black uppercase p-3 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all">
+                  <i class="fa-solid fa-bell"></i> Notifications
+                </a>
+                <a href="#" class="flex items-center gap-3 text-[10px] font-black uppercase p-3 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all">
+                  <i class="fa-solid fa-headset"></i> Customer Care
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {% if user.is_authenticated %}
+          <div class="flex items-center gap-4">
+            <div class="text-right hidden sm:block">
+              <p class="text-[9px] font-black uppercase tracking-widest text-gray-400 leading-tight">Welcome,</p>
+              <p class="text-xs font-black text-[#3E2723] uppercase">{{ user.username }}</p>
+            </div>
+
+            <div class="group relative">
+              <a href="{% url 'profile' %}" class="w-10 h-10 rounded-xl border-2 border-[#00796B] p-0.5 flex items-center justify-center hover:bg-[#00796B]/5 transition-all shadow-lg overflow-hidden active:scale-95">
+                {% if user.profile_image %}
+                <img src="{{ user.profile_image.url }}" class="rounded-lg w-full h-full object-cover">
+                {% else %}
+                <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=00796B&color=fff" class="rounded-lg w-full h-full object-cover">
+                {% endif %}
+              </a>
+              
+              <div class="absolute right-0 top-full pt-3 dropdown-animate w-56 z-[110]">
+                <div class="glass rounded-2xl p-2 shadow-2xl border border-[#00796B]/10 overflow-hidden">
+                  <div class="px-3 py-3 mb-1 border-b border-[#3E2723]/5 bg-[#3E2723]/5 rounded-t-xl">
+                      <p class="text-[10px] font-black text-[#00796B] uppercase truncate leading-tight">{{ user.username }}</p>
+                      <p class="text-[8px] font-bold text-gray-400 uppercase tracking-tighter">Verified Account</p>
+                  </div>
+
+                  <a href="{% url 'profile' %}" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-user-circle w-4 text-[#00796B] group-hover/item:text-white"></i> My Profile
+                  </a>
+                  <a href="/cart" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-shopping-cart w-4 text-[#00796B] group-hover/item:text-white"></i> My Cart
+                  </a>
+                  <a href="/wishlist" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-heart w-4 text-[#00796B] group-hover/item:text-white"></i> Wishlist
+                  </a>
+                  <a href="/orders" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-box w-4 text-[#00796B] group-hover/item:text-white"></i> My Orders
+                  </a>
+                  <a href="/addresses" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-map-location-dot w-4 text-[#00796B] group-hover/item:text-white"></i> Saved Addresses
+                  </a>
+                  <a href="/coupons" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-ticket w-4 text-[#00796B] group-hover/item:text-white"></i> Coupons
+                  </a>
+
+                  <div class="h-px bg-[#3E2723]/5 my-1"></div>
+
+                  <a href="{% url 'logout' %}" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-red-600 hover:bg-red-500 hover:text-white rounded-xl transition-all group/item">
+                    <i class="fa-solid fa-arrow-right-from-bracket w-4 group-hover/item:text-white"></i> Sign Out
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% else %}
+          <div class="flex items-center gap-3">
+            <a href="{% url 'login' %}">
+              <button class="bg-[#3E2723] text-white px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#00796B] transition-all shadow-xl active:scale-95">
+                Login
+              </button>
+            </a>
+            <a href="{% url 'register' %}">
+              <button class="bg-white border-2 border-[#3E2723] text-[#3E2723] px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-[#3E2723] hover:text-white transition-all shadow-lg active:scale-95">
+                Join
+              </button>
+            </a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+
