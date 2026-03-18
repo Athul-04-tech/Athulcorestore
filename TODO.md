@@ -1,8 +1,15 @@
-# TODO: Fix images not showing in pages
+# Fix Cart Update/Delete (Non-AJAX Forms)
 
-- [x] Step 1: Update Croestore/Corestore/settings.py - Add STATIC_ROOT and STATICFILES_DIRS
-- [x] Step 2: Update Croestore/Corestore/urls.py - Add MEDIA_URL static serving
-- [x] Step 3: Restart development server
-- [x] Step 4: Run python manage.py collectstatic --noinput (if static files broken)
-- [ ] Step 5: Test by uploading an image via admin/seller and viewing product pages
-- [ ] Step 6: Verify images load from /media/ paths
+## Steps:
+- [ ] 1. Update customer/views.py: Simplify views to always redirect, remove AJAX logic
+- [ ] 2. Update usercart.html: Add forms/CSRF, remove JS
+- [ ] 3. Update usercheckout.html: Add forms/CSRF for qty
+- [ ] 4. Test: runserver, verify qty change/delete reloads correctly with messages
+
+✅ 1. Update customer/views.py: Simplified views to always redirect, added item_total, removed AJAX logic
+
+✅ 2. usercart.html: Forms for update/delete, CSRF, no JS needed (reloads page)
+
+✅ 3. usercheckout.html: Qty forms added (page reloads to cart on update)
+
+All edits complete. Ready for testing.

@@ -168,7 +168,7 @@
                             <span><i class="fa-solid fa-user-gear mr-3 opacity-50"></i> Profile Info</span>
                             <i class="fa-solid fa-chevron-right text-[8px]"></i>
                         </a>
-                        <a href="#" class="flex items-center justify-between p-4 hover:bg-[#3E2723]/5 rounded-2xl text-xs font-black uppercase tracking-wider group transition-all">
+                        <a href="{% url 'orders' %}" class="flex items-center justify-between p-4 hover:bg-[#3E2723]/5 rounded-2xl text-xs font-black uppercase tracking-wider group transition-all">
                             <span><i class="fa-solid fa-box mr-3 opacity-30 group-hover:text-[#00796B]"></i> My Orders</span>
                             <i class="fa-solid fa-chevron-right text-[8px] opacity-20"></i>
                         </a>
@@ -222,8 +222,13 @@
                             <div class="space-y-2">
                                 <label class="text-[9px] font-black uppercase tracking-widest text-[#3E2723]/40 ml-1">Email</label>
                                 <div class="relative">
-                                    <input type="email" name="email" value="{{ data.email }}" required class="w-full bg-white border border-[#3E2723]/10 rounded-2xl px-6 py-4 pr-12 text-xs font-black text-[#3E2723] outline-none transition-all">
-                                    <div class="verify-btn" onclick="alert('Verification link sent!')"><i class="fa-solid fa-info"></i></div>
+                                <input type="email" value="{{ data.email }}" readonly class="w-full bg-[#3E2723]/5 border border-[#3E2723]/10 rounded-2xl px-6 py-4 pr-14 text-xs font-black text-[#3E2723] opacity-60">
+                                    <i class="fa-solid fa-lock absolute right-5 top-1/2 -translate-y-1/2 text-[10px] text-[#3E2723]/20 z-10"></i>
+                                    <a href="{% url 'orders' %}">
+                                        <div class="verify-btn bg-green-500 hover:bg-green-600 cursor-pointer" title="View Orders">
+                                            <i class="fa-solid fa-check"></i>
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
 

@@ -175,27 +175,52 @@
                     {% endif %} -->
 
                     <div class="flex gap-4">
-                        <form action="{% url 'add_cart' data.slug %}" method="POST" class="flex-[2]">
+                        {% if is_in_cart %}
+                            <a href="{% url 'cart' %}" class="flex-[2]">
+                                <button type="button" 
+                                    class="w-full h-20 bg-[#00796B] text-white rounded-[1.5rem] font-black text-xl uppercase tracking-tighter hover:bg-[#3E2723] transition-all shadow-xl shadow-[#00796B]/20 flex items-center justify-center gap-3 group">
+                                    <i class="fa-solid fa-shopping-bag"></i>
+                                    <span>Go to Bag</span>
+                                </button>
+                            </a>
+                        {% else %}
+                            <form action="{% url 'add_cart' data.slug %}" method="POST" class="flex-[2]">
+                                {% csrf_token %}
+                                <button type="submit" 
+                                    {% if data.stock_quantity == 0 %}disabled{% endif %}
+                                    class="h-16 w-full bg-[#3E2723] text-white rounded-[1.5rem] font-black text-xl uppercase tracking-tighter hover:bg-[#00796B] transition-all shadow-xl shadow-[#3E2723]/10 flex items-center justify-center gap-3 group {% if data.stock_quantity == 0 %}opacity-50 cursor-not-allowed grayscale{% endif %}">
+                                    {% if data.stock_quantity == 0 %}
+                                        <i class="fa-solid fa-circle-xmark"></i>
+                                        <span>Unavailable</span>
+                                    {% else %}
+                                        <i class="fa-solid fa-cart-plus group-hover:rotate-12 transition-transform"></i>
+                                        <span>Add to Bag</span>
+                                    {% endif %}
+                                </button>
+                            </form>
+                        {% endif %}
+                        
+
+                        <form action="{% url 'single_checkout' data.slug %}" method="POST" class="flex-1 flex flex-col gap-3">
                             {% csrf_token %}
                             <button type="submit" 
                                 {% if data.stock_quantity == 0 %}disabled{% endif %}
-                                class="w-full h-20 bg-[#3E2723] text-white rounded-[1.5rem] font-black text-xl uppercase tracking-tighter hover:bg-[#00796B] transition-all shadow-xl shadow-[#3E2723]/10 flex items-center justify-center gap-3 group {% if data.stock_quantity == 0 %}opacity-50 cursor-not-allowed grayscale{% endif %}">
-                                
-                                {% if data.stock_quantity == 0 %}
-                                    <i class="fa-solid fa-circle-xmark"></i>
-                                    <span>Unavailable</span>
-                                {% else %}
-                                    <i class="fa-solid fa-cart-plus group-hover:rotate-12 transition-transform"></i>
-                                    <span>Add to Bag</span>
-                                {% endif %}
+                                class="h-16 glass rounded-[1.5rem] flex items-center justify-center text-[#3E2723] hover:bg-white hover:text-[#00796B] transition-all font-black text-sm uppercase tracking-wider shadow-md hover:shadow-lg {% if data.stock_quantity == 0 %}opacity-50 cursor-not-allowed grayscale{% endif %}">
+                                BUY NOW
+                                <i class="fa-solid fa-bolt ml-1"></i>
                             </button>
+                            <div class="flex items-center bg-white/50 rounded-xl p-2 glass">
+                                <button type="button" class="qty-btn-decrease w-10 h-10 rounded-lg bg-red-100 hover:bg-red-200 text-red-600 flex items-center justify-center text-sm font-black transition-all qty-btn" id="qty-decrease">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+                                <input type="number" name="quantity" min="1" max="{{ data.stock_quantity }}" value="1" class="qty-input w-16 text-center text-lg font-black text-[#3E2723] border-0 bg-transparent focus:outline-none [-moz-appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none" readonly>
+                                <button type="button" class="qty-btn-increase w-10 h-10 rounded-lg bg-green-100 hover:bg-green-200 text-green-600 flex items-center justify-center text-sm font-black transition-all qty-btn" id="qty-increase">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                                <span class="ml-auto text-[10px] font-black text-[#3E2723]/50">/ {{ data.stock_quantity }} left</span>
+                            </div>
                         </form>
-                        
-                        <a href="{% url 'checkout' %}" 
-                            {% if data.stock_quantity == 0 %}onclick="return false;"{% endif %}
-                            class="flex-1 glass rounded-[1.5rem] flex items-center justify-center text-[#3E2723] hover:bg-white transition-all {% if data.stock_quantity == 0 %}opacity-50 cursor-not-allowed grayscale{% endif %}">
-                            <i class="fa-solid fa-bolt-lightning"></i>
-                        </a>
+
                         
                         <button type="button" class="flex-1 glass rounded-[1.5rem] flex items-center justify-center text-[#3E2723] hover:bg-white transition-all">
                             <i class="fa-solid fa-share-nodes"></i>
@@ -229,9 +254,41 @@
     <footer class="mt-32 py-16 glass border-t border-[#3E2723]/5 text-center">
         <h2 class="text-2xl font-black italic tracking-tighter uppercase mb-4">CORE<span class="text-[#00796B]">STORE</span></h2>
         <p class="text-[9px] font-bold text-[#3E2723]/30 uppercase tracking-[0.4em]">© 2026 Core Store Elite Ltd • Malibu</p>
+
     </footer>
 
     <script>
+// Single shared quantity selector for both buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            const qtyInput = document.querySelector('.qty-input[name="quantity"]');
+            const decreaseBtn = document.getElementById('qty-decrease');
+            const increaseBtn = document.getElementById('qty-increase');
+            const maxStock = parseInt(qtyInput.max);
+
+            function updateQuantity() {
+                const qty = parseInt(qtyInput.value);
+                decreaseBtn.disabled = qty <= 1;
+                increaseBtn.disabled = qty >= maxStock;
+            }
+
+            decreaseBtn.addEventListener('click', () => {
+                if (parseInt(qtyInput.value) > 1) {
+                    qtyInput.value = parseInt(qtyInput.value) - 1;
+                    updateQuantity();
+                }
+            });
+
+            increaseBtn.addEventListener('click', () => {
+                if (parseInt(qtyInput.value) < maxStock) {
+                    qtyInput.value = parseInt(qtyInput.value) + 1;
+                    updateQuantity();
+                }
+            });
+
+            qtyInput.addEventListener('input', updateQuantity);
+            updateQuantity(); // Initial state
+        });
+
         function zoom(e) {
             const container = e.currentTarget;
             const img = container.querySelector('.main-img');

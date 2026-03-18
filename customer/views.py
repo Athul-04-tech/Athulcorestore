@@ -1,18 +1,19 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from django.http import JsonResponse
-from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.core.paginator import Paginator
 from .models import *
 from core.models import *
 from seller.models import *
-from django.contrib.auth import login,logout,authenticate
+from django.contrib.auth import login,logout,authenticate, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import F, Q, Count
+from django.db.models import  Q, Count
+from .utils import generate_otp, send_otp_email
 from decimal import Decimal
-
-from django.shortcuts import render
 from django.utils import timezone
 from datetime import timedelta
+
+User = get_user_model()
 
 def home(request):
     # .select_related('product') fetches the parent Product (name, etc.) in 1 query
@@ -35,7 +36,6 @@ def home(request):
     return render(request, 'core-templates/mainhome.html', context)
 
 def products(request):
-    from django.db.models import Count
     
     category_id = request.GET.get('category_id')
     sort = request.GET.get('sort', 'newest')
@@ -60,16 +60,13 @@ def products(request):
     
     all_products_qs = base_qs
     
-    # New arrivals (filtered/sorted same way, last 7 days)
     seven_days_ago = timezone.now() - timedelta(days=7)
     new_arrivals = all_products_qs.filter(created_at__gte=seven_days_ago)[:12]  # Limit featured
     
-    # Paginate all_products
     paginator = Paginator(all_products_qs, 20)
     page = request.GET.get('page')
     all_products_page = paginator.get_page(page)
     
-# Categories with product counts for sidebar - ALL active categories
     categories_qs = Category.objects.filter(is_active=True).annotate(
         product_count=Count(
             'subcategories__products',
@@ -92,31 +89,23 @@ def products(request):
         'total_products': all_products_page.paginator.count,
     }
     
-    if request.user.is_authenticated:
-        context['data'] = request.user
     
     return render(request, 'core-templates/products.html', context)
 
 def category_view(request, category_slug):
-    """View to display subcategories and products when a category is clicked"""
     category = get_object_or_404(Category, slug=category_slug, is_active=True)
     
-    # Get active subcategories for this category
     subcategories = SubCategory.objects.filter(category=category, is_active=True)
     
-    # Build context with subcategories and their products (max 5 per subcategory)
     subcategories_with_products = []
     
     for subcategory in subcategories:
-        # Get approved and active products for this subcategory (max 5)
-        # Include products even with 0 stock to display them (OOS badge will show)
         products = ProductVariant.objects.filter(
             product__subcategory=subcategory,
             product__approval_status='APPROVED',
             product__is_active=True
         ).select_related('product__subcategory__category').prefetch_related('images')[:5]
         
-        # Get total product count for "Show All" button
         total_products_count = ProductVariant.objects.filter(
             product__subcategory=subcategory,
             product__approval_status='APPROVED',
@@ -141,11 +130,9 @@ def category_view(request, category_slug):
     return render(request, 'core-templates/category-view.html', context)
 
 def subcategory_products(request, category_slug, subcategory_slug):
-    """View to display all products for a specific subcategory"""
     category = get_object_or_404(Category, slug=category_slug, is_active=True)
     subcategory = get_object_or_404(SubCategory, slug=subcategory_slug, category=category, is_active=True)
     
-    # Get all approved and active products for this subcategory
     products_qs = ProductVariant.objects.filter(
         product__subcategory=subcategory,
         product__approval_status='APPROVED',
@@ -169,66 +156,75 @@ def subcategory_products(request, category_slug, subcategory_slug):
     return render(request, 'core-templates/subcategory-products.html', context)
 
 def user_register(request):
-    error_msg = ''
-    saved_data = {'username': '', 'email': '', 'phone_number': ''}
-    if request.method == 'POST':
-        # user_obj = User()
-        # user_obj.phone_number = request.POST.get('phone_number') 
-        # # user_obj.email = request.POST.get('email') 
-        # arrived_email = request.POST.get('email') 
-        # # user_obj.username = request.POST.get('username')
-        # arrived_username = request.POST.get('username')
-        # arrived_password = request.POST.get('password') 
-        # arrived_confirm_password = request.POST.get('confirm_password')
-        # allready_exist_email = authenticate(request, email = arrived_email)
-        # allready_exist_username = authenticate(request, username = arrived_username)
-        # if allready_exist_email is not None:
-        #     messages.error(request,'Email already exist')
-        #     return redirect('register')
-        # if allready_exist_username is not None:
-        #     messages.error(request,'Username already exist')
-        #     return redirect('register')
-        arrived_username = request.POST.get('username')
-        arrived_email = request.POST.get('email')
-        arrived_password = request.POST.get('password') 
-        arrived_confirm_password = request.POST.get('confirm_password')
+    """Alias for register_view to maintain compatibility"""
+    return register_view(request)
+
+def register_view(request):
+    if request.method == "POST":
+        arrived_email = request.POST.get("email")
+        arrived_username = request.POST.get("username")
+        arrived_password = request.POST.get("password")
+        arrived_confirm_password = request.POST.get("confirm_password")
         
         phone = request.POST.get('phone_number', '').strip()
         arrived_phone = phone if phone else None
         
-        # Save data for repopulating form on error
-        saved_data = {
-            'username': arrived_username,
-            'email': arrived_email,
-            'phone_number': arrived_phone
-        }
-        
+        # Basic validation
         if User.objects.filter(email=arrived_email).exists():
             messages.error(request, 'Email already exists')
-            return redirect('register')
+            return render(request, 'customer-templates/user_register.html', {'error_message': 'Email already exists'})
             
         if User.objects.filter(username=arrived_username).exists():
             messages.error(request, 'Username already exists')
-            return redirect('register')
+            return render(request, 'customer-templates/user_register.html', {'error_message': 'Username already exists'})
         
         if arrived_phone and User.objects.filter(phone_number=arrived_phone).exists():
             messages.error(request, 'This phone number is already registered.')
-            return redirect('register')
+            return render(request, 'customer-templates/user_register.html', {'error_message': 'Phone already registered'})
         
-        if arrived_password == arrived_confirm_password :
-            user_obj = User.objects.create_user(
-                username=arrived_username,
-                email=arrived_email,
-                password=arrived_password,
-            )
-            user_obj.phone_number = arrived_phone
-            user_obj.save()
-            
-            messages.success(request, 'Registration successful! Please login.')
-            return redirect('login') 
+        if arrived_password != arrived_confirm_password:
+            return render(request, 'customer-templates/user_register.html', {'error_message': 'Passwords do not match'})
+        
+        # Create inactive user
+        user = User.objects.create_user(
+            username=arrived_username,
+            email=arrived_email,
+            password=arrived_password
+        )
+        user.phone_number = arrived_phone
+        user.save()
+        
+        # Generate and send OTP
+        otp = generate_otp()
+        request.session['email_otp'] = otp
+        request.session['verify_user'] = str(user.id)
+        
+        send_otp_email(arrived_email, otp)
+        
+        messages.success(request, 'Registration successful! Please check your email for verification code.')
+        return redirect("verify_email")
+    
+    return render(request, 'customer-templates/user_register.html')
+
+def verify_email(request):
+    if request.method == "POST":
+        entered_otp = request.POST.get("otp")
+        stored_otp = request.session.get("email_otp")
+        user_id = request.session.get("verify_user")
+
+        if entered_otp == stored_otp:
+            user = User.objects.get(id=user_id)
+            user.is_verified = True
+            user.is_email_verified = True
+            user.save()
+
+            messages.success(request, "Email verified successfully")
+            return redirect("login")
+
         else:
-            error_msg = "Entered a different password."
-    return render(request, 'customer-templates/user_register.html', {'error_message': error_msg, 'saved_data': saved_data})
+            messages.error(request, "Invalid OTP")
+
+    return render(request, "core-templates/verify_email.html")
 
 def user_login(request):
     error_msg = ''
@@ -236,13 +232,14 @@ def user_login(request):
     if request.method == "POST":
         username_or_email = request.POST.get("username")
         password = request.POST.get("password")
-        saved_username = username_or_email  # Save for repopulating on error
+        saved_username = username_or_email  
         
         try:
             user_obj = User.objects.get(email=username_or_email)
             username = user_obj.username
         except User.DoesNotExist:
             username = username_or_email
+            print(username)
             
         data = authenticate(request, username=username, password=password)
         
@@ -413,11 +410,11 @@ def user_address_delete(request, address_id):
 
 @login_required
 def user_cart(request):
-    cart = get_object_or_404(Cart, user=request.user)
+    cart, created = Cart.objects.get_or_create(user=request.user)
     cart_items = CartItem.objects.filter(cart=cart).prefetch_related('variant__product', 'variant__images')
-    
-    # for item in cart_items:
-    total_amount = sum(item.quantity * item.price_at_time for item in cart_items)
+    for item in cart_items:
+        item.item_total = item.quantity * item.price_at_time
+    total_amount = sum(item.item_total for item in cart_items)
     
     return render(request, 'customer-templates/usercart.html', {
         'cart': cart_items,
@@ -549,20 +546,28 @@ def user_addto_cart(request, slug):
         product_variant = get_object_or_404(ProductVariant, slug=slug)
         
         if product_variant.stock_quantity > 0:
+            # Get quantity from POST, validate and default to 1
+            quantity = 1
+            try:
+                qty = int(request.POST.get('quantity', 1))
+                quantity = max(1, min(qty, product_variant.stock_quantity))
+            except (ValueError, TypeError):
+                quantity = 1
+            
             cart, _ = Cart.objects.get_or_create(user=request.user)
             
             cart_item, created = CartItem.objects.get_or_create(
                 cart=cart, 
                 variant=product_variant, 
-                defaults={'price_at_time': product_variant.selling_price, 'quantity': 1}
+                defaults={'price_at_time': product_variant.selling_price, 'quantity': quantity}
             )
             
             if not created:
-                cart_item.quantity += 1
+                cart_item.quantity += quantity
                 cart_item.price_at_time = product_variant.selling_price
                 cart_item.save()
             
-            messages.success(request, f"{product_variant.product.name} added to bag!")
+            messages.success(request, f"{quantity} x {product_variant.product.name} added to bag!")
         else:
             messages.error(request, "Sorry, this item is out of stock.")
             
@@ -572,23 +577,49 @@ def user_addto_cart(request, slug):
 
 @login_required
 def cart_update_quantity(request, item_id, action):
+    """Update cart item quantity via AJAX"""
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
+    
+    previous_quantity = cart_item.quantity
     
     if action == 'increase':
         cart_item.quantity += 1
-        cart_item.save()
     elif action == 'decrease':
         if cart_item.quantity > 1:
             cart_item.quantity -= 1
-            cart_item.save()
         else:
+            cart = cart_item.cart
             cart_item.delete()
-            messages.info(request, "Item removed from cart.")
-            
+            cart_items = CartItem.objects.filter(cart=cart)
+            total_amount = sum(item.quantity * item.price_at_time for item in cart_items)
+            return JsonResponse({
+                'status': 'success',
+                'item_deleted': True,
+                'new_quantity': 0,
+                'total_amount': float(total_amount),
+                'item_total': 0
+            })
+    
+    cart_item.save()
+    
+    # Calculate totals
+    cart_items = CartItem.objects.filter(cart=cart_item.cart)
+    total_amount = sum(item.quantity * item.price_at_time for item in cart_items)
+    item_total = cart_item.quantity * cart_item.price_at_time
+    
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'status': 'success',
+            'new_quantity': cart_item.quantity,
+            'total_amount': float(total_amount),
+            'item_total': f"${item_total:.2f}"
+        })
+    
     return redirect('cart')
 
 @login_required
 def cart_remove_item(request, item_id):
+    """Remove item via form POST"""
     cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     cart_item.delete()
     messages.info(request, "Item removed from cart.")
@@ -600,14 +631,12 @@ def user_wishlist(request):
 
     all_wishlists = Wishlist.objects.filter(user=request.user).order_by('-created_at')
 
-    #Determine which wishlist to VIEW (GET param)
     active_id = request.GET.get('id')
     if active_id:
         viewing_wishlist = get_object_or_404(Wishlist, id=active_id, user=request.user)
     else:
         viewing_wishlist = default_wishlist
 
-    # Fetch items for the list we are looking at
     items = WishlistItem.objects.filter(wishlist=viewing_wishlist).prefetch_related(
         'variant__product__subcategory', 
         'variant__images'
@@ -615,7 +644,7 @@ def user_wishlist(request):
 
     return render(request, 'customer-templates/userwishlist.html', {
         'all_wishlists': all_wishlists,
-        'active_wishlist': viewing_wishlist, # The one being viewed
+        'active_wishlist': viewing_wishlist, 
         'items': items,
         'item_count': items.count(),
         'default_wishlist': default_wishlist,
@@ -718,12 +747,129 @@ def toggle_wishlist_item(request, variant_slug):
 
 @login_required
 def user_checkout(request):
-    addresses = Address.objects.filter(user = request.user)
-    return render(request, 'customer-templates/usercheckout.html',{'address':addresses})
+    cart = Cart.objects.filter(user=request.user).first()
+    
+    # Handle single product buy now via GET param (fallback for direct access)
+    single_slug = request.GET.get('single')
+    if single_slug and not cart.items.exists():
+        from core.views import single_product_checkout
+        return single_product_checkout(request, single_slug)
+    
+    if not cart or not cart.items.exists():
+        messages.warning(request, 'Your cart is empty.')
+        return redirect('cart')
+    
+    cart_items = cart.items.select_related('variant__product').prefetch_related('variant__images')
+    for item in cart_items:
+        item.item_total = item.quantity * item.price_at_time
+    total_amount = sum(item.item_total for item in cart_items)
+    
+    addresses = Address.objects.filter(user=request.user)
+    if not addresses.exists():
+        messages.info(request, 'Please add a shipping address first.')
+    
+    # Detect single checkout
+    is_single_checkout = request.session.get('single_checkout', False)
+    if is_single_checkout:
+        # Clear the flag after use
+        del request.session['single_checkout']
+        request.session.modified = True
+    
+    return render(request, 'customer-templates/usercheckout.html', {
+        'addresses': addresses,
+        'cart_data': cart_items,
+        'total_amount': total_amount,
+        'cart': cart,
+        'is_single_checkout': is_single_checkout
+    })
+
+@login_required
+def user_checkout_process(request):
+    if request.method != 'POST':
+        return redirect('checkout')
+    
+    cart = Cart.objects.filter(user=request.user).first()
+    if not cart or not cart.items.exists():
+        messages.error(request, 'Cannot process empty cart.')
+        return redirect('cart')
+    
+    try:
+        selected_address_id = request.POST.get('selected_address')
+        payment_method = request.POST.get('payment_method')
+        
+        # Fix payment status mapping
+        display_payment = payment_method.upper() if payment_method == 'online' else 'COD'
+        
+        if not selected_address_id or payment_method not in ['online', 'cod']:
+            messages.error(request, 'Please select address and payment method.')
+            return redirect('checkout')
+        
+        address = get_object_or_404(Address, id=selected_address_id, user=request.user)
+        
+        # Calculate final total
+        cart_items = cart.items.select_related('variant__product')
+        total_amount = sum(item.quantity * Decimal(str(item.price_at_time)) for item in cart_items)
+        
+        # Generate unique order number
+        import uuid
+        order_number = f"CS-{uuid.uuid4().hex.upper()[:8]}"
+        
+        # Create Order
+        order = Order.objects.create(
+            user=request.user,
+            order_number=order_number,
+            total_amount=total_amount,
+            payment_status=display_payment,
+            order_status='placed'
+        )
+        order.shipping_address = address
+        order.save()
+        
+        # Create OrderItems + update stock
+        for cart_item in cart_items:
+            variant = cart_item.variant
+            if variant.stock_quantity >= cart_item.quantity:
+                OrderItem.objects.create(
+                    order=order,
+                    variant=variant,
+                    seller=variant.product.seller,
+                    quantity=cart_item.quantity,
+                    price_at_purchase=cart_item.price_at_time
+                )
+                # Update stock
+                variant.stock_quantity -= cart_item.quantity
+                variant.save()
+            else:
+                messages.warning(request, f'Insufficient stock for {variant.sku_code}. Item skipped.')
+        
+        # Clear cart
+        cart.items.all().delete()
+        
+        messages.success(request, f'Order #{order_number} placed successfully!')
+        return redirect('order_success', order_id=order.id)
+        
+    except Exception as e:
+        messages.error(request, 'Order processing failed. Please try again.')
+        return redirect('checkout')
+
+@login_required
+def order_success(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+    order_items = order.items.select_related('variant__product').prefetch_related('variant__images')
+    return render(request, 'customer-templates/order-success.html', {
+        'order': order,
+        'order_items': order_items
+    })
 
 @login_required
 def user_orders(request):
-    return render(request, 'customer-templates/userorders.html')
+    orders = Order.objects.filter(
+        user=request.user
+    ).prefetch_related(
+        'items__variant__product',
+        'items__variant__images'
+    ).order_by('-ordered_at')
+    return render(request, 'customer-templates/userorders.html', {'orders': orders})
 
 @login_required
 def user_track(request, order_id):

@@ -36,7 +36,7 @@
             <i class="fa-solid fa-box-open"></i> Products
           </a>
 
-          <a href="/cart/" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#00796B] transition flex items-center gap-2">
+          <a href="{% url 'cart' %}" class="text-xs font-bold uppercase tracking-widest text-gray-500 hover:text-[#00796B] transition flex items-center gap-2">
             <i class="fa-solid fa-shopping-cart"></i> Cart
           </a>
 
@@ -87,7 +87,7 @@
                   <a href="{% url 'profile' %}" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
                     <i class="fa-solid fa-user-circle w-4 text-[#00796B] group-hover/item:text-white"></i> My Profile
                   </a>
-                  <a href="/cart" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
+                  <a href="{% url 'cart' %}" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">
                     <i class="fa-solid fa-shopping-cart w-4 text-[#00796B] group-hover/item:text-white"></i> My Cart
                   </a>
                   <a href="/wishlist" class="flex items-center gap-3 text-[10px] font-black uppercase p-2.5 text-[#3E2723] hover:bg-[#00796B] hover:text-white rounded-xl transition-all group/item">

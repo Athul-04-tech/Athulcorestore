@@ -9,136 +9,147 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
-        
-        /* Timeline styling */
+        .glass { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        .timeline-step { position: relative; }
+        .timeline-step:not(:last-child)::after { content: ''; position: absolute; left: 50%; top: 100%; width: 2px; height: 40px; background: linear-gradient(to bottom, #00796B, transparent); transform: translateX(-50%); }
+        .step-complete { color: #10B981; }
         .step-active { color: #00796B; }
-        .step-line { width: 2px; background: rgba(62, 39, 35, 0.1); flex-grow: 1; margin-left: 15px; }
-        .step-line-active { background: #00796B; }
-        .dot { width: 32px; height: 32px; border-radius: 10px; display: flex; items-center; justify-content: center; font-size: 12px; border: 2px solid rgba(62, 39, 35, 0.1); background: white; z-index: 10; }
-        .dot-active { border-color: #00796B; background: #00796B; color: white; box-shadow: 0 0 15px rgba(0, 121, 107, 0.3); }
+        .step-pending { color: #6B7280; }
     </style>
 </head>
-<body class="bg-[#FAF9F6] pb-20">
-
-    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
-        <div class="text-xl font-extrabold tracking-tighter uppercase">
-            Core<span class="text-[#00796B]">Store</span>
+<body class="min-h-screen">
+    <nav class="glass sticky top-0 z-50 px-6 py-4 shadow-lg">
+        <div class="container mx-auto flex items-center justify-between">
+            <a href="{% url 'orders' %}" class="text-xl font-black flex items-center gap-2">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>CORE<span class="text-[#00796B]">STORE</span></span>
+            </a>
+            <div class="text-lg font-bold text-[#00796B]">Track #{{ order_id }}</div>
         </div>
-        <a href="userorders.html" class="text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 transition">My Orders</a>
     </nav>
 
-    <main class="container mx-auto px-4 max-w-5xl">
-        
-        <header class="mb-10 text-center md:text-left">
-            <div class="inline-block bg-[#00796B]/10 text-[#00796B] px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-4">
-                In Transit
+    <main class="container mx-auto px-4 py-16 max-w-2xl">
+        <!-- Order Header -->
+        <div class="glass rounded-3xl p-8 mb-12 text-center shadow-2xl">
+            <h1 class="text-4xl font-black uppercase tracking-tighter text-[#3E2723] mb-4">Track Your Order</h1>
+            <div class="bg-gradient-to-r from-gray-100 to-gray-200 px-6 py-3 rounded-full inline-block mb-6">
+                <span class="text-xl font-black text-[#00796B]">#{{ order_id }}</span>
             </div>
-            <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter">Order <span class="text-[#00796B]">#CS-9921</span></h1>
-            <p class="text-[#3E2723]/40 text-[10px] font-black uppercase tracking-widest mt-2">Estimated Arrival: <span class="text-[#3E2723]">Feb 18, 2026</span></p>
-        </header>
+            <p class="text-lg text-[#3E2723]/70">Stay updated on your shipment status</p>
+        </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <div class="lg:col-span-5 space-y-2">
-                <div class="glass p-8 rounded-[2.5rem]">
-                    <h3 class="text-xs font-black uppercase tracking-widest mb-10 border-b border-[#3E2723]/5 pb-4">Journey Log</h3>
-                    
-                    <div class="space-y-0">
-                        <div class="flex gap-6 h-20">
-                            <div class="flex flex-col items-center">
-                                <div class="dot dot-active"><i class="fa-solid fa-check"></i></div>
-                                <div class="step-line step-line-active"></div>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-black uppercase">Order Placed</p>
-                                <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase">Feb 15 • 10:30 AM</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-6 h-20">
-                            <div class="flex flex-col items-center">
-                                <div class="dot dot-active"><i class="fa-solid fa-box-open"></i></div>
-                                <div class="step-line step-line-active"></div>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-black uppercase">Packed & Ready</p>
-                                <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase">Feb 15 • 04:45 PM</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-6 h-20">
-                            <div class="flex flex-col items-center">
-                                <div class="dot dot-active"><i class="fa-solid fa-truck-fast"></i></div>
-                                <div class="step-line"></div>
-                            </div>
-                            <div class="step-active">
-                                <p class="text-[11px] font-black uppercase tracking-tight">On the Way</p>
-                                <p class="text-[9px] font-bold opacity-60 uppercase italic">Arrived at Carrier Facility</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-6">
-                            <div class="flex flex-col items-center">
-                                <div class="dot"><i class="fa-solid fa-house-chimney text-[10px] opacity-20"></i></div>
-                            </div>
-                            <div class="opacity-30">
-                                <p class="text-[11px] font-black uppercase">Delivered</p>
-                                <p class="text-[9px] font-bold uppercase">Estimated Feb 18</p>
-                            </div>
-                        </div>
+        <!-- Timeline -->
+        <div class="space-y-12">
+            <!-- Order Placed -->
+            <div class="timeline-step flex items-center gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 glass rounded-2xl flex items-center justify-center shadow-lg mb-2">
+                        <i class="fa-solid fa-file-invoice text-2xl text-green-500"></i>
                     </div>
+                    <div class="w-4 h-4 bg-green-500 rounded-full"></div>
                 </div>
-
-                <button class="w-full glass py-5 rounded-[1.5rem] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#3E2723] hover:text-white transition flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-headset"></i> Need Help?
-                </button>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-black text-green-500 mb-2">Order Placed</h3>
+                    <p class="text-lg text-[#3E2723]/70">Your order has been received and is being processed</p>
+                </div>
             </div>
 
-            <div class="lg:col-span-7 space-y-6">
-                <div class="glass h-72 rounded-[3rem] overflow-hidden relative border-4 border-white shadow-xl shadow-[#3E2723]/5">
-                    <div class="absolute inset-0 bg-[#EFEBE9] flex items-center justify-center">
-                        <i class="fa-solid fa-map-location-dot text-6xl text-[#3E2723]/10"></i>
-                        <div class="absolute top-1/2 left-1/3 bg-[#00796B] p-2 rounded-lg text-white shadow-lg animate-bounce">
-                            <i class="fa-solid fa-truck"></i>
-                        </div>
+            <!-- Payment Confirmed -->
+            <div class="timeline-step flex items-center gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 glass rounded-2xl flex items-center justify-center shadow-lg mb-2 bg-green-50">
+                        <i class="fa-solid fa-credit-card text-2xl text-green-500"></i>
                     </div>
-                    <div class="absolute bottom-6 left-6 right-6 glass p-4 rounded-2xl flex items-center justify-between">
-                        <div>
-                            <p class="text-[8px] font-black text-[#3E2723]/40 uppercase">Current Location</p>
-                            <p class="text-[10px] font-black uppercase">Distribution Hub • San Francisco, CA</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[8px] font-black text-[#3E2723]/40 uppercase">Carrier</p>
-                            <p class="text-[10px] font-black uppercase text-[#00796B]">StudioExpress</p>
-                        </div>
+                    <div class="w-4 h-4 bg-green-500 rounded-full"></div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-black text-green-500 mb-2">Payment Confirmed</h3>
+                    <p class="text-lg text-[#3E2723]/70">Payment successfully processed ✓</p>
+                </div>
+            </div>
+
+            <!-- Preparing -->
+            <div class="timeline-step flex items-center gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 glass rounded-2xl flex items-center justify-center shadow-lg mb-2 bg-yellow-50 border-2 border-yellow-200">
+                        <i class="fa-solid fa-boxes-stacked text-2xl text-yellow-600"></i>
+                    </div>
+                    <div class="w-4 h-4 bg-yellow-500 rounded-full"></div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-black text-yellow-600 mb-2">Preparing Your Order</h3>
+                    <p class="text-lg text-[#3E2723]/70">Items being packed by warehouse team</p>
+                </div>
+            </div>
+
+            <!-- Shipped -->
+            <div class="timeline-step flex items-center gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 glass rounded-2xl flex items-center justify-center shadow-lg mb-2 border-2 border-blue-200 bg-blue-50">
+                        <i class="fa-solid fa-truck text-2xl text-blue-600"></i>
+                    </div>
+                    <div class="w-4 h-4 bg-blue-500 rounded-full"></div>
+                </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-black text-blue-600 mb-2">Shipped</h3>
+                    <p class="text-lg text-[#3E2723]/70">Out for delivery with our partner</p>
+                </div>
+            </div>
+
+            <!-- Delivered -->
+            <div class="timeline-step flex items-center gap-8">
+                <div class="flex flex-col items-center">
+                    <div class="w-16 h-16 glass rounded-2xl flex items-center justify-center shadow-lg mb-2">
+                        <i class="fa-solid fa-home text-2xl text-gray-500"></i>
                     </div>
                 </div>
+                <div class="flex-1">
+                    <h3 class="text-2xl font-black text-gray-500 mb-2">Delivered</h3>
+                    <p class="text-lg text-[#3E2723]/70">Arriving at your doorstep soon</p>
+                </div>
+            </div>
+        </div>
 
-                <div class="glass p-8 rounded-[2.5rem]">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-6 opacity-30">Package Contents</h3>
-                    <div class="flex items-center gap-6">
-                        <div class="w-20 h-20 bg-white rounded-2xl overflow-hidden border border-[#3E2723]/5">
-                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-[12px] font-black uppercase tracking-tighter">Vortex Racer X1</p>
-                            <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase mt-1">Size: 42 • Color: Neon Teal</p>
-                            <p class="text-[11px] font-black text-[#00796B] mt-2">$149.00</p>
-                        </div>
-                        <div class="text-center bg-[#FAF9F6] px-4 py-2 rounded-xl">
-                            <p class="text-[8px] font-black uppercase text-[#3E2723]/40">Qty</p>
-                            <p class="text-sm font-black text-[#3E2723]">01</p>
-                        </div>
-                    </div>
+        <!-- Tracking Info -->
+        <div class="glass rounded-2xl p-8 mt-20 text-center">
+            <h3 class="text-2xl font-black uppercase text-[#3E2723] mb-6">Need Help?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 hover:shadow-xl transition-all rounded-xl border border-[#3E2723]/10">
+                    <i class="fa-solid fa-headset text-3xl text-[#00796B] mb-4 block"></i>
+                    <h4 class="font-black text-lg mb-2">Customer Support</h4>
+                    <p class="text-[#3E2723]/70 mb-4">24/7 assistance</p>
+                    <a href="mailto:support@corestore.com" class="text-[#00796B] font-bold hover:underline">support@corestore.com</a>
+                </div>
+                <div class="p-6 hover:shadow-xl transition-all rounded-xl border border-[#3E2723]/10">
+                    <i class="fa-solid fa-phone text-3xl text-[#00796B] mb-4 block"></i>
+                    <h4 class="font-black text-lg mb-2">Call Us</h4>
+                    <p class="text-[#3E2723]/70 mb-4">Mon-Sun 9AM-9PM</p>
+                    <a href="tel:+18001234567" class="text-[#00796B] font-bold hover:underline">+1 800-123-4567</a>
+                </div>
+                <div class="p-6 hover:shadow-xl transition-all rounded-xl border border-[#3E2723]/10">
+                    <i class="fa-solid fa-clock text-3xl text-[#00796B] mb-4 block"></i>
+                    <h4 class="font-black text-lg mb-2">Delivery ETA</h4>
+                    <p class="text-[#3E2723]/70 mb-4">3-5 Business Days</p>
+                    <span class="bg-gradient-to-r from-[#00796B] to-[#10B981] text-white px-4 py-2 rounded-full font-black text-sm tracking-wide">Standard Shipping</span>
                 </div>
             </div>
         </div>
     </main>
 
-    <footer class="mt-20 text-center opacity-20">
-        <p class="text-[9px] font-black uppercase tracking-[0.4em]">Core Store Logistics • Sustainable Shipping</p>
-    </footer>
-
+    <script>
+        // Dynamic timeline updates (mock)
+        const timelineSteps = document.querySelectorAll('.timeline-step');
+        const currentStep = Math.floor(Math.random() * timelineSteps.length);
+        timelineSteps.forEach((step, index) => {
+            if (index < currentStep) {
+                step.classList.add('step-complete');
+            } else if (index === currentStep) {
+                step.classList.add('step-active');
+            } else {
+                step.classList.add('step-pending');
+            }
+        });
+    </script>
 </body>
 </html>
+

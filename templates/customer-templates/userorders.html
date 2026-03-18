@@ -25,9 +25,11 @@
             box-shadow: 0 20px 40px rgba(62, 39, 35, 0.08);
         }
 
-        .status-transit { border: 1px solid #00796B; }
-        .status-delivered { border: 1px solid #6D4C41; }
-        .status-processing { border: 1px solid #8D6E63; }
+        .status-transit { border: 1px solid #00796B; background: #00796B/5; color: #00796B; }
+        .status-delivered { border: 1px solid #6D4C41; background: #6D4C41/5; color: #6D4C41; }
+        .status-processing { border: 1px solid #8D6E63; background: #8D6E63/5; color: #8D6E63; }
+        .status-placed { border: 1px solid #FF9800; background: #FF9800/5; color: #FF9800; }
+        .status-cancelled { border: 1px solid #F44336; background: #F44336/5; color: #F44336; }
 
         /* Custom Pulse for Processing */
         .pulse-processing { animation: pulse 2s infinite; }
@@ -39,21 +41,7 @@
     </style>
 </head>
 <body class="min-h-screen pb-20 overflow-x-hidden">
-
-    <nav class="bg-[#F5F5DC]/80 backdrop-blur-md border-b border-[#3E2723]/10 sticky top-0 z-50 animate__animated animate__fadeInDown">
-        <div class="container mx-auto px-4 md:px-6 py-3 flex justify-between items-center">
-            <div class="text-xl font-extrabold tracking-tighter flex items-center gap-2 cursor-pointer group" onclick="window.history.back()">
-                <div class="bg-[#00796B] p-1.5 rounded-lg text-white group-hover:rotate-12 transition-transform">
-                    <i class="fa-solid fa-bolt-lightning text-xs"></i>
-                </div>
-                <span class="text-[#3E2723]">CORE<span class="text-[#00796B]">STORE</span></span>
-            </div>
-            <div class="flex items-center gap-4">
-                <span class="text-[9px] font-black uppercase tracking-widest opacity-40 hidden md:block">Account Dashboard</span>
-                <img src="https://ui-avatars.com/api/?name=John+Doe&background=3E2723&color=fff" class="w-8 h-8 rounded-full border-2 border-[#00796B]/20">
-            </div>
-        </div>
-    </nav>
+    {% include 'core-templates/navbar.html' %}
 
     <div class="container mx-auto px-4 md:px-6 mt-10 md:mt-16 max-w-4xl">
         <div class="mb-10 md:mb-14 animate__animated animate__fadeInLeft">
@@ -61,130 +49,102 @@
                 Order <span class="text-[#00796B]">History.</span>
             </h1>
             <div class="flex items-center gap-4 mt-4">
-                <p class="text-[10px] md:text-xs text-[#3E2723]/60 font-black uppercase tracking-[0.2em]">3 active shipments</p>
+                <p class="text-[10px] md:text-xs text-[#3E2723]/60 font-black uppercase tracking-[0.2em]">{{ orders|length }} order{{ orders|length|pluralize }}</p>
                 <div class="h-[1px] w-20 bg-[#3E2723]/10"></div>
             </div>
         </div>
 
-        <div class="space-y-6">
-            
-            <div class="order-card glass rounded-[2rem] overflow-hidden animate__animated animate__fadeInUp" style="animation-delay: 0.1s;">
-                <div class="p-5 md:p-8 flex flex-row items-center gap-5 md:gap-10">
-                    <div class="relative w-24 h-24 md:w-32 md:h-32 bg-[#EFEBE9] rounded-[1.5rem] overflow-hidden shrink-0 shadow-inner">
-                        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400" class="w-full h-full object-cover">
-                    </div>
+        {% if orders %}
+            <div class="space-y-6">
+                {% for order in orders %}
+                <div class="order-card glass rounded-[2rem] overflow-hidden animate__animated animate__fadeInUp">
+</xai:function_call > 
 
-                    <div class="flex-1 min-w-0">
-                        <div class="mb-2">
-                            <span class="status-transit inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-[#00796B] bg-[#00796B]/5 mb-3">
-                                <i class="fa-solid fa-truck-fast mr-1.5"></i> In Transit
-                            </span>
-                            <h3 class="text-lg md:text-2xl font-black uppercase italic tracking-tighter text-[#3E2723] truncate leading-none">Vortex Racer X1</h3>
+<xai:function_call name="edit_file">
+<parameter name="path">main project 1/TODO.md
+                    {% with first_item=order.items.first %}
+                    <div class="p-5 md:p-8 flex flex-row items-center gap-5 md:gap-10">
+                        <div class="relative w-24 h-24 md:w-32 md:h-32 bg-[#EFEBE9] rounded-[1.5rem] overflow-hidden shrink-0 shadow-inner">
+                            {% if first_item.variant.images.first %}
+                                <img src="{{ first_item.variant.images.first.image.url }}" alt="{{ first_item.variant.product.name }}" class="w-full h-full object-cover">
+                            {% else %}
+                                <div class="w-full h-full bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
+                                    <i class="fa-solid fa-image text-2xl text-gray-400"></i>
+                                </div>
+                            {% endif %}
                         </div>
-                        <div class="flex items-center gap-3 text-[#3E2723]/40 text-[10px] font-bold uppercase tracking-widest">
-                            <span>ID: #CS-8812</span>
-                            <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
-                            <span>Qty: 01</span>
-                        </div>
-                        <p class="text-xl md:text-2xl font-black text-[#3E2723] mt-3">$189.00</p>
-                    </div>
 
-                    <div class="hidden md:flex flex-col gap-3 shrink-0">
-                        <a href="{% url 'track_order' %}" target="_blank" class="bg-[#3E2723] text-white px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#00796B] transition-all shadow-lg shadow-[#3E2723]/10 text-center">
-                            Track Order
-                        </a>
-                        <button class="border border-[#3E2723]/10 text-[#3E2723] px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all">
-                            Return
-                        </button>
-                        <a href="orderdetails.html" class="text-center text-[#3E2723]/30 hover:text-[#3E2723] text-[9px] font-black uppercase tracking-widest transition-colors">
-                            View Invoice
-                        </a>
+                        <div class="flex-1 min-w-0">
+                            <div class="mb-2">
+                                {% if order.order_status == 'shipped' %}
+                                    <span class="status-transit inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                                        <i class="fa-solid fa-truck-fast mr-1.5"></i> In Transit
+                                    </span>
+                                {% elif order.order_status == 'delivered' %}
+                                    <span class="status-delivered inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                                        <i class="fa-solid fa-circle-check mr-1.5"></i> Delivered
+                                    </span>
+                                {% elif order.order_status == 'processing' %}
+                                    <span class="status-processing pulse-processing inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                                        <i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Preparing
+                                    </span>
+                                {% elif order.order_status == 'placed' %}
+                                    <span class="status-placed inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                                        <i class="fa-solid fa-clock mr-1.5"></i> Order Placed
+                                    </span>
+                                {% else %}
+                                    <span class="status-cancelled inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest">
+                                        <i class="fa-solid fa-xmark mr-1.5"></i> {{ order.order_status|title }}
+                                    </span>
+                                {% endif %}
+                                <h3 class="text-lg md:text-2xl font-black uppercase italic tracking-tighter text-[#3E2723] truncate leading-none mt-2">
+                                    {{ first_item.variant.product.name|truncatewords:4 }}
+                                </h3>
+                            </div>
+                            <div class="flex items-center gap-3 text-[#3E2723]/40 text-[10px] font-bold uppercase tracking-widest">
+                                <span>ID: #{{ order.order_number }}</span>
+                                <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
+                                <span>Qty: {{ first_item.quantity }}{% if order.items.count > 1 %} +{{ order.items.count|add:-1 }} more{% endif %}</span>
+                                <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
+                                <span>{{ order.ordered_at|date:"M d, Y" }}</span>
+                            </div>
+                            <p class="text-xl md:text-2xl font-black text-[#3E2723] mt-3">{{ order.total_amount|floatformat:2 }}</p>
+                        </div>
+
+                        <div class="hidden md:flex flex-col gap-3 shrink-0">
+                            <a href="{% url 'track_order' order.id %}" target="_blank" class="bg-[#3E2723] text-white px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#00796B] transition-all shadow-lg shadow-[#3E2723]/10 text-center whitespace-nowrap">
+                                Track Order
+                            </a>
+                            <button class="border border-[#3E2723]/10 text-[#3E2723] px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all whitespace-nowrap">
+                                {% if order.order_status == 'delivered' %}Write Review{% else %}Return{% endif %}
+                            </button>
+                            <a href="#" class="text-center text-[#3E2723]/30 hover:text-[#3E2723] text-[9px] font-black uppercase tracking-widest transition-colors">
+                                View Invoice
+                            </a>
+                        </div>
                     </div>
+                    <div class="md:hidden flex border-t border-[#3E2723]/5">
+                        <a href="{% url 'track_order' order.id %}" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-white bg-[#3E2723] text-center">Track Package</a>
+                        <a href="#" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/60 text-center">Details</a>
+                    </div>
+                    {% endwith %}
                 </div>
-                <div class="md:hidden flex border-t border-[#3E2723]/5">
-                    <a href="#" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-white bg-[#3E2723] text-center">Track Package</a>
-                    <a href="orderdetails.html" class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/60 text-center">Details</a>
-                </div>
+                {% endfor %}
             </div>
-
-            <div class="order-card glass rounded-[2rem] overflow-hidden animate__animated animate__fadeInUp" style="animation-delay: 0.2s;">
-                <div class="p-5 md:p-8 flex flex-row items-center gap-5 md:gap-10">
-                    <div class="relative w-24 h-24 md:w-32 md:h-32 bg-[#EFEBE9] rounded-[1.5rem] overflow-hidden shrink-0 grayscale-[0.5]">
-                        <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400" class="w-full h-full object-cover">
-                    </div>
-
-                    <div class="flex-1 min-w-0">
-                        <div class="mb-2">
-                            <span class="status-delivered inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-[#6D4C41] bg-[#6D4C41]/5 mb-3">
-                                <i class="fa-solid fa-circle-check mr-1.5"></i> Delivered
-                            </span>
-                            <h3 class="text-lg md:text-2xl font-black uppercase italic tracking-tighter text-[#3E2723] truncate leading-none">Onyx Stealth</h3>
-                        </div>
-                        <div class="flex items-center gap-3 text-[#3E2723]/40 text-[10px] font-bold uppercase tracking-widest">
-                            <span>ID: #CS-7756</span>
-                            <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
-                            <span>Qty: 01</span>
-                        </div>
-                        <p class="text-xl md:text-2xl font-black text-[#3E2723] mt-3">$450.00</p>
-                    </div>
-
-                    <div class="hidden md:flex flex-col gap-3 shrink-0">
-                        <button class="bg-[#3E2723] text-white px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-[#00796B] transition-all">
-                            Buy Again
-                        </button>
-                        <button class="border border-[#3E2723]/10 text-[#3E2723] px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-white transition-all">
-                            Write Review
-                        </button>
-                    </div>
-                </div>
-                <div class="md:hidden flex border-t border-[#3E2723]/5">
-                    <button class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-[#3E2723] bg-[#3E2723]/5">Buy Again</button>
-                    <button class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-[#3E2723]/60">Review</button>
-                </div>
+        {% else %}
+            <div class="text-center py-32 glass rounded-[2.5rem] animate__animated animate__fadeIn">
+                <i class="fa-solid fa-boxes-stacked text-6xl text-[#3E2723]/20 mb-8"></i>
+                <h3 class="text-2xl font-black uppercase tracking-wider text-[#3E2723]/60 mb-4">No Orders Yet</h3>
+                <p class="text-[#3E2723]/40 mb-8 max-w-md mx-auto">Your order history is empty. Start shopping to track your purchases!</p>
+                <a href="{% url 'products' %}" class="bg-[#00796B] text-white px-8 py-4 rounded-2xl font-black text-lg uppercase tracking-widest hover:bg-[#00695C] transition-all shadow-xl">
+                    Continue Shopping
+                </a>
             </div>
-
-            <div class="order-card glass rounded-[2rem] overflow-hidden animate__animated animate__fadeInUp" style="animation-delay: 0.3s;">
-                <div class="p-5 md:p-8 flex flex-row items-center gap-5 md:gap-10">
-                    <div class="relative w-24 h-24 md:w-32 md:h-32 bg-[#EFEBE9] rounded-[1.5rem] overflow-hidden shrink-0">
-                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400" class="w-full h-full object-cover">
-                    </div>
-
-                    <div class="flex-1 min-w-0">
-                        <div class="mb-2">
-                            <span class="status-processing pulse-processing inline-flex items-center px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-widest text-[#8D6E63] bg-[#8D6E63]/5 mb-3">
-                                <i class="fa-solid fa-spinner fa-spin mr-1.5"></i> Preparing
-                            </span>
-                            <h3 class="text-lg md:text-2xl font-black uppercase italic tracking-tighter text-[#3E2723] truncate leading-none">Studio Pro Beats</h3>
-                        </div>
-                        <div class="flex items-center gap-3 text-[#3E2723]/40 text-[10px] font-bold uppercase tracking-widest">
-                            <span>ID: #CS-9001</span>
-                            <span class="w-1 h-1 rounded-full bg-[#3E2723]/20"></span>
-                            <span>Qty: 02</span>
-                        </div>
-                        <p class="text-xl md:text-2xl font-black text-[#3E2723] mt-3">$598.00</p>
-                    </div>
-
-                    <div class="hidden md:flex flex-col gap-3 shrink-0">
-                        <button class="bg-red-50 text-red-600 px-7 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-red-600 hover:text-white transition-all">
-                            Cancel
-                        </button>
-                        <a href="orderdetails.html" class="text-center text-[#3E2723]/30 hover:text-[#3E2723] text-[9px] font-black uppercase tracking-widest transition-colors">
-                            Help Center
-                        </a>
-                    </div>
-                </div>
-                <div class="md:hidden flex border-t border-[#3E2723]/5">
-                    <button class="flex-1 py-4 text-[10px] font-black uppercase tracking-widest text-red-600 bg-red-50">Cancel Order</button>
-                </div>
-            </div>
-
-        </div>
+        {% endif %}
 
         <div class="mt-16 p-8 glass rounded-[2.5rem] text-center opacity-60">
             <h4 class="text-[10px] font-black uppercase tracking-[0.4em] mb-6">Our Logistics Flow</h4>
-            
         </div>
     </div>
-
 </body>
 </html>

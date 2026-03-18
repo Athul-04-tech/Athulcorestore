@@ -53,6 +53,7 @@ class Order(models.Model):
     payment_status = models.CharField(max_length=20, default='PENDING')
     order_status = models.CharField(max_length=50,default="placed")
     ordered_at = models.DateTimeField(auto_now_add=True)
+    shipping_address = models.ForeignKey("core.Address", on_delete=models.SET_NULL, null=True, blank=True, related_name="orders")
     
     def __str__(self):
         return self.order_number
