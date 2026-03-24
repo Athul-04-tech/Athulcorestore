@@ -10,259 +10,256 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
         :root {
-            --brand-brown: #3E2723;
-            --brand-emerald: #10b981;
+            --brand-primary: #4F7D88;
+            --brand-primary-light: #f0f5f6;
+            --brand-dark: #2C3E50;
+            --surface: #FFFFFF;
+            /* Reduced border radius for professional look */
+            --radius-sm: 10px;
+            --radius-md: 4px;
+            --radius-lg: 8px;
         }
 
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #FAF9F6; 
-            color: var(--brand-brown);
+            background-color: #fcfcfc; 
+            color: var(--brand-dark);
             overflow-x: hidden;
         }
 
-        .sidebar-item.active {
-            background: rgba(255, 255, 255, 0.1);
-            border-left: 3px solid var(--brand-emerald);
+        /* Professional Sidebar */
+        .sidebar-bg { 
+            background-color: var(--surface); 
+            border-right: 1px solid #eef2f3;
+        }
+        
+        .nav-item {
+            color: #64748b;
+            transition: all 0.2s ease;
+            border-radius: var(--radius-sm);
+            margin: 0.15rem 1rem;
         }
 
+        .nav-item:hover {
+            color: var(--brand-primary);
+            background: var(--brand-primary-light);
+        }
+
+        .nav-item.active {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            box-shadow: 0 4px 6px -1px rgba(79, 125, 136, 0.2);
+        }
+
+        /* Clean E-commerce Cards */
         .dashboard-card {
-            background: white;
-            border: 1px solid rgba(62, 39, 35, 0.08);
+            background: var(--surface);
+            border: 1px solid #eef2f3;
+            border-radius: var(--radius-sm);
             transition: all 0.3s ease;
         }
 
         .dashboard-card:hover {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02);
-            border-color: rgba(16, 185, 129, 0.2);
-        }
-
-        .orb {
-            position: fixed; width: 40vw; height: 40vw; border-radius: 50%;
-            background: radial-gradient(circle, rgba(16, 185, 129, 0.07) 0%, transparent 70%);
-            z-index: -1; top: -10%; right: -10%; filter: blur(80px);
-            animation: pulse-orb 10s infinite alternate;
-        }
-
-        @keyframes pulse-orb {
-            from { transform: scale(1); opacity: 0.5; }
-            to { transform: scale(1.2); opacity: 0.8; }
+            border-color: var(--brand-primary);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
         }
 
         .custom-scroll::-webkit-scrollbar { width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(62, 39, 35, 0.1); border-radius: 10px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .chart-bar {
+            transition: height 1s ease-in-out;
+            border-radius: 1px 1px 0 0;
+        }
+
+        .btn-primary {
+            background-color: var(--brand-primary);
+            border-radius: var(--radius-sm);
+            transition: opacity 0.2s;
+        }
+        
+        .btn-primary:hover {
+            opacity: 0.9;
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
-    <div class="orb"></div>
 
-    <aside class="w-full md:w-24 lg:w-72 bg-[#3E2723] flex md:flex-col sticky top-0 z-50 h-auto md:h-screen text-white border-r border-white/5 shadow-2xl">
-        <div class="p-8 flex items-center justify-center lg:justify-start gap-3">
-            <div class="bg-emerald-500 w-10 h-10 flex items-center justify-center rounded-xl shadow-lg shadow-emerald-900/20">
-                <i class="fa-solid fa-bolt text-lg"></i>
+    <aside class="w-full md:w-24 lg:w-64 sidebar-bg flex md:flex-col sticky top-0 z-50 h-auto md:h-screen">
+        <div class="p-6 flex items-center gap-3">
+            <div class="bg-[#4F7D88] p-2 rounded-sm text-white">
+                <i class="fa-solid fa-bolt-lightning text-lg"></i>
             </div>
-            <span class="font-bold tracking-tight text-xl hidden lg:block italic">Studio<span class="text-emerald-400">Pro</span></span>
+            <span class="font-extrabold tracking-tight text-xl hidden lg:block text-[#2C3E50]">CORE<span class="text-[#4F7D88]">STORE</span></span>
         </div>
         
-        <nav class="flex-1 px-4 space-y-2 overflow-y-auto custom-scroll py-4">
-            <a href="#" class="sidebar-item active flex items-center gap-4 px-4 py-3 rounded-xl transition-all group">
-                <i class="fa-solid fa-house-chimney text-emerald-400"></i>
+        <nav class="flex-1 space-y-1 mt-4 overflow-y-auto custom-scroll">
+            <a href="/sellerdashboard/" class="nav-item active flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-chart-pie text-lg"></i>
                 <span class="text-sm font-semibold hidden lg:block">Dashboard</span>
             </a>
-            <a href="/sellerhome/" class="sidebar-item flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                <i class="fa-solid fa-cubes text-lg"></i>
+
+            <a href="/sellerhome/" class="nav-item flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-layer-group text-lg"></i>
                 <span class="text-sm font-semibold hidden lg:block">Inventory</span>
             </a>
-            <a href="/sellerorder/" class="sidebar-item flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
+
+            <a href="/sellerorder/" class="nav-item flex items-center gap-4 px-4 py-3">
                 <i class="fa-solid fa-receipt text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Order Management</span>
+                <span class="text-sm font-semibold hidden lg:block">Orders</span>
             </a>
-            <a href="/sellerinactive/" class="sidebar-item flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                <i class="fa-solid fa-eye-slash text-lg"></i>
-                <span class="text-sm font-semibold hidden lg:block">Inactive Stock</span>
+            
+            <a href="/sellerinactive/" class="nav-item flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-box-archive text-lg"></i>
+                <span class="text-sm font-semibold hidden lg:block">Vault</span>
             </a>
-            <a href="/sellerreturn/" class="sidebar-item flex items-center gap-4 px-4 py-3 text-white/50 hover:text-white hover:bg-white/5 rounded-xl transition-all group">
-                <i class="fa-solid fa-rotate-left text-lg"></i>
+
+            <a href="/sellerreturn/" class="nav-item flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-truck-ramp-box text-lg"></i>
                 <span class="text-sm font-semibold hidden lg:block">Returns</span>
             </a>
         </nav>
 
-        <div class="p-6 mt-auto border-t border-white/5">
-            <a href="/sellerprofile/" class="flex items-center gap-4 p-3 bg-white/5 rounded-2xl hover:bg-white/10 transition-all border border-white/5">
-                <img src="{{ seller.user.profile_image.url }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-emerald-500/50">
-                <div class="hidden lg:block">
-                    <p class="text-[11px] font-bold text-white uppercase">{{seller.user.username}}</p>
-                    <p class="text-[9px] text-emerald-400 font-medium">Enterprise Tier</p>
+        <div class="p-4 mt-auto border-t border-gray-100">
+            <a href="/sellerprofile/" class="flex items-center gap-3 p-2 hover:bg-gray-50 transition-all rounded-sm">
+                <img src="{{ seller.user.profile_image.url }}" class="w-8 h-8 rounded-sm object-cover grayscale-[0.5]">
+                <div class="hidden lg:block overflow-hidden">
+                    <p class="text-xs font-bold text-[#2C3E50] truncate">{{seller.user.username}}</p>
+                    <p class="text-[10px] text-[#4F7D88] font-semibold uppercase">Enterprise Tier</p>
                 </div>
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 p-6 md:p-12 lg:px-16 overflow-y-auto custom-scroll">
-        <header class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-12">
+    <main class="flex-1 p-6 md:p-8 overflow-y-auto custom-scroll">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-10 pb-6 border-b border-gray-100">
             <div>
-                <h1 class="text-2xl md:text-3xl font-extrabold text-[#3E2723] tracking-tight">
-                    Overview <span class="text-emerald-500 underline underline-offset-8 decoration-2 decoration-emerald-200">Insights</span>
+                <h1 class="text-2xl font-bold text-[#2C3E50] tracking-tight">
+                    Executive <span class="text-[#4F7D88]">Insights</span>
                 </h1>
-                <p class="text-[#3E2723]/50 text-xs font-medium mt-3 tracking-wide">Last data sync: Just now</p>
+                <p class="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mt-1">Management Console / Statistics</p>
             </div>
             
-            <div class="flex items-center gap-3">
-                <div class="flex -space-x-2">
-                    <div class="w-8 h-8 rounded-full border-2 border-white bg-emerald-100 flex items-center justify-center text-[10px] font-bold">JD</div>
-                    <div class="w-8 h-8 rounded-full border-2 border-white bg-brown-100 flex items-center justify-center text-[10px] font-bold">MK</div>
-                </div>
-                <button class="bg-[#3E2723] text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-lg shadow-brown-900/20 hover:scale-105 transition-transform">
-                    Generate Report <i class="fa-solid fa-download ml-2 opacity-50"></i>
-                </button>
-            </div>
+            <button class="btn-primary text-white px-6 py-2.5 font-bold text-xs uppercase tracking-wide flex items-center gap-2">
+                <i class="fa-solid fa-download text-[10px]"></i> Export Data
+            </button>
         </header>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
-            <div class="dashboard-card p-7 rounded-3xl relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-emerald-50 rounded-2xl text-emerald-600 transition-colors group-hover:bg-emerald-600 group-hover:text-white">
-                        <i class="fa-solid fa-indian-rupee-sign text-lg"></i>
-                    </div>
-                    <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-lg">Live</span>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="dashboard-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-[#4F7D88]"><i class="fa-solid fa-indian-rupee-sign text-lg"></i></div>
+                    <span class="text-[10px] font-bold text-emerald-600">+12% growth</span>
                 </div>
-                <h4 class="text-[11px] font-bold text-[#3E2723]/40 uppercase tracking-widest">Total Gross Revenue</h4>
-                <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-3xl font-bold tracking-tight counter" data-target="{{total_revenue}}">₹0</span>
-                </div>
+                <h4 class="text-xs font-semibold text-gray-400 uppercase mb-1">Total Revenue</h4>
+                <span class="text-3xl font-bold tracking-tight counter" data-target="{{total_revenue}}">₹0</span>
             </div>
 
-            <div class="dashboard-card p-7 rounded-3xl relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-amber-50 rounded-2xl text-amber-600 transition-colors group-hover:bg-amber-600 group-hover:text-white">
-                        <i class="fa-solid fa-truck-fast text-lg"></i>
-                    </div>
+            <div class="dashboard-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-[#4F7D88]"><i class="fa-solid fa-box text-lg"></i></div>
+                    <span class="text-[10px] font-bold text-gray-400">Volume</span>
                 </div>
-                <h4 class="text-[11px] font-bold text-[#3E2723]/40 uppercase tracking-widest">Units Distributed</h4>
-                <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-3xl font-bold tracking-tight counter" data-target="{{total_products}}">0</span>
-                </div>
+                <h4 class="text-xs font-semibold text-gray-400 uppercase mb-1">Orders Processed</h4>
+                <span class="text-3xl font-bold tracking-tight counter" data-target="{{total_products}}">0</span>
             </div>
 
-            <div class="dashboard-card p-7 rounded-3xl relative overflow-hidden group">
-                <div class="flex justify-between items-start mb-4">
-                    <div class="p-3 bg-red-50 rounded-2xl text-red-600 transition-colors group-hover:bg-red-600 group-hover:text-white">
-                        <i class="fa-solid fa-box-open text-lg"></i>
-                    </div>
+            <div class="dashboard-card p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="text-[#4F7D88]"><i class="fa-solid fa-rotate-left text-lg"></i></div>
+                    <span class="text-[10px] font-bold text-red-500">Return Rate</span>
                 </div>
-                <h4 class="text-[11px] font-bold text-[#3E2723]/40 uppercase tracking-widest">Active Claims</h4>
-                <div class="flex items-baseline gap-1 mt-2">
-                    <span class="text-3xl font-bold tracking-tight counter" data-target="{{total_returns}}">0</span>
-                </div>
+                <h4 class="text-xs font-semibold text-gray-400 uppercase mb-1">Reverse Logistics</h4>
+                <span class="text-3xl font-bold tracking-tight counter" data-target="{{total_returns}}">0</span>
             </div>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div class="lg:col-span-2 dashboard-card rounded-[2.5rem] p-8 flex flex-col">
-                <div class="flex justify-between items-center mb-10">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div class="lg:col-span-2 dashboard-card p-8">
+                <div class="flex justify-between items-center mb-8">
                     <div>
-                        <h3 class="font-bold text-lg">Growth Performance</h3>
-                        <p class="text-xs text-[#3E2723]/50">Projected vs Actual Revenue</p>
+                        <h3 class="font-bold text-sm text-[#2C3E50] uppercase tracking-wide">Sales Performance</h3>
+                        <p class="text-[10px] text-gray-400 font-medium">Weekly analysis of revenue flow</p>
                     </div>
-                    <select class="bg-gray-50 border-none text-[11px] font-bold rounded-lg px-3 py-2 outline-none cursor-pointer">
-                        <option>Current Quarter</option>
-                        <option>Last 6 Months</option>
-                    </select>
                 </div>
                 
                 <div class="flex items-end justify-between gap-4 h-48 px-2">
-                    <div class="w-full bg-emerald-50 rounded-t-xl h-1/3 hover:bg-emerald-200 transition-all cursor-pointer relative group">
-                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#3E2723] text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">12%</div>
+                    <div class="w-full bg-gray-50 h-1/3 hover:bg-[#f0f5f6] transition-all relative group"></div>
+                    <div class="w-full bg-[#f0f5f6] h-2/3"></div>
+                    <div class="w-full bg-gray-50 h-1/2"></div>
+                    <div class="w-full bg-[#4F7D88] h-5/6 relative">
+                        <div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#2C3E50] text-white text-[9px] px-2 py-1 rounded-sm">PEAK</div>
                     </div>
-                    <div class="w-full bg-emerald-100 rounded-t-xl h-2/3 hover:bg-emerald-300 transition-all cursor-pointer"></div>
-                    <div class="w-full bg-emerald-50 rounded-t-xl h-1/2 hover:bg-emerald-200 transition-all cursor-pointer"></div>
-                    <div class="w-full bg-emerald-500 rounded-t-xl h-5/6 hover:bg-emerald-600 transition-all cursor-pointer shadow-lg shadow-emerald-500/20"></div>
-                    <div class="w-full bg-emerald-100 rounded-t-xl h-3/4 hover:bg-emerald-300 transition-all cursor-pointer"></div>
-                    <div class="w-full bg-emerald-50 rounded-t-xl h-2/3 hover:bg-emerald-200 transition-all cursor-pointer"></div>
-                    <div class="w-full bg-emerald-50 rounded-t-xl h-1/2 hover:bg-emerald-200 transition-all cursor-pointer"></div>
+                    <div class="w-full bg-[#f0f5f6] h-3/4"></div>
+                    <div class="w-full bg-gray-50 h-2/3"></div>
                 </div>
-                <div class="mt-6 flex justify-between text-[10px] font-bold text-[#3E2723]/30 uppercase tracking-widest px-2">
-                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                
+                <div class="mt-6 flex justify-between text-[10px] font-bold text-gray-300 uppercase px-2">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
                 </div>
             </div>
 
             <div class="space-y-6">
-                <div class="dashboard-card rounded-[2.5rem] p-8">
-                    <h3 class="font-bold text-base mb-6">Internal Audit</h3>
+                <div class="dashboard-card p-8">
+                    <h3 class="font-bold text-xs uppercase tracking-wider mb-6 text-gray-400">Inventory Health</h3>
                     <div class="space-y-5">
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                                <span class="text-xs font-bold text-[#3E2723]/60">Active Listings</span>
-                            </div>
-                            <span class="text-sm font-black">{{activelisting}}</span>
+                            <span class="text-xs font-semibold text-gray-500">Live Listings</span>
+                            <span class="text-sm font-bold">{{activelisting}}</span>
                         </div>
                         <div class="flex items-center justify-between">
-                            <div class="flex items-center gap-4">
-                                <div class="w-2 h-2 rounded-full bg-amber-500"></div>
-                                <span class="text-xs font-bold text-[#3E2723]/60">Pending Orders</span>
-                            </div>
-                            <span class="text-sm font-black text-amber-600">{{active_orders}}</span>
+                            <span class="text-xs font-semibold text-gray-500">Open Orders</span>
+                            <span class="text-sm font-bold text-[#4F7D88]">{{active_orders}}</span>
                         </div>
-                        <div class="flex items-center justify-between border-t border-gray-100 pt-5">
-                            <div class="flex items-center gap-4">
-                                <div class="w-2 h-2 rounded-full bg-indigo-500"></div>
-                                <span class="text-xs font-bold text-[#3E2723]/60">Store Health</span>
+                        <div class="pt-4 border-t border-gray-50">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-[10px] font-bold text-gray-400 uppercase">Fulfillment</span>
+                                <span class="text-[10px] font-bold text-emerald-500">94%</span>
                             </div>
-                            <span class="text-xs font-black px-2 py-1 bg-indigo-50 text-indigo-600 rounded">A+ Grade</span>
+                            <div class="w-full bg-gray-100 h-1 rounded-none overflow-hidden">
+                                <div class="bg-emerald-500 h-full w-[94%]"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="bg-[#3E2723] rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+                <div class="bg-[#2C3E50] p-8 text-white rounded-none relative">
                     <div class="relative z-10">
-                        <p class="text-[10px] font-bold text-emerald-400 uppercase tracking-widest mb-1">Tip of the day</p>
-                        <p class="text-sm font-medium leading-relaxed">Optimization: Adding clear images to your inactive products can increase sales by 40%.</p>
-                        <button class="mt-6 text-[11px] font-bold border-b border-emerald-400 pb-1 hover:text-emerald-400 transition-colors">Learn more</button>
+                        <p class="text-[10px] font-bold text-[#4F7D88] uppercase mb-2 tracking-widest">Efficiency Tip</p>
+                        <p class="text-xs leading-relaxed text-gray-300">
+                            Inventory optimization suggested for SKU-{{activelisting}}. Increasing stock levels could yield a 15% revenue lift.
+                        </p>
                     </div>
-                    <i class="fa-solid fa-lightbulb absolute -bottom-4 -right-4 text-white/5 text-8xl"></i>
                 </div>
             </div>
         </div>
 
-        <footer class="mt-16 py-8 border-t border-gray-100 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p class="text-[10px] font-bold uppercase tracking-[0.2em] text-[#3E2723]/40">StudioPro Dashboard v2.0</p>
-            <div class="flex gap-6">
-                <a href="#" class="text-[10px] font-bold text-[#3E2723]/40 hover:text-emerald-500">Support</a>
-                <a href="#" class="text-[10px] font-bold text-[#3E2723]/40 hover:text-emerald-500">Terms</a>
-            </div>
+        <footer class="mt-16 py-6 border-t border-gray-100">
+            <p class="text-[10px] font-medium text-gray-400 uppercase tracking-widest text-center md:text-left">
+                CORE STORE Management Terminal &bull; 2026 &bull; Secure Session Active
+            </p>
         </footer>
     </main>
 
     <script>
-        // Smooth Counter Animation Logic
         const counters = document.querySelectorAll('.counter');
-        const speed = 100;
-
         counters.forEach(counter => {
             const updateCount = () => {
-                const target = +counter.getAttribute('data-target').replace(/[₹,]/g, '');
+                const targetText = counter.getAttribute('data-target') || "0";
+                const target = +targetText.replace(/[₹,]/g, '');
                 const count = +counter.innerText.replace(/[₹,]/g, '');
+                const speed = 200;
                 const inc = target / speed;
 
                 if (count < target) {
                     const nextVal = Math.ceil(count + inc);
-                    counter.innerText = counter.getAttribute('data-target').startsWith('₹') ? '₹' + nextVal.toLocaleString() : nextVal.toLocaleString();
-                    setTimeout(updateCount, 15);
+                    counter.innerText = targetText.startsWith('₹') ? '₹' + nextVal.toLocaleString() : nextVal.toLocaleString();
+                    setTimeout(updateCount, 1);
                 } else {
-                    counter.innerText = counter.getAttribute('data-target');
+                    counter.innerText = targetText;
                 }
             };
             updateCount();
-        });
-
-        // Toggle Sidebar Active State (Visual Only)
-        document.querySelectorAll('.sidebar-item').forEach(item => {
-            item.addEventListener('click', function() {
-                document.querySelectorAll('.sidebar-item').forEach(i => i.classList.remove('active', 'text-white'));
-                this.classList.add('active');
-            });
         });
     </script>
 </body>

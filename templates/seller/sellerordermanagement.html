@@ -3,211 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Control | CORE STORE</title>
+    <title>Order Management | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
+        :root {
+            --brand-primary: #4F7D88;
+            --brand-primary-light: #f0f5f6;
+            --brand-dark: #2C3E50;
+            --surface: #FFFFFF;
+            /* Precise Professional Radii */
+            --radius-sm: 10px;
+            --radius-md: 4px;
+            --radius-lg: 8px;
+        }
+
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #FAF9F6; 
-            color: #3E2723; 
+            background-color: #fcfcfc; 
+            color: var(--brand-dark);
             overflow-x: hidden;
-            scroll-behavior: smooth;
         }
 
-        /* Side Panel Integration Styles */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-        /* Modern Glassmorphism Depth */
-        .glass { 
-            background: rgba(255, 255, 255, 0.65); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(62, 39, 35, 0.04); 
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        /* Sidebar Consistency */
+        .sidebar-bg { 
+            background-color: var(--surface); 
+            border-right: 1px solid #eef2f3;
+        }
+        
+        .nav-item {
+            color: #64748b;
+            transition: all 0.2s ease;
+            border-radius: var(--radius-sm);
+            margin: 0.15rem 1rem;
         }
 
-        .glass-card:hover {
-            transform: translateY(-6px);
-            background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(0, 121, 107, 0.2);
-            box-shadow: 0 22px 40px -15px rgba(62, 39, 35, 0.08);
+        .nav-item:hover {
+            color: var(--brand-primary);
+            background: var(--brand-primary-light);
         }
 
-        /* Animated Background Orbs */
-        .orb {
-            position: fixed; width: 500px; height: 500px; border-radius: 50%;
-            filter: blur(100px); z-index: -1; opacity: 0.3;
-            animation: float 20s infinite alternate;
+        .nav-item.active {
+            background: var(--brand-primary);
+            color: #FFFFFF;
+            box-shadow: 0 4px 6px -1px rgba(79, 125, 136, 0.2);
         }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 60px) scale(1.1); }
+        /* Order Table Styling */
+        .order-row {
+            transition: all 0.2s ease;
         }
 
-        /* Status Badge Design */
+        .order-row:hover {
+            background-color: #f8fafb;
+        }
+
         .status-badge {
-            display: inline-flex; items-center: center; gap: 8px; padding: 6px 14px;
-            border-radius: 12px; font-size: 9px; font-weight: 800;
-            text-transform: uppercase; letter-spacing: 0.1em;
-            border: 1px solid rgba(62, 39, 35, 0.05); background: rgba(255, 255, 255, 0.5);
+            padding: 4px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .dot { width: 6px; height: 6px; border-radius: 50%; box-shadow: 0 0 8px currentColor; }
-        .badge-processing { color: #f59e0b; border-color: rgba(245, 158, 11, 0.2); }
-        .badge-shipped { color: #3b82f6; border-color: rgba(59, 130, 246, 0.2); }
-        .badge-delivered { color: #10b981; border-color: rgba(16, 185, 129, 0.2); }
-        .badge-cancelled { color: #ef4444; border-color: rgba(239, 68, 68, 0.2); }
+        /* Dynamic Status Coloring */
+        .status-processing { background: #fff7ed; color: #c2410c; border: 1px solid #ffedd5; }
+        .status-shipped { background: #f0f9ff; color: #0369a1; border: 1px solid #e0f2fe; }
+        .status-delivered { background: #f0fdf4; color: #15803d; border: 1px solid #dcfce7; }
 
-        tbody tr { transition: all 0.3s ease; }
-        tbody tr:hover { 
-            background: rgba(255, 255, 255, 0.9) !important;
-            transform: scale(1.005);
-            box-shadow: 0 4px 20px -10px rgba(0,0,0,0.1);
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid #eef2f3;
+            border-radius: var(--radius-sm);
+            transition: transform 0.2s;
         }
-
-        .stat-icon { transition: all 0.4s ease; }
-        .glass-card:hover .stat-icon { transform: rotate(-10deg) scale(1.1); color: #00796B; }
+        .stat-card:hover { transform: translateY(-2px); }
     </style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <div class="orb bg-[#00796B]/5 -top-20 -left-20"></div>
-    <div class="orb bg-[#3E2723]/5 bottom-40 right-10" style="animation-delay: -5s;"></div>
-
-    <aside class="w-full md:w-20 lg:w-64 bg-[#3E2723] flex md:flex-col sticky top-0 z-50 h-auto md:h-screen text-white border-b md:border-b-0 border-white/5">
+    <aside class="w-full md:w-24 lg:w-64 sidebar-bg flex md:flex-col sticky top-0 z-50 h-auto md:h-screen">
         <div class="p-6 flex items-center gap-3">
-            <div class="bg-[#00796B] p-2 rounded-xl text-white shadow-lg shadow-[#00796B]/20">
-                <i class="fa-solid fa-anchor text-sm"></i>
+            <div class="bg-[#4F7D88] p-2 rounded-sm text-white">
+                <i class="fa-solid fa-bolt-lightning text-lg"></i>
             </div>
-            <span class="font-black tracking-tighter text-xl hidden lg:block uppercase italic">Studio<span class="text-[#00796B]">Pro</span></span>
+            <span class="font-extrabold tracking-tight text-xl hidden lg:block text-[#2C3E50]">CORE<span class="text-[#4F7D88]">STORE</span></span>
         </div>
         
-        <nav class="flex-1 flex md:flex-col p-3 md:p-4 gap-2 overflow-x-auto no-scrollbar whitespace-nowrap md:mt-4">
+        <nav class="flex-1 space-y-1 mt-4 overflow-y-auto custom-scroll">
+            <a href="/sellerdashboard/" class="nav-item flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-chart-pie text-lg"></i>
+                <span class="text-sm font-semibold hidden lg:block">Dashboard</span>
+            </a>
 
-            <a href="/sellerdashboard/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
-                <i class="fa-solid fa-gauge-high"></i> <span class="hidden lg:block">Dashboard</span>
+            <a href="/sellerhome/" class="nav-item flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-layer-group text-lg"></i>
+                <span class="text-sm font-semibold hidden lg:block">Inventory</span>
             </a>
-            <a href="/sellerhome/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
-                <i class="fa-solid fa-boxes-stacked"></i> <span class="hidden lg:block">Inventory</span>
-            </a>
-            <a href="/sellerorder/" class="flex items-center gap-3 px-5 py-4 bg-[#00796B] text-white rounded-2xl font-black text-[10px] uppercase shadow-xl shadow-[#00796B]/20 transition-all hover:scale-105">
-                <i class="fa-solid fa-chart-line"></i> <span class="hidden lg:block">Order Mgmt</span>
+
+            <a href="/sellerorder/" class="nav-item active flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-receipt text-lg"></i>
+                <span class="text-sm font-semibold hidden lg:block">Orders</span>
             </a>
             
-            
-            <a href="/sellerinactive/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
-                <i class="fa-solid fa-eye-slash"></i> <span class="hidden lg:block">Inactive products</span>
+            <a href="/sellerinactive/" class="nav-item flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-box-archive text-lg"></i>
+                <span class="text-sm font-semibold hidden lg:block">Vault</span>
             </a>
-            <a href="/sellerreturn/" class="flex items-center gap-3 px-5 py-4 text-white/30 hover:text-white hover:bg-white/5 rounded-2xl font-black text-[10px] uppercase transition-all">
-                <i class="fa-solid fa-truck-ramp-box"></i> <span class="hidden lg:block">Return details</span>
+
+            <a href="/sellerreturn/" class="nav-item flex items-center gap-4 px-4 py-3">
+                <i class="fa-solid fa-truck-ramp-box text-lg"></i>
+                <span class="text-sm font-semibold hidden lg:block">Returns</span>
             </a>
         </nav>
 
-        <div class="mt-auto p-4 border-t border-white/5 hidden md:block">
-            <a href="/sellerprofile/" class="group flex items-center gap-3 p-3 rounded-2xl hover:bg-white/5 transition-all">
-                <div class="relative shrink-0">
-                    <img src="{{ seller.user.profile_image.url }}" class="w-10 h-10 rounded-xl object-cover ring-2 ring-white/10 group-hover:ring-[#00796B] transition-all">
-                    <div class="absolute -top-1 -right-1 w-3 h-3 bg-[#00796B] border-2 border-[#3E2723] rounded-full"></div>
-                </div>
+        <div class="p-4 mt-auto border-t border-gray-100">
+            <a href="/sellerprofile/" class="flex items-center gap-3 p-2 hover:bg-gray-50 transition-all rounded-sm">
+                <img src="{{ seller.user.profile_image.url }}" class="w-8 h-8 rounded-sm object-cover grayscale-[0.5]">
                 <div class="hidden lg:block overflow-hidden">
-                    <p class="text-[10px] font-black uppercase tracking-tight text-white/90 truncate">{{seller.user.username}}</p>
-                    <p class="text-[8px] font-bold text-white/30 uppercase tracking-[0.2em]">Profile</p>
+                    <p class="text-xs font-bold text-[#2C3E50] truncate">{{seller.user.username}}</p>
+                    <p class="text-[10px] text-[#4F7D88] font-semibold uppercase">Enterprise Tier</p>
                 </div>
             </a>
         </div>
     </aside>
 
-    <main class="flex-1 p-6 md:p-10 lg:p-14 overflow-y-auto">
-        
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <div class="glass glass-card p-8 rounded-[2.5rem] relative overflow-hidden">
-                <div class="absolute top-4 right-6 opacity-10 stat-icon">
-                    <i class="fa-solid fa-box-open text-3xl text-[#3E2723]"></i>
-                </div>
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40 mb-2">Active Orders</p>
-                <h3 class="text-3xl font-black text-[#3E2723]">{{active_orders}}</h3>
+    <main class="flex-1 p-6 md:p-8 lg:px-10 overflow-y-auto custom-scroll">
+        <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 pb-6 border-b border-gray-100">
+            <div>
+                <h1 class="text-2xl font-bold text-[#2C3E50] tracking-tight uppercase">
+                    Order <span class="text-[#4F7D88]">Fulfillment</span>
+                </h1>
+                <p class="text-gray-400 text-[10px] font-semibold uppercase tracking-wider mt-1">Operational Queue • Real-time Terminal</p>
             </div>
             
-            <div class="glass glass-card p-8 rounded-[2.5rem] relative overflow-hidden">
-                <div class="absolute top-4 right-6 opacity-10 stat-icon">
-                    <i class="fa-solid fa-chart-line text-3xl text-[#00796B]"></i>
+            <button class="bg-[#2C3E50] text-white px-6 py-3 rounded-sm font-bold text-[11px] uppercase tracking-widest hover:bg-[#4F7D88] transition-all flex items-center justify-center gap-3">
+                <i class="fa-solid fa-cloud-arrow-down"></i> Export Report
+            </button>
+        </header>
+
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div class="stat-card p-6">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">In Queue</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-extrabold text-[#2C3E50]">{{active_orders}}</h3>
+                    <span class="text-[9px] font-bold text-[#4F7D88]">Active</span>
                 </div>
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40 mb-2">Revenue (Feb)</p>
-                <h3 class="text-3xl font-black text-[#00796B]">${{revenue}}</h3>
             </div>
-            
-            <div class="glass glass-card p-8 rounded-[2.5rem] relative overflow-hidden">
-                <div class="absolute top-4 right-6 opacity-10 stat-icon">
-                    <i class="fa-solid fa-truck-fast text-3xl text-[#3E2723]"></i>
+            <div class="stat-card p-6 border-l-4 border-l-[#4F7D88]">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Gross Revenue</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-extrabold text-[#2C3E50]">${{revenue}}</h3>
+                    <span class="text-[9px] font-bold text-emerald-600">MTD</span>
                 </div>
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40 mb-2">Shipments Out</p>
-                <h3 class="text-3xl font-black text-[#3E2723]">{{shipments_out}}</h3>
             </div>
-            
-            <div class="glass glass-card p-8 rounded-[2.5rem] relative overflow-hidden">
-                <div class="absolute top-4 right-6 opacity-10 stat-icon">
-                    <i class="fa-solid fa-star text-3xl text-[#00796B]"></i>
+            <div class="stat-card p-6">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Dispatched</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-extrabold text-[#2C3E50]">{{shipments_out}}</h3>
+                    <span class="text-[9px] font-bold text-blue-500">Units</span>
                 </div>
-                <p class="text-[10px] font-black uppercase tracking-[0.2em] text-[#3E2723]/40 mb-2">Store Rating</p>
-                <h3 class="text-3xl font-black text-[#00796B]">4.9 <span class="text-xs ml-1 opacity-50">★</span></h3>
+            </div>
+            <div class="stat-card p-6">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">Rating</p>
+                <div class="flex items-baseline gap-2">
+                    <h3 class="text-2xl font-extrabold text-[#2C3E50]">4.9</h3>
+                    <i class="fa-solid fa-star text-[#4F7D88] text-[10px]"></i>
+                </div>
             </div>
         </div>
 
-        <section class="glass rounded-[3rem] overflow-hidden shadow-2xl shadow-[#3E2723]/5">
-            <div class="p-8 md:p-10 border-b border-[#3E2723]/5 flex flex-col md:flex-row md:items-center justify-between gap-6 bg-white/30">
-                <div>
-                    <h2 class="text-2xl font-black italic uppercase tracking-tighter">Order <span class="text-[#00796B]">Control</span></h2>
-                    <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase tracking-widest mt-1">Real-time Fulfillment Management</p>
-                </div>
-                <div class="flex gap-3">
-                    <button class="bg-[#3E2723] text-white px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] hover:bg-[#00796B] transition-colors shadow-lg active:scale-95">
-                        <i class="fa-solid fa-file-export mr-2"></i> Export CSV
-                    </button>
-                    <button class="bg-white text-[#3E2723] px-6 py-3 rounded-2xl text-[10px] font-black uppercase tracking-[0.15em] border border-[#3E2723]/10 hover:border-[#3E2723] transition-all active:scale-95">
-                        <i class="fa-solid fa-clock-rotate-left mr-2"></i> History
-                    </button>
-                </div>
-            </div>
-
-            <div class="overflow-x-auto no-scrollbar">
+        <div class="bg-white border border-gray-100 rounded-sm shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
-                        <tr class="bg-[#3E2723]/5">
-                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Order ID</th>
-                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Product</th>
-                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Customer</th>
-                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Date</th>
-                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Total</th>
-                            <th class="px-8 py-5 text-[9px] font-black uppercase tracking-[0.2em] text-[#3E2723]/50">Status</th>
+                        <tr class="bg-gray-50/50">
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#4F7D88] border-b border-gray-100">ID & Product</th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#4F7D88] border-b border-gray-100">Client</th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#4F7D88] border-b border-gray-100">Timeline</th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#4F7D88] border-b border-gray-100">Value</th>
+                            <th class="px-6 py-4 text-[10px] font-bold uppercase tracking-widest text-[#4F7D88] border-b border-gray-100">Logistics</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-[#3E2723]/5">
+                    <tbody class="divide-y divide-gray-50">
                         {% for i in order %}
-                        <tr class="group">
-                            <td class="px-8 py-8 text-[11px] font-black text-[#3E2723] tracking-wider">{{i.order.order_number}}</td>
-                            <td class="px-8 py-8">
+                        <tr class="order-row group">
+                            <td class="px-6 py-5">
                                 <div class="flex items-center gap-4">
-                                    {% for img in i.variant.images.all %}
-                                        {% if img.is_primary %}
-                                        <div class="w-12 h-12 bg-white rounded-2xl overflow-hidden shrink-0 shadow-sm border border-[#3E2723]/5 group-hover:rotate-3 transition-transform">
-                                            <img src="{{ img.images.url }}" class="w-full h-full object-cover">
-                                        </div>
-                                        {% endif %}
-                                    {% endfor %}
-                                    <span class="text-[11px] font-black uppercase truncate max-w-[150px] tracking-tight text-[#3E2723]">{{i.variant.product.name}}</span>
+                                    <div class="w-10 h-10 shrink-0 bg-gray-50 border border-gray-100 p-0.5 rounded-sm overflow-hidden">
+                                        {% for img in i.variant.images.all %}
+                                            {% if img.is_primary %}
+                                                <img src="{{ img.images.url }}" class="w-full h-full object-cover">
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-xs font-bold text-[#2C3E50] group-hover:text-[#4F7D88] transition-colors">#{{i.order.order_number}}</p>
+                                        <p class="text-[10px] text-gray-400 font-semibold truncate max-w-[150px] uppercase tracking-tighter">{{i.variant.product.name}}</p>
+                                    </div>
                                 </div>
                             </td>
-                            <td class="px-8 py-8 text-[11px] font-bold text-[#3E2723]/80">{{i.order.user.username}}</td>
-                            <td class="px-8 py-8 text-[10px] font-bold text-gray-400">{{i.order.ordered_at}}</td>
-                            <td class="px-8 py-8 text-sm font-black text-[#00796B]">${{i.order.total_amount}}</td>
-                            <td class="px-8 py-8">
-                                <span class="status-badge badge-processing">
-                                    <span class="dot bg-[#f59e0b]"></span>
+                            <td class="px-6 py-5">
+                                <div class="flex flex-col">
+                                    <span class="text-xs font-bold text-[#2C3E50]">{{i.order.user.username}}</span>
+                                    <span class="text-[9px] font-bold text-gray-400 uppercase mt-0.5">Standard Delivery</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-5">
+                                <span class="text-[10px] font-bold text-gray-500">{{i.order.ordered_at}}</span>
+                            </td>
+                            <td class="px-6 py-5">
+                                <span class="text-xs font-bold text-[#2C3E50] tracking-tight">${{i.order.total_amount}}</span>
+                            </td>
+                            <td class="px-6 py-5">
+                                <span class="status-badge status-processing">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-[#4F7D88]"></span>
                                     {{i.order.order_status}}
                                 </span>
                             </td>
@@ -217,20 +236,19 @@
                 </table>
             </div>
             
-            <div class="p-8 flex items-center justify-between bg-white/40 border-t border-[#3E2723]/5">
-                <p class="text-[9px] font-black uppercase tracking-[0.3em] text-[#3E2723]/30">Merchant Node Active</p>
-                <div class="flex gap-2">
-                    <button class="w-10 h-10 rounded-xl border border-[#3E2723]/5 flex items-center justify-center text-[10px] hover:bg-[#3E2723] hover:text-white transition-all shadow-sm"><i class="fa-solid fa-chevron-left"></i></button>
-                    <button class="w-10 h-10 rounded-xl bg-[#3E2723] text-white flex items-center justify-center text-[10px] font-black">1</button>
-                    <button class="w-10 h-10 rounded-xl border border-[#3E2723]/5 flex items-center justify-center text-[10px] hover:bg-[#3E2723] hover:text-white transition-all shadow-sm"><i class="fa-solid fa-chevron-right"></i></button>
+            <div class="px-6 py-4 bg-gray-50/50 flex flex-col sm:flex-row items-center justify-between gap-4 border-t border-gray-100">
+                <span class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Network Status: Optimized</span>
+                <div class="flex items-center gap-1">
+                    <button class="h-8 px-4 border border-gray-200 text-[10px] font-bold uppercase hover:bg-white transition-all rounded-sm">Prev</button>
+                    <button class="h-8 w-8 bg-[#4F7D88] text-white text-[10px] font-bold rounded-sm">1</button>
+                    <button class="h-8 px-4 border border-gray-200 text-[10px] font-bold uppercase hover:bg-white transition-all rounded-sm">Next</button>
                 </div>
             </div>
-        </section>
+        </div>
 
-        <footer class="mt-24 text-center py-10 opacity-20">
-            <p class="text-[9px] font-black uppercase tracking-[0.5em]">Core Store • Merchant Terminal • SECURE NODE</p>
+        <footer class="mt-12 py-8 border-t border-gray-50">
+            <p class="text-[9px] font-bold uppercase tracking-[0.4em] text-gray-300 text-center">CORE STORE LOGISTICS TERMINAL &bull; 2026</p>
         </footer>
     </main>
-
 </body>
 </html>

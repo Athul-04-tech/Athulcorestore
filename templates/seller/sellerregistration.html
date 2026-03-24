@@ -3,207 +3,229 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seller Registration | CORE STORE</title>
+    <title>Merchant Onboarding | StudioPro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
+        :root {
+            --brand-teal: #4F7D88;
+            --brand-bg: #F8FAFB;
+        }
+
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: #FAF9F6; 
-            color: #3E2723; 
+            background-color: var(--brand-bg); 
+            color: #2D3748; 
             overflow-x: hidden;
         }
 
-        /* Responsive Background Orbs */
-        .orb {
-            position: fixed;
-            width: 300px;
-            height: 300px;
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.3;
-            animation: float 20s infinite alternate;
-        }
-        @media (min-width: 768px) { .orb { width: 500px; height: 500px; filter: blur(100px); } }
-
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(40px, 60px) scale(1.1); }
+        .glass-card { 
+            background: rgba(255, 255, 255, 1); 
+            border: 1px solid #E2E8F0; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.04);
+            border-radius: 1.5rem;
         }
 
-        .glass { 
-            background: rgba(255, 255, 255, 0.75); 
-            backdrop-filter: blur(20px); 
-            border: 1px solid rgba(62, 39, 35, 0.04); 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Enhanced Input Field */
         .input-field { 
-            background-color: rgba(62, 39, 35, 0.04); 
-            border: 1px solid rgba(62, 39, 35, 0.08); 
-            border-radius: 1rem; 
-            padding: 0.75rem 1rem; 
-            font-size: 0.75rem; 
-            font-weight: 700; 
+            background-color: #FFFFFF; 
+            border: 1.5px solid #E2E8F0; 
+            border-radius: 0.75rem; 
+            padding: 0.8rem 1rem; 
+            font-size: 13px; 
+            font-weight: 600; 
             width: 100%; 
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            transition: all 0.2s ease; 
         }
-
-        @media (min-width: 768px) { .input-field { padding: 0.85rem 1.25rem; } }
 
         .input-field:focus { 
             outline: none; 
-            border-color: #00796B; 
+            border-color: var(--brand-teal); 
+            box-shadow: 0 0 0 4px rgba(79, 125, 136, 0.1);
             background-color: white; 
-            transform: translateX(4px);
-            box-shadow: -4px 0 0 0 #00796B;
         }
         
         .label-text { 
-            font-size: 8px; 
-            font-weight: 900; 
+            font-size: 11px; 
+            font-weight: 700; 
             text-transform: uppercase; 
-            letter-spacing: 0.2em; 
-            color: rgba(62, 39, 35, 0.4); 
+            letter-spacing: 0.05em; 
+            color: #718096; 
             margin-bottom: 0.5rem; 
             display: block; 
-            margin-left: 0.2rem;
         }
 
-        .section-divider {
-            position: relative;
-            margin: 2rem 0 1rem 0;
-        }
-        .section-divider::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 30px;
-            height: 2px;
-            background: #00796B;
+        .section-header {
+            border-left: 4px solid var(--brand-teal);
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(15px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .animate-fade { animation: fadeInUp 0.6s ease forwards; }
+        .animate-ui { animation: fadeIn 0.5s ease forwards; }
+
+        /* Custom scrollbar for address textarea */
+        .custom-scroll::-webkit-scrollbar { width: 4px; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 10px; }
     </style>
 </head>
-<body class="min-h-screen py-8 px-4 md:py-20 md:px-8">
+<body class="min-h-screen py-10 px-4 md:py-16">
 
-    <div class="orb bg-[#00796B]/5 -top-10 -left-10"></div>
-    <div class="orb bg-[#3E2723]/5 bottom-20 right-5" style="animation-delay: -5s;"></div>
-
-    <div class="max-w-5xl mx-auto animate-fade">
-        <header class="text-center mb-10 md:mb-16">
-            <div class="flex justify-center items-center gap-2 mb-4">
-                <div class="bg-[#3E2723] p-1.5 rounded-lg text-white shadow-lg"><i class="fa-solid fa-anchor text-xs"></i></div>
-                <span class="text-base md:text-xl font-black tracking-tighter uppercase">Seller<span class="text-[#00796B]">Portal</span></span>
+    <div class="max-w-6xl mx-auto animate-ui">
+        <header class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+            <div>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="bg-[#4F7D88] p-2 rounded-lg text-white shadow-lg">
+                        <i class="fa-solid fa-briefcase text-xs"></i>
+                    </div>
+                    <span class="text-sm font-bold tracking-widest uppercase text-[#4F7D88]">Merchant Services</span>
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-[#1A202C] tracking-tight">
+                    Partner <span class="text-[#4F7D88]">Registration.</span>
+                </h1>
+                <p class="text-gray-500 text-sm mt-2 font-medium">Complete the form below to establish your commercial storefront.</p>
             </div>
-            <h1 class="text-2xl md:text-5xl font-black text-[#3E2723] italic uppercase tracking-tighter leading-none">
-                Open Your <span class="text-[#00796B]">Store.</span>
-            </h1>
-            <p class="text-[#3E2723]/40 text-[8px] md:text-[10px] font-black uppercase tracking-[0.2em] md:tracking-[0.3em] mt-3">Merchant Terminal Registration</p>
+            <div class="text-left md:text-right">
+                <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Version 4.0.2</p>
+                <p class="text-[10px] font-bold text-[#4F7D88] uppercase tracking-widest">Secure Encryption Active</p>
+            </div>
         </header>
 
-        <form class="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8" enctype="multipart/form-data" method="POST">
+        <form class="grid grid-cols-1 lg:grid-cols-12 gap-8" enctype="multipart/form-data" method="POST">
             {% csrf_token %}
             
             <div class="lg:col-span-4 space-y-6">
-                <div class="glass rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 text-center">
-                    <span class="label-text text-center ml-0">Store Logo / Profile</span>
-                    <div class="relative w-28 h-28 md:w-32 md:h-32 mx-auto mt-5 group">
-                        <div class="w-full h-full rounded-[1.5rem] md:rounded-[2rem] bg-[#3E2723]/5 border-2 border-dashed border-[#3E2723]/10 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#00796B]/40 group-hover:bg-white shadow-inner">
+                <div class="glass-card p-8">
+                    <span class="label-text text-center">Brand Identity</span>
+                    <div class="relative w-32 h-32 mx-auto mt-6 group">
+                        <div class="w-full h-full rounded-3xl bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-[#4F7D88] group-hover:bg-[#F0F5F6] cursor-pointer">
                             <img id="profile-preview" src="#" alt="Preview" class="hidden w-full h-full object-cover">
-                            <i id="camera-icon" class="fa-solid fa-camera text-2xl text-[#3E2723]/10 group-hover:text-[#00796B]"></i>
+                            <i id="camera-icon" class="fa-solid fa-cloud-arrow-up text-2xl text-gray-300 group-hover:text-[#4F7D88]"></i>
                             <input type="file" name="profile_image" id="image-input" class="absolute inset-0 opacity-0 cursor-pointer" accept="image/*">
                         </div>
-                        <div class="absolute -bottom-2 -right-2 bg-[#00796B] w-8 h-8 md:w-10 md:h-10 rounded-xl md:rounded-2xl shadow-xl flex items-center justify-center text-white border-4 border-[#FAF9F6]">
-                            <i class="fa-solid fa-plus text-[10px]"></i>
+                        <div class="absolute -bottom-2 -right-2 bg-[#4F7D88] w-10 h-10 rounded-xl shadow-xl flex items-center justify-center text-white border-4 border-white">
+                            <i class="fa-solid fa-pencil text-[10px]"></i>
                         </div>
                     </div>
+                    <p class="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest mt-6 leading-relaxed">
+                        Recommended: 500x500px <br> PNG or JPG
+                    </p>
                 </div>
 
-                <div class="glass rounded-[2rem] p-6 border-l-4 border-[#00796B] hidden lg:block">
-                    <p class="text-[10px] text-[#3E2723]/60 font-bold leading-relaxed">
-                        <i class="fa-solid fa-shield-halved mr-1 text-[#00796B]"></i> 
-                        Usernames are permanent terminal IDs and cannot be changed after deployment.
-                    </p>
+                <div class="glass-card p-6 bg-[#4F7D88]/5 border-[#4F7D88]/10">
+                    <h4 class="text-xs font-bold text-[#4F7D88] uppercase mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-circle-info"></i> Registration Guide
+                    </h4>
+                    <ul class="space-y-3">
+                        <li class="text-[11px] text-gray-600 font-medium flex gap-2">
+                            <i class="fa-solid fa-check text-[#4F7D88] mt-0.5"></i>
+                            Store Slug must be unique and lowercase.
+                        </li>
+                        <li class="text-[11px] text-gray-600 font-medium flex gap-2">
+                            <i class="fa-solid fa-check text-[#4F7D88] mt-0.5"></i>
+                            GST & PAN are required for payouts.
+                        </li>
+                    </ul>
                 </div>
             </div>
 
             <div class="lg:col-span-8">
-                <div class="glass rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 space-y-10">
+                <div class="glass-card p-6 md:p-10 space-y-12">
                     
                     <section>
-                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Shop Identity</h3></div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div class="sm:col-span-1">
-                                <label class="label-text">Store Name</label>
-                                <input type="text" name="store_name" placeholder="PACIFIC SURF STUDIO" class="input-field" required>
+                        <div class="section-header">
+                            <h3 class="text-xs font-black text-gray-800 uppercase tracking-widest">Business Branding</h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="label-text">Official Store Name</label>
+                                <input type="text" name="store_name" placeholder="e.g. Nexus Apparel" class="input-field" required>
                             </div>
-                            <div class="sm:col-span-1">
-                                <label class="label-text">Store Slug (URL)</label>
-                                <input type="text" name="store_slug" placeholder="pacific-surf-studio" class="input-field" required>
+                            <div>
+                                <label class="label-text">Store Slug (URL Handle)</label>
+                                <input type="text" name="store_slug" placeholder="nexus-apparel" class="input-field" required>
                             </div>
                         </div>
                     </section>
 
                     <section>
-                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Merchant Credentials</h3></div>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="section-header">
+                            <h3 class="text-xs font-black text-gray-800 uppercase tracking-widest">Account Owner Details</h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="label-text">First Name</label>
+                                <input type="text" name="first_name" placeholder="John" class="input-field" required>
+                            </div>
+                            <div>
+                                <label class="label-text">Last Name</label>
+                                <input type="text" name="last_name" placeholder="Doe" class="input-field" required>
+                            </div>
                             <div class="sm:col-span-2">
-                                <label class="label-text">Username</label>
-                                <input type="text" name="username" placeholder="merchant_id" class="input-field" required>
+                                <label class="label-text">Username (Merchant ID)</label>
+                                <div class="relative">
+                                    <i class="fa-solid fa-at absolute left-4 top-1/2 -translate-y-1/2 text-gray-300"></i>
+                                    <input type="text" name="username" placeholder="john_doe_99" class="input-field pl-10" required>
+                                </div>
                             </div>
-                            <div class="sm:col-span-1">
-                                <label class="label-text">Email</label>
-                                <input type="email" name="email" placeholder="hello@store.com" class="input-field" required>
+                            <div>
+                                <label class="label-text">Business Email</label>
+                                <input type="email" name="email" placeholder="john@business.com" class="input-field" required>
                             </div>
-                            <div class="sm:col-span-1">
-                                <label class="label-text">Phone</label>
-                                <input type="tel" name="phone_number" placeholder="+91..." class="input-field" required>
+                            <div>
+                                <label class="label-text">Contact Number</label>
+                                <input type="tel" name="phone_number" placeholder="+1 (555) 000-0000" class="input-field" required>
                             </div>
-                            <div class="sm:col-span-1">
-                                <label class="label-text">Password</label>
+                            <div>
+                                <label class="label-text">Access Password</label>
                                 <input type="password" name="password" placeholder="••••••••" class="input-field" required>
                             </div>
-                            <div class="sm:col-span-1">
-                                <label class="label-text">Confirm Password</label>
+                            <div>
+                                <label class="label-text">Verify Password</label>
                                 <input type="password" name="confirm_password" placeholder="••••••••" class="input-field" required>
                             </div>
                         </div>
                     </section>
 
                     <section>
-                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Compliance</h3></div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="col-span-2 sm:col-span-1">
-                                <label class="label-text">GST Number</label>
-                                <input type="text" name="gst_number" placeholder="GSTIN" class="input-field" required>
+                        <div class="section-header">
+                            <h3 class="text-xs font-black text-gray-800 uppercase tracking-widest">Compliance & Settlement</h3>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div>
+                                <label class="label-text">GSTIN Registration</label>
+                                <input type="text" name="gst_number" placeholder="22AAAAA0000A1Z5" class="input-field" required>
                             </div>
-                            <div class="col-span-2 sm:col-span-1">
-                                <label class="label-text">PAN Number</label>
-                                <input type="text" name="pan_number" placeholder="PAN" class="input-field" required>
+                            <div>
+                                <label class="label-text">PAN Identification</label>
+                                <input type="text" name="pan_number" placeholder="ABCDE1234F" class="input-field" required>
+                            </div>
+                            <div>
+                                <label class="label-text">Bank IFSC Code</label>
+                                <input type="text" name="ifsc_code" placeholder="HDFC0001234" class="input-field" required>
+                            </div>
+                            <div>
+                                <label class="label-text">Settlement Account No.</label>
+                                <input type="text" name="bank_account_number" placeholder="50100012345678" class="input-field" required>
                             </div>
                         </div>
                     </section>
 
                     <section>
-                        <div class="section-divider"><h3 class="text-[10px] font-black text-[#3E2723] uppercase tracking-[0.2em]">Business Address</h3></div>
-                        <textarea name="business_address" rows="3" placeholder="Full registered address..." class="input-field resize-none h-28" required></textarea>
+                        <div class="section-header">
+                            <h3 class="text-xs font-black text-gray-800 uppercase tracking-widest">Registered Address</h3>
+                        </div>
+                        <textarea name="business_address" rows="3" placeholder="Street, City, State, ZIP..." class="input-field custom-scroll resize-none h-32" required></textarea>
                     </section>
 
-                    <div class="pt-6">
-                        <button type="submit" class="w-full bg-[#3E2723] text-white py-4 md:py-5 rounded-2xl font-black uppercase text-[10px] md:text-[11px] tracking-[0.2em] hover:bg-[#00796B] transition-all shadow-xl shadow-[#3E2723]/10 active:scale-[0.98] flex items-center justify-center gap-3">
-                            Deploy Store Account
-                            <i class="fa-solid fa-arrow-right-long text-[10px]"></i>
+                    <div class="pt-8 border-t border-gray-100">
+                        <button type="submit" class="w-full bg-[#4F7D88] text-white py-5 rounded-2xl font-bold uppercase text-xs tracking-[0.2em] hover:bg-[#3D626B] transition-all shadow-xl shadow-[#4F7D88]/20 active:scale-[0.99] flex items-center justify-center gap-3">
+                            Initialize Storefront
+                            <i class="fa-solid fa-circle-check"></i>
                         </button>
                     </div>
                 </div>

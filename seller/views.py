@@ -29,7 +29,7 @@ def selleregis(request):
                                           role="seller",
                                           profile_image=request.FILES.get("profile_image"),
                                           )
-            user.save()
+            
             sellr=SellerProfile.objects.create( user=user,
                                                 store_name=request.POST.get("store_name"),
                                                 store_slug=slugify(request.POST.get("store_name")),
@@ -39,7 +39,7 @@ def selleregis(request):
                                                 ifsc_code=request.POST.get("ifsc_code"),
                                                 business_address=request.POST.get("business_address"),
                                                 )
-            sellr.save()
+            
             return redirect("/login/")
     return render(request,"seller/sellerregistration.html")
 
@@ -49,7 +49,7 @@ def sellerlogin(request):
         password=request.POST.get("password")
         data=authenticate(request,username=username,password=password)
         if data:
-            if data.role =="seller":
+            if data.role =="SELLER":
                 login(request,data)
                 return redirect("/sellerhome/")
                 
@@ -96,7 +96,7 @@ def sellerproduct(request):
             is_cancellable=bool(request.POST.get("is_cancellable")) ,
             is_returnable=bool(request.POST.get("is_returnable")), 
             )
-        data.save()
+        
         datas=ProductVariant.objects.create(
             product=data,
             sku_code=request.POST.get("sku_code"),
@@ -110,7 +110,7 @@ def sellerproduct(request):
             height=request.POST.get("height"),
             tax_percentage=request.POST.get("tax_percentage"),
         )
-        datas.save()
+        
         return redirect("/sellerhome/")
 
     return render(request,"seller/sellerproduct.html",{"sub":sub})    
@@ -238,7 +238,7 @@ def sellerorder(request):
         if item.order.order_status=="shipped":
             shipments_out += 1
         revenue += item.order.total_amount
-    return render(request,"seller/sellerordermanagement.html",{"order":order,"active_orders":active_orders,"shipments_out":shipments_out,"revenue":revenue})
+    return render(request,"seller/sellerordermanagement.html",{"order":order,"active_orders":active_orders,"shipments_out":shipments_out,"revenue":revenue,"seller":seller})
 
 @seller_required
 def productdelete(request,id):
@@ -253,7 +253,7 @@ def productdelete(request,id):
 def sellerreturns(request):
     seller = SellerProfile.objects.get(user=request.user)
     returns = ReturnRequest.objects.filter(seller=seller).order_by("-created_at")
-    return render(request,"seller/sellerreturn.html",{"returns": returns})
+    return render(request,"seller/sellerreturn.html",{"returns": returns,"seller":seller})
 
 
 
@@ -285,4 +285,4 @@ def sellerdashboard(request):
         if item.order.order_status=="placed":
             active_orders += 1    
 
-    return render(request, "seller/sellerdashboard.html",{"total_revenue":total_revenue,"total_products":total_products,"total_returns":total_returns,"active_orders":active_orders,"activelisting":activelisting})
+    return render(request, "seller/sellerdashboard.html",{"total_revenue":total_revenue,"total_products":total_products,"total_returns":total_returns,"active_orders":active_orders,"activelisting":activelisting,"seller":seller})

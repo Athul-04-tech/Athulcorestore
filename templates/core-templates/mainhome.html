@@ -189,13 +189,19 @@
         {% for product in products_page %}
         <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-[2rem] p-3 group block">
           <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#EFEBE9] mb-4">
-            {% with product.images.all|first as img %}
-              {% if img %}
-                <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
-              {% else %}
-                <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400" class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700" alt="{{ product.product.name }}" />
-              {% endif %}
-            {% endwith %}
+            {% with product.images.all|dictsortreversed:"is_primary"|first as img %}
+      
+      {% if img %}
+        <img src="{{ img.images.url }}"
+             class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
+             alt="{{ product.product.name }}">
+      {% else %}
+        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400"
+             class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
+             alt="No Image">
+      {% endif %}
+
+    {% endwith %}
             <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                 <button class="bg-white p-3 rounded-full text-[#3E2723] translate-y-4 group-hover:translate-y-0 transition-transform"><i class="fa-solid fa-cart-plus"></i></button>
             </div>
