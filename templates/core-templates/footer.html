@@ -35,8 +35,8 @@
         <ul class="space-y-3 text-gray-400 text-sm">
           <li><a href="/products/" class="hover:text-white transition-colors duration-200 block py-1">All Products</a></li>
           <li><a href="{% url 'products' %}" class="hover:text-white transition-colors duration-200 block py-1">New Arrivals</a></li>
-          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Best Sellers</a></li>
-          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Sale Items</a></li>
+          <li><a href="{% url 'about' %}" class="hover:text-white transition-colors duration-200 block py-1">About Us</a></li>
+          <li><a href="{% url 'products' %}" class="hover:text-white transition-colors duration-200 block py-1">Sale Items</a></li>
         </ul>
       </div>
 
@@ -44,10 +44,10 @@
       <div>
         <h4 class="text-white font-bold text-lg mb-6 tracking-tight">Support</h4>
         <ul class="space-y-3 text-gray-400 text-sm">
-          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Help Center</a></li>
-          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Shipping Info</a></li>
+          <li><a href="{% url 'helpe_center' %}" class="hover:text-white transition-colors duration-200 block py-1">Help Center</a></li>
+          <li><a href="{% url 'shipping_info' %}" class="hover:text-white transition-colors duration-200 block py-1">Shipping Info</a></li>
           <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Returns</a></li>
-          <li><a href="#" class="hover:text-white transition-colors duration-200 block py-1">Contact</a></li>
+          <li><a href="{% url 'support_or_contact' %}" class="hover:text-white transition-colors duration-200 block py-1">Contact</a></li>
         </ul>
       </div>
 

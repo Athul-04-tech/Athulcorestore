@@ -99,6 +99,18 @@ def product_single(request, slug):
         'avg_rating': round(float(avg_rating), 1),
         'review_count': reviews.count()
     })
+    
+def helpe_center(request):
+    return render(request, 'core-templates/helpe_center.html')
+
+def support_or_contact(request):
+    return render(request, 'core-templates/Support_or_contact.html')
+
+def about(request):
+    return render(request, 'core-templates/about.html')
+
+def shipping_info(request):
+    return render(request, 'core-templates/shippinginfo.html')
 
 
 # Deprecated - Buy Now now handled in customer.views.buy_now_checkout

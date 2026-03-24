@@ -134,12 +134,12 @@
     </section>
 
     <main class="container mx-auto px-4 md:px-8 py-12">
-      {% if products %}
+      {% if products_page %}
       <div class="flex items-center justify-between mb-10 border-b border-slate-100 pb-4">
         <h2 class="text-xl font-black uppercase tracking-tighter text-slate-900">
           Available <span class="text-blue-600">Units</span>
         </h2>
-        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">{{ products.count }} Indexed Items</span>
+        <span class="text-[10px] font-bold uppercase tracking-widest text-slate-400">{{ products_page.paginator.count }} Indexed Items</span>
       </div>
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
@@ -167,6 +167,7 @@
           <div class="px-1">
             <h3 class="text-[9px] font-bold text-slate-900 uppercase tracking-tighter truncate mb-1">{{ product.product.name }}</h3>
             <p class="text-xs font-black text-slate-900">${{ product.selling_price|floatformat:0 }}</p>
+            {% include 'core-templates/partials/product-rating.html' with product=product %}
           </div>
         </a>
         {% endfor %}

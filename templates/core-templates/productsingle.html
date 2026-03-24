@@ -232,6 +232,105 @@
                 </div>
             </div>
         </div>
+
+        <!-- Related Products Section -->
+        <section class="mt-24">
+            <h2 class="text-3xl font-black text-slate-900 mb-12 text-center uppercase tracking-tighter">Related Items</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                {% for related in related_products %}
+                <a href="{{ related.get_absolute_url }}" class="group glass p-4 hover:shadow-xl transition-all duration-300 hover:-translate-y-2">
+                    <div class="aspect-[4/5] overflow-hidden rounded-sm mb-3 group-hover:scale-105 transition-transform">
+                        {% with primary=related.images.all|dictsortreversed:"is_primary"|first %}
+                        <img src="{{ primary.image.url }}" alt="{{ related.product.name }}" class="w-full h-full object-cover">
+                        {% endwith %}
+                    </div>
+                    <h3 class="font-bold text-sm text-slate-900 line-clamp-2 mb-2 group-hover:text-blue-600">{{ related.product.name }}</h3>
+                    <p class="text-lg font-black text-slate-900">${{ related.selling_price }}</p>
+                </a>
+                {% empty %}
+                <p class="col-span-full text-center text-slate-500 py-12">No related products found.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        <section class="mt-24 border-t border-slate-100 pt-16">
+    <div class="flex flex-col md:flex-row items-center justify-center gap-4 mb-12">
+        <h2 class="text-3xl font-black text-slate-900 uppercase tracking-tighter">Customer Reviews</h2>
+        {% if review_count > 0 %}
+        <div class="flex items-center gap-2 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-sm">
+            <span class="font-bold text-lg text-emerald-800">{{ avg_rating }}/5</span>
+            <span class="text-sm font-bold text-slate-400">({{ review_count }} Total)</span>
+        </div>
+        {% endif %}
+    </div>
+    
+    {% if review_count > 0 %}
+    <div class="max-w-xl mx-auto mb-16 space-y-3 px-4">
+        {% for dist in rating_distribution %}
+            {% if review_count > 0 %}
+                {% widthratio dist.count review_count 100 as percent %}
+            {% else %}
+                {% widthratio 0 1 100 as percent %}
+            {% endif %}
+            
+            <div class="flex items-center gap-4">
+                <div class="flex items-center justify-end gap-2 w-16">
+                    <span class="text-xs font-black text-slate-700">{{ dist.rating }}</span>
+                    <i class="fas fa-star text-amber-400 text-[10px]"></i>
+                </div>
+
+                <div class="flex-1 h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
+                    <div class="h-full bg-gradient-to-r from-blue-600 to-blue-400 rounded-full transition-all duration-700 ease-out" 
+                         style="width: {{ percent }}%">
+                    </div>
+                </div>
+
+                <div class="w-20 text-right">
+                    <span class="text-[10px] font-bold text-slate-400 uppercase">{{ percent }}%</span>
+                    <span class="text-[10px] text-slate-300 ml-1">({{ dist.count }})</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="space-y-6 max-w-4xl mx-auto px-4">
+        {% for review in reviews %}
+        <div class="glass p-6 hover:shadow-lg transition-all border border-slate-100">
+            <div class="flex justify-between items-start mb-4">
+                <div class="flex text-amber-400 gap-1">
+                    {% for i in "12345"|make_list %}
+                        {% if forloop.counter <= review.rating %}
+                            <i class="fas fa-star text-sm"></i>
+                        {% else %}
+                            <i class="far fa-star text-sm text-slate-200"></i>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <span class="text-[10px] font-black text-slate-300 uppercase tracking-widest">
+                    {{ review.created_at|date:"M d, Y" }}
+                </span>
+            </div>
+            <p class="text-sm leading-relaxed text-slate-600 font-medium">{{ review.comment }}</p>
+            <div class="mt-4 pt-4 border-t border-slate-50 flex items-center gap-3">
+                <div class="w-8 h-8 bg-gradient-to-br from-slate-100 to-slate-200 rounded-full flex items-center justify-center text-[11px] font-black text-slate-700 shadow-sm border border-slate-200">
+                    {{ review.user.get_full_name|slice:":1"|default:review.user.username|slice:":1"|upper }}
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold text-slate-800 tracking-tight">{{ review.user.get_full_name|default:review.user.username }}</span>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Verified Purchase</span>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="text-center py-20 bg-slate-50 rounded-lg border-2 border-dashed border-slate-200">
+            <i class="far fa-comment-dots text-4xl text-slate-200 mb-4"></i>
+            <p class="text-slate-500 font-bold uppercase tracking-widest text-xs">No reviews yet for this variant</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
     </main>
 
     <script>

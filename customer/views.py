@@ -7,7 +7,7 @@ from seller.models import *
 from django.contrib.auth import login,logout,authenticate, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Q, Count
+from django.db.models import Q, Count, Avg
 from .utils import generate_otp, send_otp_email
 from decimal import Decimal
 from django.utils import timezone
@@ -18,7 +18,15 @@ User = get_user_model()
 def home(request):
     # .select_related('product') fetches the parent Product (name, etc.) in 1 query
     # .prefetch_related('images') fetches all related images in 1 separate query
-    products = ProductVariant.objects.filter(product__approval_status='APPROVED', product__is_active=True).select_related('product').prefetch_related('images')
+    products = ProductVariant.objects.filter(product__approval_status='APPROVED', product__is_active=True).select_related('product').prefetch_related('images').annotate(
+        avg_rating=Avg('product__reviews__rating'),
+        review_count=Count('product__reviews', distinct=True),
+        star_5=Count('product__reviews', filter=Q(product__reviews__rating=5), distinct=True),
+        star_4=Count('product__reviews', filter=Q(product__reviews__rating=4), distinct=True),
+        star_3=Count('product__reviews', filter=Q(product__reviews__rating=3), distinct=True),
+        star_2=Count('product__reviews', filter=Q(product__reviews__rating=2), distinct=True),
+        star_1=Count('product__reviews', filter=Q(product__reviews__rating=1), distinct=True)
+    )
     categories = Category.objects.all()
     
     paginator = Paginator(products, 20)
@@ -87,7 +95,15 @@ def products(request):
         product__is_active=True,
         slug__isnull=False,
         slug__regex=r'^[-a-zA-Z0-9_]+$'
-    ).select_related('product', 'product__subcategory__category').prefetch_related('images')
+    ).select_related('product', 'product__subcategory__category').prefetch_related('images').annotate(
+        avg_rating=Avg('product__reviews__rating'),
+        review_count=Count('product__reviews', distinct=True),
+        star_5=Count('product__reviews', filter=Q(product__reviews__rating=5), distinct=True),
+        star_4=Count('product__reviews', filter=Q(product__reviews__rating=4), distinct=True),
+        star_3=Count('product__reviews', filter=Q(product__reviews__rating=3), distinct=True),
+        star_2=Count('product__reviews', filter=Q(product__reviews__rating=2), distinct=True),
+        star_1=Count('product__reviews', filter=Q(product__reviews__rating=1), distinct=True)
+    )
 
     
     if category_id:
@@ -153,7 +169,15 @@ def category_view(request, category_slug):
             product__subcategory=subcategory,
             product__approval_status='APPROVED',
             product__is_active=True
-        ).select_related('product__subcategory__category').prefetch_related('images')[:5]
+        ).select_related('product__subcategory__category').prefetch_related('images').annotate(
+            avg_rating=Avg('product__reviews__rating'),
+            review_count=Count('product__reviews', distinct=True),
+            star_5=Count('product__reviews', filter=Q(product__reviews__rating=5), distinct=True),
+            star_4=Count('product__reviews', filter=Q(product__reviews__rating=4), distinct=True),
+            star_3=Count('product__reviews', filter=Q(product__reviews__rating=3), distinct=True),
+            star_2=Count('product__reviews', filter=Q(product__reviews__rating=2), distinct=True),
+            star_1=Count('product__reviews', filter=Q(product__reviews__rating=1), distinct=True)
+        )[:5]
         
         total_products_count = ProductVariant.objects.filter(
             product__subcategory=subcategory,
@@ -186,7 +210,15 @@ def subcategory_products(request, category_slug, subcategory_slug):
         product__subcategory=subcategory,
         product__approval_status='APPROVED',
         product__is_active=True
-    ).select_related('product', 'product__subcategory', 'product__subcategory__category').prefetch_related('images')
+    ).select_related('product', 'product__subcategory', 'product__subcategory__category').prefetch_related('images').annotate(
+        avg_rating=Avg('product__reviews__rating'),
+        review_count=Count('product__reviews', distinct=True),
+        star_5=Count('product__reviews', filter=Q(product__reviews__rating=5), distinct=True),
+        star_4=Count('product__reviews', filter=Q(product__reviews__rating=4), distinct=True),
+        star_3=Count('product__reviews', filter=Q(product__reviews__rating=3), distinct=True),
+        star_2=Count('product__reviews', filter=Q(product__reviews__rating=2), distinct=True),
+        star_1=Count('product__reviews', filter=Q(product__reviews__rating=1), distinct=True)
+    )
     
     paginator = Paginator(products_qs, 20)
     page = request.GET.get('page')

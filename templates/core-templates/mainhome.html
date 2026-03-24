@@ -21,7 +21,6 @@
         color: var(--primary);
       }
 
-      /* Noticeable Smooth Reveal */
       .reveal {
         opacity: 0;
         transform: translateY(20px);
@@ -32,7 +31,6 @@
         transform: translateY(0);
       }
 
-      /* Category Item Styling */
       .cat-item {
         transition: all 0.3s ease;
       }
@@ -42,26 +40,28 @@
         transform: scale(1.1);
       }
 
-      /* Sharp Professional Card with Ambient Shadow */
+      /* UPDATED PRO-CARD CSS */
       .pro-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 4px;
-        overflow: hidden;
-        /* Permanent Soft Shadow */
+        position: relative; /* Allows z-index to work */
+        z-index: 1; /* Base z-index */
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .pro-card:hover {
         border-color: var(--accent);
-        /* Intensified Hover Shadow */
         box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 10px 10px -5px rgba(15, 23, 42, 0.08);
         transform: translateY(-4px);
+        z-index: 50; /* Pops hovered card to the front so tooltips aren't hidden */
       }
       .pro-card .img-box {
         background: #f8fafc;
         position: relative;
-        overflow: hidden;
+        overflow: hidden; /* Traps the cart button inside the image box only */
+        border-top-left-radius: 3px;
+        border-top-right-radius: 3px;
       }
       .cart-slide {
         transform: translateY(100%);
@@ -71,10 +71,11 @@
         transform: translateY(0);
       }
 
-      /* Ambient Footer Tint */
       .card-footer-ambient {
         background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
         border-top: 1px solid #e2e8f0;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
       }
     </style>
 </head>
@@ -140,7 +141,7 @@
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
         {% for product in products_page %}
         <div class="pro-card group">
-          <a href="{% url 'product_single' product.slug %}" class="block">
+          <a href="{% url 'product_single' product.slug %}" class="block h-full flex flex-col">
             <div class="img-box aspect-[1/1]">
               {% with images=product.images.all %}
                 {% if images %}
@@ -157,10 +158,14 @@
               </div>
             </div>
 
-            <div class="p-3 card-footer-ambient">
-              <span class="text-[8px] font-bold text-blue-500 uppercase tracking-widest block mb-0.5">{{ product.product.category.name }}</span>
-              <h3 class="text-xs font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors mb-1.5 uppercase tracking-tighter">{{ product.product.name }}</h3>
+            <div class="p-3 card-footer-ambient flex-1 flex flex-col justify-end">
+              <div>
+                <span class="text-[8px] font-bold text-blue-500 uppercase tracking-widest block mb-0.5">{{ product.product.category.name }}</span>
+                <h3 class="text-xs font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors mb-1.5 uppercase tracking-tighter">{{ product.product.name }}</h3>
+              </div>
               <p class="text-sm font-black text-slate-900 tracking-tight">${{ product.selling_price|floatformat:0 }}</p>
+              
+              {% include 'core-templates/partials/product-rating.html' with product=product %}
             </div>
           </a>
         </div>
