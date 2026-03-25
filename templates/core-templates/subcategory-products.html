@@ -66,42 +66,14 @@
         transform: translateY(0);
         pointer-events: auto;
       }
+      .products-active span { 
+        width: 100% !important; 
+      }
     </style>
   </head>
   <body>
 
-    <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-3 px-4 md:px-8">
-      <div class="container mx-auto flex items-center justify-between gap-8">
-        
-        <a href="/" class="text-2xl font-black tracking-tighter text-white group flex items-center">
-            <span class="bg-blue-600 text-white px-2 py-1 rounded-sm mr-2 group-hover:bg-blue-500 transition-colors">C</span>
-            CORE<span class="text-blue-400">STORE</span>
-        </a>
-
-        <div class="hidden md:flex flex-1 max-w-xl relative group">
-          <input type="text" placeholder="Search product registry..." class="w-full pl-11 pr-4 py-2 bg-white/10 border border-blue-400/20 rounded-sm text-white placeholder-blue-200/50 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:bg-white/20 transition-all text-xs font-medium backdrop-blur-sm" />
-          <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-blue-400"></i>
-        </div>
-
-        <div class="flex items-center gap-6">
-          <a href="/products/" class="hidden lg:flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-blue-100/80 hover:text-white transition">
-            <i class="fa-solid fa-layer-group"></i> Inventory
-          </a>
-          
-          {% if user.is_authenticated %}
-          <div class="group relative">
-            <a href="{% url 'profile' %}" class="block w-9 h-9 rounded-full border-2 border-blue-400/30 p-0.5 hover:border-blue-400 transition-all overflow-hidden shadow-lg">
-              <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=2563eb&color=fff&bold=true" class="w-full h-full rounded-full object-cover">
-            </a>
-            </div>
-          {% else %}
-          <a href="{% url 'login' %}" class="text-[10px] font-black uppercase tracking-widest text-white bg-blue-600 px-4 py-2 rounded-sm hover:bg-blue-700 transition-all">Sign In</a>
-          {% endif %}
-        </div>
-      </div>
-    </nav>
-
-    <div class="h-20 lg:h-24"></div>
+{% include 'core-templates/navbar.html' %}
 
     <section class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] py-16 border-b border-blue-400/20">
       <div class="container mx-auto px-4 md:px-8">
@@ -201,25 +173,7 @@
       {% endif %}
     </main>
 
-    <footer class="bg-[#0f172a] py-16 border-t border-blue-400/10">
-      <div class="container mx-auto px-8">
-        <div class="flex flex-col items-center gap-8">
-            <div class="text-3xl font-black tracking-tighter text-white">
-                <span class="text-blue-600">CORE</span>STORE
-            </div>
-            <div class="flex gap-8 text-blue-200/40">
-                <i class="fa-brands fa-instagram hover:text-white transition-all cursor-pointer text-xl"></i>
-                <i class="fa-brands fa-x-twitter hover:text-white transition-all cursor-pointer text-xl"></i>
-                <i class="fa-brands fa-linkedin hover:text-white transition-all cursor-pointer text-xl"></i>
-            </div>
-            <div class="h-px w-24 bg-blue-900/50"></div>
-            <p class="text-blue-200/30 text-[9px] font-bold uppercase tracking-[0.4em] text-center leading-relaxed">
-                © 2026 Core Store Elite Division • Engineered for Performance<br>
-                All Technical Specifications Subject to Revision
-            </p>
-        </div>
-      </div>
-    </footer>
+{% include 'core-templates/footer.html' %}
 
     <script>
       function reveal() {

@@ -18,6 +18,9 @@ ENV/
 
 # Database
 db.sqlite3
+
+# Environment variables
+.env
 db.sqlite3-journal
 
 # Environment variables

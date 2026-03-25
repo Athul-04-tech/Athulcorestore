@@ -19,13 +19,15 @@
       </form>
 
       <div class="hidden lg:flex items-center gap-8">
-        <a href="/products/" class="flex items-center gap-2 text-blue-100/80 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group">
+        
+        <a href="/products/" class="flex items-center gap-2 transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group {% if '/products/' in request.path %}text-white{% else %}text-blue-100/80 hover:text-white{% endif %}">
           <i class="fa-solid fa-layer-group"></i> Products
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+          <span class="absolute -bottom-1 left-0 h-0.5 bg-blue-400 transition-all duration-300 {% if '/products/' in request.path %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
         </a>
-        <a href="{% url 'cart' %}" class="flex items-center gap-2 text-blue-100/80 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group">
+        
+        <a href="{% url 'cart' %}" class="flex items-center gap-2 transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group {% if request.resolver_match.url_name == 'cart' %}text-white{% else %}text-blue-100/80 hover:text-white{% endif %}">
           <i class="fa-solid fa-bag-shopping"></i> Cart
-          <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+          <span class="absolute -bottom-1 left-0 h-0.5 bg-blue-400 transition-all duration-300 {% if request.resolver_match.url_name == 'cart' %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
         </a>
         
         <div class="relative group">
