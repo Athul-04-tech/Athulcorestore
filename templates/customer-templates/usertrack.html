@@ -3,142 +3,176 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Track Order | CORE STORE</title>
+    <title>Track Units | CORE STORE</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; color: #3E2723; }
-        .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(15px); border: 1px solid rgba(62, 39, 35, 0.08); }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
         
-        /* Timeline styling */
-        .step-active { color: #00796B; }
-        .step-line { width: 2px; background: rgba(62, 39, 35, 0.1); flex-grow: 1; margin-left: 15px; }
-        .step-line-active { background: #00796B; }
-        .dot { width: 32px; height: 32px; border-radius: 10px; display: flex; items-center; justify-content: center; font-size: 12px; border: 2px solid rgba(62, 39, 35, 0.1); background: white; z-index: 10; }
-        .dot-active { border-color: #00796B; background: #00796B; color: white; box-shadow: 0 0 15px rgba(0, 121, 107, 0.3); }
+        :root {
+            --primary: #0f172a; 
+            --accent: #2563eb; 
+            --bg-main: #f8fafc;
+        }
+
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg-main); 
+            color: var(--primary); 
+            overflow-x: hidden; 
+        }
+
+        .glass { 
+            background: white; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 4px; /* Sharp Edges */
+        }
+
+        /* Technical Timeline Styling */
+        .timeline-step { position: relative; padding-bottom: 3rem; }
+        .timeline-step:last-child { padding-bottom: 0; }
+        
+        /* The Connecting Line */
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 40px;
+            width: 2px;
+            height: calc(100% - 40px);
+            background: #e2e8f0;
+        }
+        
+        .timeline-step.step-complete::before { background: var(--accent); }
+        .timeline-step:last-child::before { display: none; }
+
+        .step-icon {
+            width: 42px;
+            height: 42px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border: 2px solid #e2e8f0;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        .step-complete .step-icon { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+        .step-active .step-icon { border-color: var(--accent); color: white; background: var(--accent); box-shadow: 0 0 15px rgba(37, 99, 235, 0.3); }
+        .step-pending .step-icon { color: #cbd5e1; }
+
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
-<body class="bg-[#FAF9F6] pb-20">
+<body class="min-h-screen pb-20">
 
-    <nav class="p-6 flex justify-between items-center max-w-6xl mx-auto">
-        <div class="text-xl font-extrabold tracking-tighter uppercase">
-            Core<span class="text-[#00796B]">Store</span>
+    <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl py-4">
+        <div class="container mx-auto px-4 md:px-8 flex items-center justify-between">
+            <a href="{% url 'orders' %}" class="text-blue-100 hover:text-white transition-all flex items-center gap-3 text-[10px] font-black uppercase tracking-widest">
+                <i class="fa-solid fa-arrow-left-long"></i> Back to Registry
+            </a>
+            <div class="text-white font-black tracking-tighter uppercase text-sm">
+                Logistics <span class="text-blue-400">Tracker</span>
+            </div>
         </div>
-        <a href="userorders.html" class="text-[10px] font-black uppercase tracking-widest opacity-40 hover:opacity-100 transition">My Orders</a>
     </nav>
 
-    <main class="container mx-auto px-4 max-w-5xl">
+    <div class="h-24"></div>
+
+    <main class="container mx-auto px-4 max-w-4xl mt-12">
         
-        <header class="mb-10 text-center md:text-left">
-            <div class="inline-block bg-[#00796B]/10 text-[#00796B] px-4 py-1 rounded-full text-[9px] font-black uppercase tracking-[0.2em] mb-4">
-                In Transit
+        <div class="glass p-8 md:p-12 mb-12 flex flex-col md:flex-row items-center justify-between gap-8 shadow-sm border-t-4 border-t-blue-600 animate__animated animate__fadeIn">
+            <div>
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-blue-600 mb-2">Tracking Session Active</p>
+                <h1 class="text-3xl md:text-4xl font-black uppercase tracking-tighter text-slate-900">Unit Identification</h1>
+                <p class="text-xs font-bold text-slate-400 mt-2 uppercase tracking-widest">Manifest Reference: <span class="text-slate-900">#{{ order_id }}</span></p>
             </div>
-            <h1 class="text-3xl md:text-4xl font-black italic uppercase tracking-tighter">Order <span class="text-[#00796B]">#CS-9921</span></h1>
-            <p class="text-[#3E2723]/40 text-[10px] font-black uppercase tracking-widest mt-2">Estimated Arrival: <span class="text-[#3E2723]">Feb 18, 2026</span></p>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            
-            <div class="lg:col-span-5 space-y-2">
-                <div class="glass p-8 rounded-[2.5rem]">
-                    <h3 class="text-xs font-black uppercase tracking-widest mb-10 border-b border-[#3E2723]/5 pb-4">Journey Log</h3>
-                    
-                    <div class="space-y-0">
-                        <div class="flex gap-6 h-20">
-                            <div class="flex flex-col items-center">
-                                <div class="dot dot-active"><i class="fa-solid fa-check"></i></div>
-                                <div class="step-line step-line-active"></div>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-black uppercase">Order Placed</p>
-                                <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase">Feb 15 • 10:30 AM</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-6 h-20">
-                            <div class="flex flex-col items-center">
-                                <div class="dot dot-active"><i class="fa-solid fa-box-open"></i></div>
-                                <div class="step-line step-line-active"></div>
-                            </div>
-                            <div>
-                                <p class="text-[11px] font-black uppercase">Packed & Ready</p>
-                                <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase">Feb 15 • 04:45 PM</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-6 h-20">
-                            <div class="flex flex-col items-center">
-                                <div class="dot dot-active"><i class="fa-solid fa-truck-fast"></i></div>
-                                <div class="step-line"></div>
-                            </div>
-                            <div class="step-active">
-                                <p class="text-[11px] font-black uppercase tracking-tight">On the Way</p>
-                                <p class="text-[9px] font-bold opacity-60 uppercase italic">Arrived at Carrier Facility</p>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-6">
-                            <div class="flex flex-col items-center">
-                                <div class="dot"><i class="fa-solid fa-house-chimney text-[10px] opacity-20"></i></div>
-                            </div>
-                            <div class="opacity-30">
-                                <p class="text-[11px] font-black uppercase">Delivered</p>
-                                <p class="text-[9px] font-bold uppercase">Estimated Feb 18</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <button class="w-full glass py-5 rounded-[1.5rem] text-[10px] font-black uppercase tracking-[0.2em] hover:bg-[#3E2723] hover:text-white transition flex items-center justify-center gap-3">
-                    <i class="fa-solid fa-headset"></i> Need Help?
-                </button>
-            </div>
-
-            <div class="lg:col-span-7 space-y-6">
-                <div class="glass h-72 rounded-[3rem] overflow-hidden relative border-4 border-white shadow-xl shadow-[#3E2723]/5">
-                    <div class="absolute inset-0 bg-[#EFEBE9] flex items-center justify-center">
-                        <i class="fa-solid fa-map-location-dot text-6xl text-[#3E2723]/10"></i>
-                        <div class="absolute top-1/2 left-1/3 bg-[#00796B] p-2 rounded-lg text-white shadow-lg animate-bounce">
-                            <i class="fa-solid fa-truck"></i>
-                        </div>
-                    </div>
-                    <div class="absolute bottom-6 left-6 right-6 glass p-4 rounded-2xl flex items-center justify-between">
-                        <div>
-                            <p class="text-[8px] font-black text-[#3E2723]/40 uppercase">Current Location</p>
-                            <p class="text-[10px] font-black uppercase">Distribution Hub • San Francisco, CA</p>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[8px] font-black text-[#3E2723]/40 uppercase">Carrier</p>
-                            <p class="text-[10px] font-black uppercase text-[#00796B]">StudioExpress</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="glass p-8 rounded-[2.5rem]">
-                    <h3 class="text-[10px] font-black uppercase tracking-widest mb-6 opacity-30">Package Contents</h3>
-                    <div class="flex items-center gap-6">
-                        <div class="w-20 h-20 bg-white rounded-2xl overflow-hidden border border-[#3E2723]/5">
-                            <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=200" class="w-full h-full object-cover">
-                        </div>
-                        <div class="flex-1">
-                            <p class="text-[12px] font-black uppercase tracking-tighter">Vortex Racer X1</p>
-                            <p class="text-[9px] font-bold text-[#3E2723]/40 uppercase mt-1">Size: 42 • Color: Neon Teal</p>
-                            <p class="text-[11px] font-black text-[#00796B] mt-2">$149.00</p>
-                        </div>
-                        <div class="text-center bg-[#FAF9F6] px-4 py-2 rounded-xl">
-                            <p class="text-[8px] font-black uppercase text-[#3E2723]/40">Qty</p>
-                            <p class="text-sm font-black text-[#3E2723]">01</p>
-                        </div>
-                    </div>
-                </div>
+            <div class="bg-slate-50 border border-slate-200 px-8 py-4 rounded-sm text-center">
+                <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-1">Current Status</p>
+                <span class="text-sm font-black text-blue-600 uppercase tracking-tighter" id="global-status-text">Synchronizing...</span>
             </div>
         </div>
+
+        <div class="glass p-8 md:p-12 shadow-sm mb-12 animate__animated animate__fadeInUp">
+            <div class="max-w-xl mx-auto">
+                
+                <div class="timeline-step step-complete flex gap-6">
+                    <div class="step-icon"><i class="fa-solid fa-file-contract"></i></div>
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-900">Registry Entry Created</h3>
+                        <p class="text-xs font-medium text-slate-500 mt-1">Order received and logged into central database.</p>
+                        <span class="text-[9px] font-bold text-blue-500 uppercase mt-2 block">System Check: Verified</span>
+                    </div>
+                </div>
+
+                <div class="timeline-step step-complete flex gap-6">
+                    <div class="step-icon"><i class="fa-solid fa-shield-check"></i></div>
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-900">Authorization Success</h3>
+                        <p class="text-xs font-medium text-slate-500 mt-1">Financial transaction cleared and secured.</p>
+                        <span class="text-[9px] font-bold text-blue-500 uppercase mt-2 block">Payment Ref: AUTH-{{ order_id|slice:":4" }}</span>
+                    </div>
+                </div>
+
+                <div class="timeline-step step-active flex gap-6">
+                    <div class="step-icon"><i class="fa-solid fa-microchip"></i></div>
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-900">Technical Preparation</h3>
+                        <p class="text-xs font-medium text-slate-500 mt-1">Units are undergoing final QA and manifest packing.</p>
+                        <span class="text-[9px] font-bold text-amber-500 uppercase mt-2 block animate-pulse">In Progress: Warehouse Sector 7</span>
+                    </div>
+                </div>
+
+                <div class="timeline-step step-pending flex gap-6">
+                    <div class="step-icon"><i class="fa-solid fa-plane-departure"></i></div>
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-400">Logistics Dispatch</h3>
+                        <p class="text-xs font-medium text-slate-300 mt-1">Consignment awaiting pickup from regional hub.</p>
+                    </div>
+                </div>
+
+                <div class="timeline-step step-pending flex gap-6">
+                    <div class="step-icon"><i class="fa-solid fa-location-dot"></i></div>
+                    <div>
+                        <h3 class="text-sm font-black uppercase tracking-widest text-slate-400">Final Destination</h3>
+                        <p class="text-xs font-medium text-slate-300 mt-1">Registry closeout upon confirmed physical delivery.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate__animated animate__fadeInUp">
+            <div class="glass p-6 hover:border-blue-600 transition-all group">
+                <i class="fa-solid fa-headset text-blue-600 mb-4 block text-xl"></i>
+                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2">Technical Support</h4>
+                <p class="text-[10px] font-medium text-slate-500 leading-relaxed">Assistance with tracking data and manifest errors.</p>
+            </div>
+            <div class="glass p-6 hover:border-blue-600 transition-all">
+                <i class="fa-solid fa-phone-volume text-blue-600 mb-4 block text-xl"></i>
+                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2">Direct Line</h4>
+                <p class="text-[10px] font-medium text-slate-500 leading-relaxed">+1 800-CORE-DEP<br>0900 - 2100 HRS</p>
+            </div>
+            <div class="glass p-6 bg-slate-900 text-white">
+                <i class="fa-solid fa-clock text-blue-400 mb-4 block text-xl"></i>
+                <h4 class="font-black text-[10px] uppercase tracking-widest mb-2">Estimated Arrival</h4>
+                <p class="text-[10px] font-bold text-blue-100 leading-relaxed">48 - 72 Hours<br>Standard Freight</p>
+            </div>
+        </div>
+
     </main>
 
-    <footer class="mt-20 text-center opacity-20">
-        <p class="text-[9px] font-black uppercase tracking-[0.4em]">Core Store Logistics • Sustainable Shipping</p>
-    </footer>
-
+    <script>
+        // Update the header status text based on the active step
+        document.addEventListener('DOMContentLoaded', () => {
+            const activeStep = document.querySelector('.step-active h3');
+            if (activeStep) {
+                document.getElementById('global-status-text').textContent = activeStep.textContent;
+            }
+        });
+    </script>
 </body>
 </html>
