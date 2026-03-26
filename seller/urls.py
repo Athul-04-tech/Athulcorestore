@@ -1,11 +1,11 @@
 from django.urls import path
 from . import views
 urlpatterns =[
-    path("login/",views.sellerlogin),
+    path("slogin/",views.sellerlogin),
     path("regis/",views.selleregis),
     path("sellerhome/",views.sellerhome),
     path("sellerprofile/",views.sellerprofile),
-    path("logout/",views.seller_logout),
+    path("slogout/",views.seller_logout),
     path("sellerproduct/",views.sellerproduct),
     path("sellerproductupdate/<int:id>/", views.sellerproduct_update),
     path("sellerimage/<int:id>/",views.sellerimage),

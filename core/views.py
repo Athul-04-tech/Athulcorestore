@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib import messages
 from seller.models import Product, ProductVariant
 from customer.models import *
 from django.shortcuts import render, get_object_or_404
@@ -29,10 +30,19 @@ def product_single(request, slug):
     product = get_object_or_404(ProductVariant.objects.select_related('product').prefetch_related('images'), slug=slug)
     
     cart_count = 0
+    is_in_cart = False
     all_wishlists = []
     active_wishlist_id = None
     active_wishlist = None
     is_in_wishlist = False
+    
+    if request.user.is_authenticated:
+        try:
+            cart = Cart.objects.get(user=request.user)
+            cart_count = CartItem.objects.filter(cart=cart).count()
+            is_in_cart = CartItem.objects.filter(cart=cart, variant=product).exists()
+        except Cart.DoesNotExist:
+            cart_count = 0
     
     if request.user.is_authenticated:
         try:
@@ -70,11 +80,40 @@ def product_single(request, slug):
                 variant=product
             ).exists()
     
+    # Reviews section
+    from customer.models import Review
+    from django.db.models import Avg
+    reviews = product.product.reviews.select_related('user').order_by('-created_at')[:12]
+    avg_result = reviews.aggregate(avg_rating=Avg('rating'))
+    avg_rating = avg_result['avg_rating'] or 0
+    
     return render(request, 'core-templates/productsingle.html', {
         "data": product, 
         'cart_count': cart_count,
         'all_wishlists': all_wishlists,
         'active_wishlist_id': active_wishlist_id,
         'active_wishlist_name': active_wishlist.wishlist_name if active_wishlist else request.user.username,
-        'is_in_wishlist': is_in_wishlist
+        'is_in_wishlist': is_in_wishlist,
+        'is_in_cart': is_in_cart,
+        'reviews': reviews,
+        'avg_rating': round(float(avg_rating), 1),
+        'review_count': reviews.count()
     })
+    
+def helpe_center(request):
+    return render(request, 'core-templates/helpe_center.html')
+
+def support_or_contact(request):
+    return render(request, 'core-templates/Support_or_contact.html')
+
+def about(request):
+    return render(request, 'core-templates/about.html')
+
+def shipping_info(request):
+    return render(request, 'core-templates/shippinginfo.html')
+
+
+# Deprecated - Buy Now now handled in customer.views.buy_now_checkout
+# @login_required
+# def single_product_checkout(request, slug):
+#     pass
