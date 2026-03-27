@@ -1,4 +1,4 @@
-<nav class="fixed top-0 left-0 right-0 z-[100] bg-[#0f172a] border-b border-blue-400/10 shadow-2xl backdrop-blur-md bg-opacity-95">
+<nav class="fixed top-0 left-0 right-0 z-[9999] bg-gradient-to-r from-slate-900 via-blue-950 to-slate-900 border-b border-blue-400/10 shadow-2xl backdrop-blur-md bg-opacity-95 lg:bg-[#0f172a]">
   <div class="container mx-auto px-4 lg:px-8 py-3 md:py-4">
     <div class="flex items-center justify-between gap-4">
       
@@ -57,7 +57,7 @@
         </div>
         {% else %}
         <div class="flex items-center gap-2">
-          <a href="{% url 'login' %}" class="hidden sm:block px-4 py-2 text-blue-100 hover:text-white text-[10px] font-black uppercase tracking-widest">Sign In</a>
+          <a href="{% url 'login' %}" class="px-4 py-2 text-blue-100 hover:text-white text-[10px] font-black uppercase tracking-widest">Login</a>
           <a href="{% url 'register' %}" class="px-5 py-2.5 bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg hover:bg-blue-500 shadow-lg shadow-blue-900/30 active:scale-95 transition-all">Join</a>
         </div>
         {% endif %}
@@ -77,21 +77,21 @@
     </div>
   </div>
 
-  <div id="mobileSidebar" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-[200] hidden lg:hidden">
-    <div class="absolute top-0 right-0 w-[280px] h-full bg-[#0f172a] shadow-2xl p-6 transform transition-transform duration-300 translate-x-full" id="sidebarContent">
+  <div id="mobileSidebar" class="fixed inset-0 bg-slate-950/90 backdrop-blur-xl z-[99999] hidden lg:hidden">
+    <div class="absolute top-0 right-0 w-[280px] h-full  from-blue-950 via-slate-900 to-slate-800 shadow-2xl p-6 transform transition-transform duration-300 translate-x-full" id="sidebarContent">
       <div class="flex justify-between items-center mb-10">
-        <span class="text-blue-400 font-black uppercase tracking-widest text-xs">Registry Menu</span>
+        <span class="text-blue-300 font-black uppercase tracking-widest text-xs">Registry Menu</span>
         <button onclick="toggleMobileMenu()" class="text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
       </div>
       
-      <nav class="space-y-6">
-        <a href="/products/" class="flex items-center gap-4 text-white font-black uppercase tracking-[0.2em] text-sm">
+      <nav class="space-y-6 {% if user.is_authenticated %}bg-[#0f172a]{% else %}bg-transparent{% endif %} p-2 rounded-xl">
+        <a href="/products/" class="flex items-center gap-4 {% if user.is_authenticated %}bg-[#0f172a]{% else %}bg-transparent{% endif %} text-white font-black uppercase tracking-[0.2em] text-sm p-3 rounded-lg">
           <i class="fa-solid fa-layer-group text-blue-500"></i> Products
         </a>
-        <a href="{% url 'cart' %}" class="flex items-center gap-4 text-white font-black uppercase tracking-[0.2em] text-sm">
+        <a href="{% url 'cart' %}" class="flex items-center gap-4 {% if user.is_authenticated %}bg-[#0f172a]{% else %}bg-transparent{% endif %} text-white font-black uppercase tracking-[0.2em] text-sm p-3 rounded-lg">
           <i class="fa-solid fa-cart-shopping text-emerald-500"></i> Cart
         </a>
-        <a href="/wishlist" class="flex items-center gap-4 text-white font-black uppercase tracking-[0.2em] text-sm">
+        <a href="/wishlist" class="flex items-center gap-4 {% if user.is_authenticated %}bg-[#0f172a]{% else %}bg-transparent{% endif %} text-white font-black uppercase tracking-[0.2em] text-sm p-3 rounded-lg">
           <i class="fa-solid fa-heart text-pink-500"></i> Wishlist
         </a>
         <div class="h-px bg-white/5 my-6"></div>
