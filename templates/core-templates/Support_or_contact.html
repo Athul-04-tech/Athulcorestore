@@ -19,13 +19,14 @@
         font-family: "Inter", sans-serif;
         background-color: var(--bg-main);
         color: var(--primary);
+        overflow-x: hidden; /* Prevent horizontal scrolling */
       }
 
       /* Noticeable Smooth Reveal */
       .reveal {
         opacity: 0;
         transform: translateY(20px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .reveal.active {
         opacity: 1;
@@ -47,7 +48,7 @@
 
       /* Custom Scrollbar for Chat */
       .chat-scroll::-webkit-scrollbar {
-        width: 6px;
+        width: 4px; /* Slightly thinner for mobile elegance */
       }
       .chat-scroll::-webkit-scrollbar-track {
         background: #f1f5f9; 
@@ -76,75 +77,81 @@
     {% include 'core-templates/navbar.html' %}
     {% include 'includes/message-toast.html' %}
 
-    <header class="container mx-auto px-4 md:px-6 py-8 reveal">
-      <div class="border-l-4 border-blue-600 pl-4 mb-2">
-        <span class="text-blue-600 font-bold tracking-widest text-[10px] uppercase block mb-1">Get In Touch</span>
-        <h1 class="text-3xl md:text-4xl font-black tracking-tighter uppercase text-slate-900">Contact Support.</h1>
+    <header class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 reveal">
+      <div class="border-l-4 border-blue-600 pl-4 sm:pl-5 mb-3">
+        <span class="text-blue-600 font-bold tracking-widest text-[10px] sm:text-xs uppercase block mb-1.5">Get In Touch</span>
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase text-slate-900 leading-tight">Contact Support.</h1>
       </div>
-      <p class="text-sm font-medium text-slate-500 max-w-2xl mt-4">Need assistance with an order, or looking for advice on upgrading your gear? Reach out to us through the form below, or chat instantly with our AI assistant.</p>
+      <p class="text-sm sm:text-base font-medium text-slate-500 max-w-2xl mt-4 leading-relaxed">
+        Need assistance with an order, or looking for advice on upgrading your gear? Reach out to us through the form below, or chat instantly with our AI assistant.
+      </p>
     </header>
 
-    <section class="container mx-auto px-4 md:px-6 pb-20 reveal">
-      <div class="grid lg:grid-cols-5 gap-8">
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-24 reveal">
+      <div class="grid lg:grid-cols-5 gap-8 lg:gap-10">
         
-        <div class="lg:col-span-3 flex flex-col gap-8">
+        <div class="lg:col-span-3 flex flex-col gap-8 md:gap-10 order-2 lg:order-1">
           
           <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div class="bg-slate-50 border border-slate-100 rounded-sm p-4 flex flex-col items-center text-center">
-              <i class="fa-solid fa-envelope text-blue-600 text-xl mb-2"></i>
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-800 mb-1">Email Us</h4>
-              <p class="text-xs text-slate-500 font-medium">support@corestore.com</p>
+            <div class="bg-slate-50 border border-slate-100 rounded-sm p-5 sm:p-4 flex flex-col items-center text-center transition-colors hover:bg-slate-100">
+              <i class="fa-solid fa-envelope text-blue-600 text-xl md:text-2xl mb-3"></i>
+              <h4 class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-800 mb-1">Email Us</h4>
+              <p class="text-xs sm:text-sm text-slate-500 font-medium break-all">support@corestore.com</p>
             </div>
-            <div class="bg-slate-50 border border-slate-100 rounded-sm p-4 flex flex-col items-center text-center">
-              <i class="fa-solid fa-phone text-blue-600 text-xl mb-2"></i>
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-800 mb-1">Call Us</h4>
-              <p class="text-xs text-slate-500 font-medium">1-800-ELITE-GEAR</p>
+            <div class="bg-slate-50 border border-slate-100 rounded-sm p-5 sm:p-4 flex flex-col items-center text-center transition-colors hover:bg-slate-100">
+              <i class="fa-solid fa-phone text-blue-600 text-xl md:text-2xl mb-3"></i>
+              <h4 class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-800 mb-1">Call Us</h4>
+              <p class="text-xs sm:text-sm text-slate-500 font-medium">1-800-ELITE-GEAR</p>
             </div>
-            <div class="bg-slate-50 border border-slate-100 rounded-sm p-4 flex flex-col items-center text-center">
-              <i class="fa-solid fa-location-dot text-blue-600 text-xl mb-2"></i>
-              <h4 class="text-[10px] font-black uppercase tracking-widest text-slate-800 mb-1">Headquarters</h4>
-              <p class="text-xs text-slate-500 font-medium">Silicon Valley, CA</p>
+            <div class="bg-slate-50 border border-slate-100 rounded-sm p-5 sm:p-4 flex flex-col items-center text-center transition-colors hover:bg-slate-100">
+              <i class="fa-solid fa-location-dot text-blue-600 text-xl md:text-2xl mb-3"></i>
+              <h4 class="text-[10px] sm:text-xs font-black uppercase tracking-widest text-slate-800 mb-1">Headquarters</h4>
+              <p class="text-xs sm:text-sm text-slate-500 font-medium">Silicon Valley, CA</p>
             </div>
           </div>
 
-          <div class="pro-card p-6 md:p-8">
-            <h3 class="text-sm font-bold text-slate-900 uppercase tracking-wide mb-6 border-b border-slate-100 pb-3">Send a Message</h3>
-            <form action="#" method="POST" class="flex flex-col gap-4">
+          <div class="pro-card p-6 sm:p-8">
+            <h3 class="text-sm sm:text-base font-bold text-slate-900 uppercase tracking-wide mb-6 border-b border-slate-100 pb-3">Send a Message</h3>
+            
+            <form action="#" method="POST" class="flex flex-col gap-5">
               {% csrf_token %}
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-4">
                 <div>
-                  <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1">Full Name</label>
-                  <input type="text" class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-2.5 rounded-sm text-sm focus:outline-none focus:border-blue-600 transition-colors" placeholder="John Doe">
+                  <label class="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest mb-1.5">Full Name</label>
+                  <input type="text" class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-3 rounded-sm text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-all shadow-sm" placeholder="John Doe">
                 </div>
                 <div>
-                  <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1">Email Address</label>
-                  <input type="email" class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-2.5 rounded-sm text-sm focus:outline-none focus:border-blue-600 transition-colors" placeholder="john@example.com">
+                  <label class="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest mb-1.5">Email Address</label>
+                  <input type="email" class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-3 rounded-sm text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-all shadow-sm" placeholder="john@example.com">
                 </div>
               </div>
+              
               <div>
-                <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1">Subject</label>
-                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-2.5 rounded-sm text-sm focus:outline-none focus:border-blue-600 transition-colors">
+                <label class="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest mb-1.5">Subject</label>
+                <select class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-3 rounded-sm text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-all shadow-sm cursor-pointer">
                   <option>Order Inquiry</option>
                   <option>Technical Support</option>
                   <option>Returns & Refunds</option>
                   <option>Other</option>
                 </select>
               </div>
+              
               <div>
-                <label class="block text-[10px] font-bold text-slate-600 uppercase tracking-widest mb-1">Message</label>
-                <textarea rows="5" class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-3 rounded-sm text-sm focus:outline-none focus:border-blue-600 transition-colors resize-none" placeholder="How can we help you today?"></textarea>
+                <label class="block text-[10px] sm:text-xs font-bold text-slate-600 uppercase tracking-widest mb-1.5">Message</label>
+                <textarea rows="5" class="w-full bg-slate-50 border border-slate-200 text-slate-800 px-4 py-3 rounded-sm text-sm focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-all shadow-sm resize-none" placeholder="How can we help you today?"></textarea>
               </div>
-              <button type="submit" class="bg-blue-600 text-white w-full py-3 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-colors mt-2">
+              
+              <button type="submit" class="bg-blue-600 text-white w-full py-3.5 sm:py-4 rounded-sm font-black text-xs uppercase tracking-widest hover:bg-slate-900 transition-colors mt-2 shadow-md hover:shadow-lg">
                 Submit Request
               </button>
             </form>
           </div>
         </div>
 
-        <div class="lg:col-span-2">
-          <div class="pro-card flex flex-col h-[600px] overflow-hidden sticky top-6 border-blue-600">
+        <div class="lg:col-span-2 order-1 lg:order-2">
+          <div class="pro-card flex flex-col h-[500px] sm:h-[550px] lg:h-[600px] overflow-hidden lg:sticky lg:top-8 border-blue-600 shadow-xl">
             
-            <div class="bg-slate-900 text-white p-4 flex items-center justify-between">
+            <div class="bg-slate-900 text-white p-4 flex items-center justify-between shrink-0">
               <div class="flex items-center gap-3">
                 <div class="relative">
                   <div class="w-10 h-10 bg-slate-800 rounded-full flex items-center justify-center border border-slate-700">
@@ -157,41 +164,41 @@
                   <span class="text-[9px] text-blue-400 font-medium">Online • Responds instantly</span>
                 </div>
               </div>
-              <i class="fa-solid fa-ellipsis-vertical text-slate-500 cursor-pointer hover:text-white"></i>
+              <button class="w-8 h-8 flex items-center justify-center rounded hover:bg-slate-800 transition-colors group" aria-label="Menu">
+                <i class="fa-solid fa-ellipsis-vertical text-slate-400 group-hover:text-white transition-colors"></i>
+              </button>
             </div>
 
             <div id="chat-window" class="flex-1 bg-slate-50 p-4 overflow-y-auto chat-scroll flex flex-col gap-4">
-              
-              <div class="text-center text-[9px] font-bold text-slate-400 uppercase tracking-widest my-2">Today</div>
+              <div class="text-center text-[9px] font-bold text-slate-400 uppercase tracking-widest my-2 shrink-0">Today</div>
 
-              <div class="flex gap-2">
-                <div class="w-6 h-6 rounded-full bg-slate-900 flex-shrink-0 flex items-center justify-center mt-1">
+              <div class="flex gap-2 shrink-0">
+                <div class="w-7 h-7 rounded-full bg-slate-900 flex-shrink-0 flex items-center justify-center mt-0.5 shadow-sm">
                   <i class="fa-solid fa-robot text-[10px] text-blue-400"></i>
                 </div>
-                <div class="bg-white border border-slate-200 text-slate-700 p-3 rounded-r-md rounded-bl-md text-xs font-medium max-w-[85%] shadow-sm">
+                <div class="bg-white border border-slate-200 text-slate-700 p-3 sm:p-3.5 rounded-r-lg rounded-bl-lg text-xs sm:text-sm font-medium max-w-[85%] shadow-sm leading-relaxed">
                   Welcome to CORE STORE! I'm your AI assistant. How can I help you gear up today?
                 </div>
               </div>
-
             </div>
 
-            <div id="typing-indicator" class="hidden bg-slate-50 px-12 pb-2">
-              <div class="bg-slate-200 w-12 h-6 rounded-full flex items-center justify-center gap-1">
+            <div id="typing-indicator" class="hidden bg-slate-50 px-14 pb-3 shrink-0">
+              <div class="bg-slate-200 w-12 h-6 rounded-full flex items-center justify-center gap-1 shadow-sm border border-slate-300">
                 <div class="w-1.5 h-1.5 bg-slate-500 rounded-full typing-dot"></div>
                 <div class="w-1.5 h-1.5 bg-slate-500 rounded-full typing-dot"></div>
                 <div class="w-1.5 h-1.5 bg-slate-500 rounded-full typing-dot"></div>
               </div>
             </div>
 
-            <div class="p-3 bg-white border-t border-slate-100">
+            <div class="p-3 sm:p-4 bg-white border-t border-slate-100 shrink-0">
               <div class="relative flex items-center">
-                <input type="text" id="chat-input" class="w-full bg-slate-50 border border-slate-200 text-slate-800 pl-4 pr-12 py-3 rounded-sm text-xs font-medium focus:outline-none focus:border-blue-600 focus:bg-white transition-colors" placeholder="Type your message here..." onkeypress="handleKeyPress(event)">
-                <button onclick="sendChatMessage()" class="absolute right-2 w-8 h-8 bg-blue-600 text-white rounded flex items-center justify-center hover:bg-slate-900 transition-colors">
-                  <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                <input type="text" id="chat-input" class="w-full bg-slate-50 border border-slate-200 text-slate-800 pl-4 pr-14 py-3 sm:py-3.5 rounded-sm text-xs sm:text-sm font-medium focus:outline-none focus:border-blue-600 focus:bg-white focus:ring-1 focus:ring-blue-600 transition-all shadow-inner" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+                <button onclick="sendChatMessage()" class="absolute right-2 w-9 h-9 sm:w-10 sm:h-10 bg-blue-600 text-white rounded flex items-center justify-center hover:bg-slate-900 transition-colors shadow-md" aria-label="Send Message">
+                  <i class="fa-solid fa-paper-plane text-xs"></i>
                 </button>
               </div>
-              <div class="text-center mt-2">
-                <span class="text-[8px] text-slate-400 font-bold uppercase tracking-widest">Powered by Core AI</span>
+              <div class="text-center mt-3">
+                <span class="text-[9px] text-slate-400 font-bold uppercase tracking-widest">Powered by Core AI</span>
               </div>
             </div>
 
@@ -212,7 +219,7 @@
         });
       }
       window.addEventListener("scroll", reveal);
-      reveal();
+      reveal(); // Trigger on load
 
       // --- Chatbot Demo Logic ---
       const chatInput = document.getElementById('chat-input');
@@ -231,8 +238,8 @@
 
         // 1. Add User Message
         const userMsgHTML = `
-          <div class="flex justify-end gap-2">
-            <div class="bg-blue-600 text-white p-3 rounded-l-md rounded-br-md text-xs font-medium max-w-[85%] shadow-sm">
+          <div class="flex justify-end gap-2 shrink-0">
+            <div class="bg-blue-600 text-white p-3 sm:p-3.5 rounded-l-lg rounded-br-lg text-xs sm:text-sm font-medium max-w-[85%] shadow-sm leading-relaxed">
               ${message}
             </div>
           </div>
@@ -262,11 +269,11 @@
           }
 
           const botMsgHTML = `
-            <div class="flex gap-2 reveal active">
-              <div class="w-6 h-6 rounded-full bg-slate-900 flex-shrink-0 flex items-center justify-center mt-1">
+            <div class="flex gap-2 reveal active shrink-0">
+              <div class="w-7 h-7 rounded-full bg-slate-900 flex-shrink-0 flex items-center justify-center mt-0.5 shadow-sm">
                 <i class="fa-solid fa-robot text-[10px] text-blue-400"></i>
               </div>
-              <div class="bg-white border border-slate-200 text-slate-700 p-3 rounded-r-md rounded-bl-md text-xs font-medium max-w-[85%] shadow-sm">
+              <div class="bg-white border border-slate-200 text-slate-700 p-3 sm:p-3.5 rounded-r-lg rounded-bl-lg text-xs sm:text-sm font-medium max-w-[85%] shadow-sm leading-relaxed">
                 ${botReply}
               </div>
             </div>

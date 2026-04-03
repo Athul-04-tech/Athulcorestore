@@ -103,9 +103,10 @@
             <div class="lg:col-span-7 flex flex-col md:flex-row gap-4 animate__animated animate__fadeInLeft animate__faster">
                 <div class="flex md:flex-col gap-3 order-2 md:order-1 overflow-x-auto md:overflow-y-auto hide-scrollbar max-h-[500px]">
                     {% for img in data.images.all %}
-                    <button onclick="changeHero('{{ img.image.url }}', this)" class="thumbnail-btn shrink-0 w-16 h-16 md:w-20 md:h-20 glass overflow-hidden {% if img.is_primary %}thumbnail-active{% endif %}">
-                        <img src="{{ img.image.url }}" class="w-full h-full object-cover">
+onclick="changeHero('{{ img.images.url }}', this)" class="thumbnail-btn shrink-0 w-16 h-16 md:w-20 md:h-20 glass overflow-hidden {% if img.is_primary %}thumbnail-active{% endif %}">
+                        <img src="{{ img.images.url }}" class="w-full h-full object-cover">
                     </button>
+
                     {% endfor %}
                 </div>
 

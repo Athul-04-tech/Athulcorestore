@@ -81,7 +81,9 @@
                             <div class="w-24 h-24 md:w-32 md:h-32 bg-slate-50 rounded-sm overflow-hidden border border-slate-100 group-hover:border-blue-100 transition-all">
                                 {% for img in cart_item.variant.images.all %}
                                     {% if img.is_primary %}
-                                        <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
+                                        <img src="{{ img.images.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+
                                     {% endif %}
                                 {% empty %}
                                     <div class="w-full h-full flex items-center justify-center bg-slate-100">

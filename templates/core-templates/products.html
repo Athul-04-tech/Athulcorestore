@@ -102,7 +102,7 @@
           <div class="relative aspect-[1/1] overflow-hidden rounded-sm bg-slate-50 mb-3">
             {% with product.images.all|first as img %}
               {% if img %}
-                <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                <img src="{{ img.images.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
               {% endif %}
             {% endwith %}
             <div class="absolute top-2 left-2 bg-blue-600 text-white text-[8px] font-black px-2 py-1 rounded-sm uppercase tracking-widest">NEW</div>
@@ -210,7 +210,7 @@
                 <div class="relative aspect-[1/1] overflow-hidden rounded-sm bg-slate-50 mb-4">
                   {% with product.images.all|first as img %}
                     {% if img %}
-                      <img src="{{ img.image.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                      <img src="{{ img.images.url }}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
                     {% endif %}
                   {% endwith %}
                   

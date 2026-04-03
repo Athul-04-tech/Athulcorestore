@@ -591,125 +591,6 @@ def user_cart(request):
         'cart': cart_items,
         'total_amount': total_amount
     })
-
-# @login_required
-# def user_addto_cart(request, id):
-#     user = request.user
-#     cart, _ = Cart.objects.get_or_create(user=user)
-#     product_variant = get_object_or_404(ProductVariant, id=id)
-#     cart_item, created = CartItem.objects.get_or_create(
-#         cart=cart, 
-#         variant=product_variant, 
-#         defaults={'price_at_time': product_variant.selling_price, 'quantity': 1}
-#     )
-    
-#     if not created:
-#         cart_item.quantity += 1
-#         cart_item.price_at_time = product_variant.selling_price
-#         cart_item.save()
-    
-#     # Get updated cart count (number of distinct items)
-#     cart_count = CartItem.objects.filter(cart=cart).count()
-    
-#     # Check if it's an AJAX request
-#     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-#         return JsonResponse({
-#             'status': 'success',
-#             'cart_count': cart_count,
-#             'message': 'Item added to cart!'
-#         })
-    
-#     return redirect('product_single', id=id)
-
-# @login_required
-# def cart_update_quantity(request, item_id, Asc action):
-#     """AJAX view to update cart item Asc quantity (increase/decrease)"""
-#     try:
-#         cart_item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-        
-#         if Asc action == 'increase':
-#             cart_item.quantity += 1
-#             cart_item.save()
-            
-#             # Calculate new total
-#             cart_items = CartItem.objects.filter(cart=cart_item.cart)
-#             total_amount = sum(item.quantity * item.price_at_time for item in cart_items)
-#             cart_count = cart_items.count()
-            
-#             return JsonResponse({
-#                 'status': 'success',
-#                 'new_quantity': cart_item.quantity,
-#                 'total_amount': f"{total_amount:.2f}",
-#                 'item_total': f"{cart_item.quantity * cart_item.price_at_time:.2f}",
-#                 'cart_count': cart_count
-# Asc             })
-            
-#         elif action == 'decrease':
-#             if cart_item.quantity > 1:
-#                 cart_item Asc Asc .quantity -= 1
-#                 cart_item.save()
-                
-#                 # Calculate new total
-#                 cart_items = CartItem.objects.filter(cart=cart_item.cart)
-#                 total_amount = sum(item.quantity * item.price_at_time for item in cart_items)
-#                 cart_count = cart_items.count()
-                
-#                 return JsonResponse({
-#                     'status': 'success',
-#                     'new_quantity': cart_item.quantity,
-#                     'total_amount': f"{total_amount:.2f}",
-#                     'item_total': f"{cart_item Asc Asc .quantity * cart_item.price_at_time:.2f}",
-#                     'cart_count': cart_count
-#                 })
-#             else:
-#                 # If quantity is 1 and user clicks minus, delete the item
-#                 cart = cart_item.cart
-#                 cart_item.delete()
-                
-#                 # Get remaining item count and total
-#                 remaining_items = CartItem.objects.filter(cart=cart)
-#                 item_count = remaining_items.count()
-#                 total_amount = sum(item.quantity * item.price_at_time for item in remaining_items)
-                
-#                 return JsonResponse({
-#                     'status': 'success',
-#                     'item_deleted': True,
-#                     'cart_count': item_count,
-#                     'total_amount': f"{total_amount:.2f}",
-#                     'cart_empty': item_count == 0
-# Asc                 })
-        
-#     except Exception Asc as e:
-#         return JsonResponse({
-#             'status': 'error',
-#             'message': str(e)
-# Asc         })
-
-# @login_required
-# def cart_remove_item(request, item_id):
-# Asc Asc Asc """AJAX view to remove item from cart"""
-# Asc Asc Asc try:
-# Asc Asc Asc Asc Asc cart_item = get_object_or_404(CartItem, Asc id=item_id, cart__user=request.user)
-# Asc Asc Asc Asc Asc cart = cart_item.cart
-# Asc Asc Asc Asc Asc cart_item.delete()
-        
-# Asc Asc Asc Asc Asc Asc Asc # Get remaining item count and total
-# Asc Asc Asc Asc Asc Asc Asc remaining_items = CartItem.objects.filter(cart=cart)
-# Asc Asc Asc Asc Asc Asc Asc item_count = remaining_items.count()
-# Asc Asc Asc Asc Asc Asc Asc total_amount = sum(item.quantity * item.price_at_time for item in remaining_items)
-        
-# Asc Asc Asc Asc Asc Asc Asc return JsonResponse({
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc 'status': 'success',
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc 'cart_count': item_count,
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc 'total_amount': f"{total_amount:.2f}",
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc 'cart_empty': item_count == 0
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc })
-        
-# Asc Asc Asc Asc Asc Asc except Exception as e:
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc return JsonResponse({
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc 'status': 'error',
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc 'message': str(e)
-# Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc Asc })
     
 @customer_required
 def user_addto_cart(request, slug):
@@ -1056,8 +937,10 @@ def user_orders(request):
     orders = Order.objects.filter(
         user=request.user
     ).prefetch_related(
-        'items__variant__product',
+        'items__variant__product__images',
         'items__variant__images'
+    ).select_related(
+        'items__variant__product'
     ).order_by('-ordered_at')
     return render(request, 'customer-templates/userorders.html', {'orders': orders})
 
@@ -1078,25 +961,23 @@ def order_detail(request, order_id):
     context = {
         'order': order,
         'order_items': order.items.all(),
-        'order_status_display': order.order_status.replace('_', ' ').title()
+        'order_status_display': order.order_status.replace('_', ' ').title(),
+        'eligible_items': [],
+        'review_status_list': []
     }
     
-
-    # Add review eligibility for delivered orders with review status
-    eligible_items = []
-    review_status = {}
+    # Add review eligibility for delivered orders only
     if order.order_status == 'delivered':
         eligible_items = order.items.all()
-        # Get user's existing reviews for products in this order
         product_ids = [item.variant.product.id for item in eligible_items]
         user_reviews = Review.objects.filter(
             user=request.user,
             product_id__in=product_ids
         )
-    review_status_list = [(review.product_id, review) for review in user_reviews]
-    context['eligible_items'] = eligible_items
-    context['review_status_list'] = review_status_list
-
+        review_status_list = [(review.product_id, review) for review in user_reviews]
+        
+        context['eligible_items'] = eligible_items
+        context['review_status_list'] = review_status_list
     
     return render(request, 'customer-templates/order-detail.html', context)
 

@@ -21,6 +21,7 @@
         color: var(--primary);
       }
 
+      /* Noticeable Smooth Reveal */
       .reveal {
         opacity: 0;
         transform: translateY(20px);
@@ -31,6 +32,7 @@
         transform: translateY(0);
       }
 
+      /* Category Item Styling */
       .cat-item {
         transition: all 0.3s ease;
       }
@@ -40,7 +42,7 @@
         transform: scale(1.1);
       }
 
-      /* UPDATED PRO-CARD CSS */
+      /* Sharp Professional Card with Ambient Shadow & z-index fixes */
       .pro-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
@@ -71,6 +73,7 @@
         transform: translateY(0);
       }
 
+      /* Ambient Footer Tint */
       .card-footer-ambient {
         background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
         border-top: 1px solid #e2e8f0;
@@ -140,35 +143,12 @@
 
       <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
         {% for product in products_page %}
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> fc48336313d1d7e3aacea95bd85af412fed26470
-        <a href="{% url 'product_single' product.slug %}" class="product-card glass rounded-[2rem] p-3 group block">
-          <div class="relative aspect-[4/5] overflow-hidden rounded-[1.5rem] bg-[#EFEBE9] mb-4">
-            {% with product.images.all|dictsortreversed:"is_primary"|first as img %}
-      
-      {% if img %}
-        <img src="{{ img.images.url }}"
-             class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
-             alt="{{ product.product.name }}">
-      {% else %}
-        <img src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400"
-             class="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
-             alt="No Image">
-      {% endif %}
-
-    {% endwith %}
-            <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                <button class="bg-white p-3 rounded-full text-[#3E2723] translate-y-4 group-hover:translate-y-0 transition-transform"><i class="fa-solid fa-cart-plus"></i></button>
-<<<<<<< HEAD
-=======
         <div class="pro-card group">
           <a href="{% url 'product_single' product.slug %}" class="block h-full flex flex-col">
             <div class="img-box aspect-[1/1]">
               {% with images=product.images.all %}
                 {% if images %}
-                  <img src="{{ images.0.image.url }}" class="main-img w-full h-full object-cover transition-transform duration-500">
+                  <img src="{{ images.0.images.url }}" class="main-img w-full h-full object-cover transition-transform duration-500">
                 {% else %}
                   <div class="w-full h-full flex items-center justify-center bg-slate-50"><i class="fa-solid fa-image text-xl text-slate-200"></i></div>
                 {% endif %}
@@ -179,9 +159,6 @@
                     Add To Cart +
                 </button>
               </div>
->>>>>>> safe-hpuse
-=======
->>>>>>> fc48336313d1d7e3aacea95bd85af412fed26470
             </div>
 
             <div class="p-3 card-footer-ambient flex-1 flex flex-col justify-end">

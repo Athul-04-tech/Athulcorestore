@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
         :root {
             --primary: #0f172a; 
@@ -27,7 +27,7 @@
         .glass { 
             background: white; 
             border: 1px solid #e2e8f0; 
-            border-radius: 4px; /* Sharp Edges */
+            border-radius: 4px;
         }
 
         .order-card { 
@@ -36,7 +36,7 @@
         }
         .order-card:hover { 
             border-left-color: var(--accent);
-            transform: translateX(8px);
+            transform: translateX(4px);
             box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08);
         }
 
@@ -46,8 +46,10 @@
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 0.1em;
-            padding: 4px 12px;
+            padding: 4px 10px;
             border-radius: 2px;
+            display: inline-flex;
+            align-items: center;
         }
         .status-transit { background: #eff6ff; color: #2563eb; border: 1px solid #dbeafe; }
         .status-delivered { background: #f0fdf4; color: #16a34a; border: 1px solid #dcfce7; }
@@ -67,102 +69,118 @@
 
     {% include 'core-templates/navbar.html' %}
 
-    <div class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 py-16 shadow-lg">
-      <div class="container mx-auto px-4 md:px-8 max-w-5xl">
-        <h1 class="text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic">
+    <div class="bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 py-12 md:py-16 shadow-lg px-4">
+      <div class="container mx-auto max-w-5xl">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-white uppercase italic leading-tight">
           Registry <span class="text-blue-400">History</span>
         </h1>
         <div class="flex items-center gap-4 mt-4">
-            <p class="text-[10px] text-blue-200/60 font-bold uppercase tracking-[0.3em]">{{ orders|length }} Recorded Transaction{{ orders|length|pluralize }}</p>
+            <p class="text-[9px] sm:text-[10px] text-blue-200/60 font-bold uppercase tracking-[0.2em] sm:tracking-[0.3em] shrink-0">
+                {{ orders|length }} Recorded Transaction{{ orders|length|pluralize }}
+            </p>
             <div class="h-[1px] flex-1 bg-blue-400/10"></div>
         </div>
       </div>
     </div>
 
-    <main class="container mx-auto px-4 md:px-8 mt-12 max-w-5xl">
+    <main class="container mx-auto px-4 md:px-8 mt-8 md:mt-12 max-w-5xl">
         
         {% if orders %}
-            <div class="space-y-4">
+            <div class="space-y-4 md:space-y-6">
                 {% for order in orders %}
                 <div class="order-card glass overflow-hidden animate__animated animate__fadeInUp" style="animation-delay: {{ forloop.counter0|add:1 }}00ms">
                     {% with first_item=order.items.first %}
-                    <div class="p-6 md:p-8 flex flex-col md:flex-row items-center gap-6 md:gap-10">
+                    
+                    <div class="p-5 md:p-8 flex flex-col md:flex-row md:items-center gap-5 md:gap-8">
                         
-                        <div class="relative w-24 h-24 md:w-28 md:h-28 bg-slate-50 border border-slate-100 rounded-sm overflow-hidden shrink-0">
-                            {% if first_item.variant.images.first %}
-                                <img src="{{ first_item.variant.images.first.image.url }}" alt="{{ first_item.variant.product.name }}" class="w-full h-full object-cover">
-                            {% else %}
-                                <div class="w-full h-full flex items-center justify-center text-slate-200">
-                                    <i class="fa-solid fa-box text-3xl"></i>
+                        <div class="flex items-start md:items-center gap-4 md:gap-8 flex-1 min-w-0">
+                            
+                            <div class="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 bg-slate-50 border border-slate-100 rounded-sm overflow-hidden shrink-0 shadow-sm">
+                                {# Try variant images first, fallback to product images #}
+                                {% with variant_img=first_item.variant.images.first product_img=first_item.variant.product.images.first %}
+                                    {% if variant_img %}
+                                        <img src="{{ variant_img.image.url }}" alt="{{ first_item.variant.product.name }}" class="w-full h-full object-cover" loading="lazy" onerror="this.onerror=null;this.src='{{ product_img.image.url }}';if(!this.src || this.src==='{{ product_img.image.url }}') this.style.display='none';">
+                                    {% elif product_img %}
+                                        <img src="{{ product_img.image.url }}" alt="{{ first_item.variant.product.name }}" class="w-full h-full object-cover" loading="lazy" onerror="this.style.display='none';">
+                                    {% endif %}
+                                {% endwith %}
+                                <div class="absolute inset-0 flex items-center justify-center bg-slate-50 text-slate-200 z-10 hidden data-[no-image]:flex" data-no-image="{% if not first_item.variant.images.first and not first_item.variant.product.images.first %}true{% endif %}">
+                                    <i class="fa-solid fa-box text-2xl md:text-3xl"></i>
                                 </div>
-                            {% endif %}
-                        </div>
+                            </div>
 
-                        <div class="flex-1 min-w-0 text-center md:text-left">
-                            <div class="mb-3">
-                                {% if order.order_status == 'shipped' %}
-                                    <span class="status-badge status-transit"><i class="fa-solid fa-truck-fast mr-2"></i>In Transit</span>
-                                {% elif order.order_status == 'delivered' %}
-                                    <span class="status-badge status-delivered"><i class="fa-solid fa-circle-check mr-2"></i>Delivered</span>
-                                {% elif order.order_status == 'processing' %}
-                                    <span class="status-badge status-processing pulse-processing"><i class="fa-solid fa-gear fa-spin mr-2"></i>Processing</span>
-                                {% elif order.order_status == 'placed' %}
-                                    <span class="status-badge status-placed"><i class="fa-solid fa-clock mr-2"></i>Order Placed</span>
-                                {% else %}
-                                    <span class="status-badge status-cancelled"><i class="fa-solid fa-xmark mr-2"></i>{{ order.order_status|upper }}</span>
-                                {% endif %}
+                            <div class="flex-1 min-w-0">
+                                <div class="mb-2 md:mb-3">
+                                    {% if order.order_status == 'shipped' %}
+                                        <span class="status-badge status-transit"><i class="fa-solid fa-truck-fast mr-1.5 text-[10px]"></i>In Transit</span>
+                                    {% elif order.order_status == 'delivered' %}
+                                        <span class="status-badge status-delivered"><i class="fa-solid fa-circle-check mr-1.5 text-[10px]"></i>Delivered</span>
+                                    {% elif order.order_status == 'processing' %}
+                                        <span class="status-badge status-processing pulse-processing"><i class="fa-solid fa-gear fa-spin mr-1.5 text-[10px]"></i>Processing</span>
+                                    {% elif order.order_status == 'placed' %}
+                                        <span class="status-badge status-placed"><i class="fa-solid fa-clock mr-1.5 text-[10px]"></i>Order Placed</span>
+                                    {% else %}
+                                        <span class="status-badge status-cancelled"><i class="fa-solid fa-xmark mr-1.5 text-[10px]"></i>{{ order.order_status|upper }}</span>
+                                    {% endif %}
+                                    
+                                    <h3 class="text-lg sm:text-xl font-black uppercase tracking-tighter text-slate-900 truncate leading-tight mt-2 sm:mt-3">
+                                        {{ first_item.variant.product.name }}
+                                    </h3>
+                                </div>
                                 
-                                <h3 class="text-xl font-black uppercase tracking-tighter text-slate-900 truncate leading-none mt-4">
-                                    {{ first_item.variant.product.name }}
-                                </h3>
-                            </div>
-                            
-                            <div class="flex flex-wrap justify-center md:justify-start items-center gap-x-4 gap-y-2 text-slate-400 text-[9px] font-bold uppercase tracking-widest">
-                                <span>Ref: #{{ order.order_number }}</span>
-                                <span class="w-1 h-1 rounded-full bg-slate-200"></span>
-                                <span>Units: {{ first_item.quantity }}{% if order.items.count > 1 %} (+{{ order.items.count|add:-1 }} Items){% endif %}</span>
-                                <span class="w-1 h-1 rounded-full bg-slate-200"></span>
-                                <span>Dispatch: {{ order.ordered_at|date:"M d, Y" }}</span>
+                                <div class="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-slate-500 text-[9px] font-bold uppercase tracking-widest">
+                                    <span>Ref: #{{ order.order_number }}</span>
+                                    <span class="hidden sm:block w-1 h-1 rounded-full bg-slate-300"></span>
+                                    <span>Units: {{ first_item.quantity }}{% if order.items.count > 1 %} (+{{ order.items.count|add:-1 }}){% endif %}</span>
+                                    <span class="hidden sm:block w-1 h-1 rounded-full bg-slate-300"></span>
+                                    <span>Dispatch: {{ order.ordered_at|date:"M d, Y" }}</span>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="flex flex-col items-center md:items-end gap-4 shrink-0 pt-4 md:pt-0 md:border-l md:border-slate-100 md:pl-10">
-                            <p class="text-2xl font-black text-slate-900 tracking-tighter">${{ order.total_amount|floatformat:2 }}</p>
+                        <div class="flex flex-col sm:flex-row md:flex-col items-center sm:items-stretch md:items-end gap-4 shrink-0 pt-4 md:pt-0 border-t md:border-t-0 md:border-l border-slate-100 md:pl-8">
                             
-                            <div class="flex md:flex-col gap-2 w-full md:w-auto">
-                                <a href="{% url 'order_detail' order.id %}" class="flex-1 bg-slate-900 text-white px-6 py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:bg-blue-600 transition-all text-center">
+                            <div class="w-full sm:w-auto md:w-full flex justify-between md:justify-end items-center mb-2 md:mb-0">
+                                <span class="md:hidden text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total</span>
+                                <p class="text-xl sm:text-2xl font-black text-slate-900 tracking-tighter">${{ order.total_amount|floatformat:2 }}</p>
+                            </div>
+                            
+                            <div class="flex flex-col sm:flex-row md:flex-col gap-2.5 w-full">
+                                <a href="{% url 'order_detail' order.id %}" class="flex-1 bg-slate-900 text-white px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:bg-blue-600 transition-all text-center shadow-sm">
                                     View Details
                                 </a>
-                                <a href="{% url 'track_order' order.id %}" class="flex-1 border border-slate-200 text-slate-400 px-6 py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-900 transition-all">
+                                <a href="{% url 'track_order' order.id %}" class="flex-1 bg-white border border-slate-200 text-slate-600 px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-900 hover:bg-slate-50 transition-all text-center shadow-sm">
                                     Track Order
                                 </a>
-                                <button class="flex-1 border border-slate-200 text-slate-400 px-6 py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-900 transition-all">
+                                <button type="button" class="flex-1 bg-white border border-slate-200 text-slate-600 px-5 py-3 md:py-2.5 rounded-sm font-black text-[9px] uppercase tracking-widest hover:text-slate-900 hover:border-slate-900 hover:bg-slate-50 transition-all text-center shadow-sm">
                                     Invoice
                                 </button>
                             </div>
                         </div>
+
                     </div>
                     {% endwith %}
                 </div>
                 {% endfor %}
             </div>
+
         {% else %}
-            <div class="text-center py-24 glass animate__animated animate__fadeIn">
-                <i class="fa-solid fa-folder-open text-5xl text-slate-100 mb-6"></i>
-                <h3 class="text-2xl font-black uppercase tracking-tighter text-slate-900 mb-2">Registry Empty</h3>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-10">No transaction records detected in this account.</p>
-                <a href="{% url 'products' %}" class="bg-blue-600 text-white px-10 py-4 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-xl shadow-blue-200">
+            <div class="text-center py-16 sm:py-24 px-4 glass animate__animated animate__fadeIn">
+                <i class="fa-solid fa-folder-open text-4xl sm:text-5xl text-slate-200 mb-5 sm:mb-6"></i>
+                <h3 class="text-xl sm:text-2xl font-black uppercase tracking-tighter text-slate-900 mb-2">Registry Empty</h3>
+                <p class="text-slate-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-8 sm:mb-10 max-w-sm mx-auto leading-relaxed">No transaction records detected in this account.</p>
+                <a href="{% url 'products' %}" class="inline-block bg-blue-600 text-white px-8 sm:px-10 py-3.5 sm:py-4 rounded-sm font-black text-[10px] uppercase tracking-widest hover:bg-slate-900 transition-all shadow-lg hover:shadow-xl shadow-blue-600/20">
                     Sync Collection
                 </a>
             </div>
         {% endif %}
 
-        <div class="mt-20 p-10 glass text-center border-dashed border-2">
-            <h4 class="text-[10px] font-black uppercase tracking-[0.4em] text-slate-300 mb-8">Supply Chain Status</h4>
-            <div class="flex flex-wrap justify-center gap-12 opacity-40 grayscale">
-                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-warehouse"></i> Inventory</div>
-                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-shield-check"></i> Quality Control</div>
-                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-plane-departure"></i> Dispatch</div>
+        <div class="mt-16 sm:mt-20 p-6 sm:p-10 glass text-center border-dashed border-2">
+            <h4 class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.3em] sm:tracking-[0.4em] text-slate-400 mb-6 sm:mb-8">Supply Chain Status</h4>
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-6 sm:gap-12 opacity-50 grayscale">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-warehouse text-slate-500"></i> Inventory</div>
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-shield-check text-slate-500"></i> Quality Control</div>
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest"><i class="fa-solid fa-plane-departure text-slate-500"></i> Dispatch</div>
             </div>
         </div>
     </main>
