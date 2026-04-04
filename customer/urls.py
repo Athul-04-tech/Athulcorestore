@@ -53,4 +53,5 @@ urlpatterns = [
     path('review/submit/', views.submit_review, name='submit_review'),
     path('my-reviews/', views.my_reviews, name='my_reviews'),
     path('review/edit/<uuid:review_id>/', views.edit_review, name='edit_review'),
+    path('account/', views.user_account, name='user_account'),
 ]

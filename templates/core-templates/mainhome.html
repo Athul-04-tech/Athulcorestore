@@ -19,58 +19,86 @@
         font-family: "Inter", sans-serif;
         background-color: var(--bg-main);
         color: var(--primary);
+        overflow-x: hidden;
       }
 
       /* Noticeable Smooth Reveal */
       .reveal {
         opacity: 0;
         transform: translateY(20px);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       }
       .reveal.active {
         opacity: 1;
         transform: translateY(0);
       }
 
-      /* Category Item Styling */
+      /* Hide Scrollbar for Horizontal Swiping */
+      .hide-scrollbar::-webkit-scrollbar { display: none; }
+      .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Category Item Styling - FIXED STACKING CONTEXT */
       .cat-item {
         transition: all 0.3s ease;
+        position: relative; 
+        z-index: 1; /* Base layer */
       }
-      .cat-item:hover .cat-circle {
-        border-color: var(--accent);
-        box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
-        transform: scale(1.1);
+      .cat-circle {
+        position: relative;
+        z-index: 1;
+        will-change: transform;
+      }
+      @media (min-width: 1024px) {
+        .cat-item:hover {
+          z-index: 999; /* Pops the entire item above the hero section */
+        }
+        .cat-item:hover .cat-circle {
+          position: relative;
+          z-index: 1000;
+          border-color: var(--accent);
+          box-shadow: 0 0 20px rgba(37, 99, 235, 0.2);
+          transform: scale(1.1);
+          background-color: #ffffff; /* Ensures solid background when overlapping */
+        }
       }
 
-      /* Sharp Professional Card with Ambient Shadow & z-index fixes */
+      /* Sharp Professional Card with Ambient Shadow */
       .pro-card {
         background: #ffffff;
         border: 1px solid #e2e8f0;
         border-radius: 4px;
-        position: relative; /* Allows z-index to work */
-        z-index: 1; /* Base z-index */
+        position: relative; 
+        z-index: 1; 
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
-      .pro-card:hover {
-        border-color: var(--accent);
-        box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 10px 10px -5px rgba(15, 23, 42, 0.08);
-        transform: translateY(-4px);
-        z-index: 50; /* Pops hovered card to the front so tooltips aren't hidden */
+      
+      @media (min-width: 1024px) {
+        .pro-card:hover {
+          border-color: var(--accent);
+          box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.15), 0 10px 10px -5px rgba(15, 23, 42, 0.08);
+          transform: translateY(-4px);
+          z-index: 40; /* Adjusted slightly lower than categories so they don't fight */
+        }
       }
+
       .pro-card .img-box {
         background: #f8fafc;
         position: relative;
-        overflow: hidden; /* Traps the cart button inside the image box only */
+        overflow: hidden; 
         border-top-left-radius: 3px;
         border-top-right-radius: 3px;
       }
-      .cart-slide {
-        transform: translateY(100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      
+      /* Carousel crossfade logic */
+      .carousel-slide {
+        opacity: 0;
+        transition: opacity 0.8s ease-in-out;
+        z-index: 0;
       }
-      .pro-card:hover .cart-slide {
-        transform: translateY(0);
+      .carousel-slide.active {
+        opacity: 1;
+        z-index: 10;
       }
 
       /* Ambient Footer Tint */
@@ -86,89 +114,113 @@
     {% include 'core-templates/navbar.html' %}
     {% include 'includes/message-toast.html' %}
 
-    <header class="container mx-auto px-4 md:px-6 py-4">
-      <div class="grid lg:grid-cols-4 gap-3">
-        <div class="lg:col-span-3 relative overflow-hidden rounded-sm bg-slate-900 h-[280px] md:h-[400px]">
+    <header class="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div class="flex flex-col lg:grid lg:grid-cols-4 gap-3 sm:gap-4">
+        
+        <div class="lg:col-span-3 relative overflow-hidden rounded-sm bg-slate-900 h-[300px] sm:h-[350px] md:h-[450px] shadow-sm">
+          
           <div class="carousel-slide active absolute inset-0">
             <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1400" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Tech">
-            <div class="relative z-10 h-full flex flex-col justify-center px-8 md:px-12 text-white">
-              <span class="text-blue-400 font-bold tracking-widest text-[10px] uppercase mb-2">Collection 2026</span>
-              <h1 class="text-3xl md:text-5xl font-black tracking-tighter mb-4 uppercase">Elite Gear.</h1>
-              <a href="{% url 'products' %}" class="bg-white text-slate-900 w-fit px-6 py-2 rounded-sm font-bold text-[10px] uppercase hover:bg-blue-600 hover:text-white transition-all">Shop Now</a>
+            <div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-10 md:px-12 text-white bg-gradient-to-r from-slate-900/80 to-transparent w-full md:w-3/4">
+              <span class="text-blue-400 font-bold tracking-widest text-[9px] sm:text-[10px] uppercase mb-2">Collection 2026</span>
+              <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-4 uppercase leading-tight">Elite Gear.</h1>
+              <a href="{% url 'products' %}" class="bg-white text-slate-900 w-fit px-6 sm:px-8 py-2.5 sm:py-3 rounded-sm font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all shadow-lg">Shop Now</a>
             </div>
           </div>
-          <div class="absolute bottom-4 left-8 flex gap-2 z-20">
-            <div class="w-1.5 h-1.5 rounded-full bg-white/40 cursor-pointer" onclick="showSlide(0)"></div>
-            <div class="w-1.5 h-1.5 rounded-full bg-white/40 cursor-pointer" onclick="showSlide(1)"></div>
+
+          <div class="carousel-slide absolute inset-0">
+            <img src="https://images.unsplash.com/photo-1542393545-10f5cde2c810?auto=format&fit=crop&q=80&w=1400" class="absolute inset-0 w-full h-full object-cover opacity-50" alt="Performance">
+            <div class="relative z-10 h-full flex flex-col justify-center px-6 sm:px-10 md:px-12 text-white bg-gradient-to-r from-slate-900/80 to-transparent w-full md:w-3/4">
+              <span class="text-blue-400 font-bold tracking-widest text-[9px] sm:text-[10px] uppercase mb-2">Pro Series</span>
+              <h1 class="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-4 uppercase leading-tight">Dominate.</h1>
+              <a href="{% url 'products' %}" class="bg-white text-slate-900 w-fit px-6 sm:px-8 py-2.5 sm:py-3 rounded-sm font-black text-[9px] sm:text-[10px] uppercase tracking-widest hover:bg-blue-600 hover:text-white transition-all shadow-lg">Upgrade Now</a>
+            </div>
+          </div>
+
+          <div class="absolute bottom-4 sm:bottom-6 left-6 sm:left-10 md:left-12 flex gap-2 z-20">
+            <button class="w-8 h-1.5 rounded-full bg-white/40 cursor-pointer hover:bg-white transition-colors focus:bg-blue-500 outline-none" onclick="showSlide(0)"></button>
+            <button class="w-8 h-1.5 rounded-full bg-white/40 cursor-pointer hover:bg-white transition-colors focus:bg-blue-500 outline-none" onclick="showSlide(1)"></button>
           </div>
         </div>
 
-        <div class="hidden lg:flex flex-col gap-3">
-          <div class="flex-1 bg-slate-50 border border-slate-100 rounded-sm p-5 flex flex-col justify-between hover:border-blue-200 transition-colors cursor-pointer group">
-            <h3 class="font-bold text-[10px] uppercase tracking-widest">Special Bundles</h3>
-            <span class="text-blue-600 text-[10px] font-black group-hover:translate-x-1 transition-transform inline-block uppercase">View All →</span>
+        <div class="grid grid-cols-2 lg:flex lg:flex-col gap-3 sm:gap-4">
+          <div class="flex-1 bg-slate-50 border border-slate-200 rounded-sm p-4 sm:p-5 lg:p-6 flex flex-col justify-between hover:border-blue-400 transition-colors cursor-pointer group shadow-sm">
+            <h3 class="font-black text-[9px] sm:text-[10px] uppercase tracking-widest text-slate-800">Special Bundles</h3>
+            <span class="text-blue-600 text-[9px] sm:text-[10px] font-black group-hover:translate-x-2 transition-transform inline-block uppercase mt-4 lg:mt-0 tracking-widest">View All <i class="fa-solid fa-arrow-right ml-1"></i></span>
           </div>
-          <div class="flex-1 bg-blue-600 rounded-sm p-5 text-white flex flex-col justify-between cursor-pointer hover:bg-blue-700 transition-colors">
-            <h3 class="font-bold text-[10px] uppercase tracking-widest">Global Shipping</h3>
-            <i class="fa-solid fa-plane-up text-lg opacity-40"></i>
+          
+          <div class="flex-1 bg-blue-600 rounded-sm p-4 sm:p-5 lg:p-6 text-white flex flex-col justify-between cursor-pointer hover:bg-blue-700 transition-colors shadow-sm relative overflow-hidden group">
+            <h3 class="font-black text-[9px] sm:text-[10px] uppercase tracking-widest relative z-10">Global Shipping</h3>
+            <i class="fa-solid fa-plane-up text-3xl sm:text-4xl opacity-20 absolute -bottom-2 -right-2 group-hover:-translate-y-2 group-hover:translate-x-2 transition-transform"></i>
+            <span class="text-white/80 text-[9px] sm:text-[10px] font-black uppercase mt-4 lg:mt-0 tracking-widest relative z-10 group-hover:text-white transition-colors">Details <i class="fa-solid fa-arrow-right ml-1"></i></span>
           </div>
         </div>
+
       </div>
     </header>
 
-    <section class="container mx-auto px-4 md:px-6 py-12 reveal">
-      <div class="flex flex-wrap justify-center gap-6 md:gap-10">
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 reveal relative z-20">
+      <div class="flex flex-row md:flex-wrap justify-start md:justify-center gap-4 sm:gap-6 md:gap-10 overflow-x-auto hide-scrollbar snap-x pb-4 md:pb-0 px-2 sm:px-0">
         {% for category in categories %}
-        <a href="{% url 'category_view' category.slug %}" class="cat-item group flex flex-col items-center">
-          <div class="cat-circle w-16 h-16 md:w-20 md:h-20 rounded-full border border-slate-200 bg-white flex items-center justify-center p-1 overflow-hidden transition-all duration-300">
-            <div class="w-full h-full rounded-full overflow-hidden bg-slate-50">
+        <a href="{% url 'category_view' category.slug %}" class="cat-item group flex flex-col items-center shrink-0 snap-start w-[76px] sm:w-auto">
+          <div class="cat-circle w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 rounded-full border border-slate-200 bg-white flex items-center justify-center p-1 sm:p-1.5 overflow-hidden transition-all duration-300 shadow-sm">
+            <div class="w-full h-full rounded-full overflow-hidden bg-slate-50 flex items-center justify-center">
                 {% if category.image %}
                 <img src="{{ category.image.url }}" class="w-full h-full object-cover">
                 {% else %}
-                <div class="w-full h-full flex items-center justify-center font-bold text-slate-300 text-xs">{{ category.name|first }}</div>
+                <span class="font-black text-slate-300 text-sm sm:text-base uppercase">{{ category.name|first }}</span>
                 {% endif %}
             </div>
           </div>
-          <span class="mt-3 text-[10px] font-black text-slate-600 group-hover:text-blue-600 transition-colors uppercase tracking-widest text-center">{{ category.name }}</span>
+          <span class="mt-2.5 sm:mt-3 text-[9px] sm:text-[10px] font-black text-slate-600 group-hover:text-blue-600 transition-colors uppercase tracking-widest text-center leading-tight line-clamp-2 w-full">{{ category.name }}</span>
         </a>
         {% endfor %}
       </div>
     </section>
 
-    <section class="container mx-auto px-4 md:px-6 pb-20 reveal">
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="text-lg font-black tracking-tighter uppercase border-l-4 border-blue-600 pl-3">New Arrivals</h2>
-        <a href="{% url 'products' %}" class="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-blue-600 transition-colors">View All</a>
+    <section class="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-20 md:pb-24 reveal relative z-10">
+      <div class="flex items-center justify-between mb-6 sm:mb-8 border-b border-slate-100 pb-4">
+        <h2 class="text-base sm:text-lg md:text-xl font-black tracking-tighter uppercase border-l-4 border-blue-600 pl-3 leading-none text-slate-900">New Arrivals</h2>
+        <a href="{% url 'products' %}" class="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 hover:text-blue-600 transition-colors flex items-center">View All <i class="fa-solid fa-angle-right ml-1"></i></a>
       </div>
 
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 md:gap-4">
+      <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
         {% for product in products_page %}
-        <div class="pro-card group">
-          <a href="{% url 'product_single' product.slug %}" class="block h-full flex flex-col">
-            <div class="img-box aspect-[1/1]">
+        <div class="pro-card group flex flex-col h-full">
+          <a href="{% url 'product_single' product.slug %}" class="flex-1 flex flex-col">
+            <div class="img-box aspect-square relative">
               {% with images=product.images.all %}
                 {% if images %}
-                  <img src="{{ images.0.images.url }}" class="main-img w-full h-full object-cover transition-transform duration-500">
+                  <img src="{{ images.0.images.url }}" class="main-img w-full h-full object-cover transition-transform duration-700 lg:group-hover:scale-105" alt="{{ product.product.name }}">
                 {% else %}
-                  <div class="w-full h-full flex items-center justify-center bg-slate-50"><i class="fa-solid fa-image text-xl text-slate-200"></i></div>
+                  <div class="w-full h-full flex items-center justify-center bg-slate-50"><i class="fa-solid fa-image text-2xl text-slate-200"></i></div>
                 {% endif %}
               {% endwith %}
               
-              <div class="absolute inset-x-0 bottom-0 overflow-hidden">
-                <button class="cart-slide w-full bg-blue-600 text-white py-2.5 text-[9px] font-black uppercase tracking-widest hover:bg-slate-900 transition-colors">
-                    Add To Cart +
-                </button>
+              <div class="absolute inset-x-0 bottom-0 overflow-hidden z-20">
+                <form method="POST" action="{% url 'user_addto_cart' product.slug %}" class="cart-slide translate-y-0 lg:translate-y-full lg:group-hover:translate-y-0 w-full bg-blue-600/95 backdrop-blur-sm text-white transition-transform duration-300 m-0 p-0 border-0 flex">
+                    {% csrf_token %}
+                    <input type="hidden" name="quantity" value="1">
+                    <button type="submit" class="w-full py-3 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] cursor-pointer hover:bg-blue-700 transition-colors text-center border-0 outline-none m-0">
+                        Add to Cart +
+                    </button>
+                </form>
               </div>
             </div>
 
-            <div class="p-3 card-footer-ambient flex-1 flex flex-col justify-end">
-              <div>
-                <span class="text-[8px] font-bold text-blue-500 uppercase tracking-widest block mb-0.5">{{ product.product.category.name }}</span>
-                <h3 class="text-xs font-bold text-slate-800 line-clamp-1 group-hover:text-blue-600 transition-colors mb-1.5 uppercase tracking-tighter">{{ product.product.name }}</h3>
+            <div class="p-3 sm:p-4 card-footer-ambient flex-1 flex flex-col justify-end">
+              <div class="mb-2">
+                <span class="text-[8px] sm:text-[9px] font-bold text-blue-500 uppercase tracking-widest block mb-1 truncate">{{ product.product.category.name }}</span>
+                <h3 class="text-[11px] sm:text-xs font-bold text-slate-800 line-clamp-2 group-hover:text-blue-600 transition-colors uppercase tracking-tight leading-snug">{{ product.product.name }}</h3>
               </div>
-              <p class="text-sm font-black text-slate-900 tracking-tight">${{ product.selling_price|floatformat:0 }}</p>
               
-              {% include 'core-templates/partials/product-rating.html' with product=product %}
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between mt-auto gap-1 sm:gap-0">
+                <p class="text-sm sm:text-base font-black text-slate-900 tracking-tighter">${{ product.selling_price|floatformat:0 }}</p>
+                <div class="flex items-center">
+                  {% include 'core-templates/partials/product-rating.html' with product=product %}
+                </div>
+              </div>
+              
             </div>
           </a>
         </div>
@@ -176,19 +228,24 @@
       </div>
 
       {% if products_page.has_other_pages %}
-      <div class="mt-12 flex justify-center items-center gap-6">
+      <div class="mt-10 sm:mt-12 flex justify-center items-center gap-4 sm:gap-6 bg-slate-50 border border-slate-100 rounded-sm py-3 px-6 w-fit mx-auto shadow-sm">
         {% if products_page.has_previous %}
-          <a href="?page={{ products_page.previous_page_number }}" class="text-slate-400 hover:text-blue-600 transition-colors"><i class="fa-solid fa-arrow-left-long"></i></a>
+          <a href="?page={{ products_page.previous_page_number }}" class="w-8 h-8 flex items-center justify-center rounded-sm bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><i class="fa-solid fa-angle-left"></i></a>
         {% endif %}
-        <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">{{ products_page.number }} / {{ products_page.paginator.num_pages }}</span>
+        
+        <span class="text-[10px] font-black text-slate-600 uppercase tracking-[0.2em]">
+            Pg <span class="text-blue-600">{{ products_page.number }}</span> of {{ products_page.paginator.num_pages }}
+        </span>
+        
         {% if products_page.has_next %}
-          <a href="?page={{ products_page.next_page_number }}" class="text-slate-400 hover:text-blue-600 transition-colors"><i class="fa-solid fa-arrow-right-long"></i></a>
+          <a href="?page={{ products_page.next_page_number }}" class="w-8 h-8 flex items-center justify-center rounded-sm bg-white border border-slate-200 text-slate-500 hover:text-blue-600 hover:border-blue-200 transition-all shadow-sm"><i class="fa-solid fa-angle-right"></i></a>
         {% endif %}
       </div>
       {% endif %}
     </section>
 
     <script>
+      // Reveal Animation
       function reveal() {
         const reveals = document.querySelectorAll(".reveal");
         reveals.forEach(el => {
@@ -198,18 +255,38 @@
         });
       }
       window.addEventListener("scroll", reveal);
-      reveal();
+      reveal(); // Trigger immediately on load
 
+      // Carousel Logic
       let currentIdx = 0;
       const slides = document.querySelectorAll(".carousel-slide");
+      const indicators = document.querySelectorAll(".bottom-4 button, .bottom-6 button");
+      
       function showSlide(index) {
-        slides.forEach((s, i) => s.classList.toggle("active", i === index));
+        if(slides.length === 0) return;
+        
+        slides.forEach((s, i) => {
+            s.classList.toggle("active", i === index);
+        });
+        
+        if(indicators.length > 0) {
+            indicators.forEach((ind, i) => {
+                ind.style.backgroundColor = (i === index) ? 'white' : 'rgba(255, 255, 255, 0.4)';
+            });
+        }
         currentIdx = index;
       }
-      setInterval(() => {
-        currentIdx = (currentIdx + 1) % slides.length;
-        showSlide(currentIdx);
-      }, 5000);
+      
+      // Auto-advance
+      if(slides.length > 1) {
+          setInterval(() => {
+            currentIdx = (currentIdx + 1) % slides.length;
+            showSlide(currentIdx);
+          }, 5000);
+      }
+      
+      // Initialize first slide indicators
+      showSlide(0);
     </script>
 
     {% include 'core-templates/footer.html' %}

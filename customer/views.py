@@ -606,8 +606,8 @@ def user_cart(request):
         'cart': cart_items,
         'total_amount': total_amount
     })
-    
-@customer_required
+
+@login_required(login_url='login')
 def user_addto_cart(request, slug):
     if request.method == "POST":
         product_variant = get_object_or_404(ProductVariant, slug=slug)
@@ -1116,3 +1116,29 @@ def cancel_order(request, order_id):
 
 
 # Create your views here.
+
+@customer_required
+def user_account(request):
+    if not hasattr(request, 'user') or not request.user.is_authenticated or not request.user.is_active:
+        messages.warning(request, 'Session expired. Please log in.')
+        return redirect('login')
+    
+    data = request.user
+    addresses = Address.objects.filter(user=request.user)
+    orders_count = Order.objects.filter(user=request.user).count()
+    reviews_count = Review.objects.filter(user=request.user).count()
+    
+    if request.method == 'POST' and 'deactivate_account' in request.POST:
+        data.is_active = False
+        data.save()
+        logout(request)
+        messages.error(request, 'Account deactivated successfully. Your data will be preserved for 30 days.')
+        return redirect('home')
+    
+    context = {
+        'data': data,
+        'addresses': addresses,
+        'orders_count': orders_count,
+        'reviews_count': reviews_count,
+    }
+    return render(request, 'customer-templates/useraccount.html', context)

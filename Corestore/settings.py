@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+# ssh -i "Corestore-key.pem" ubuntu@ec2-16-176-20-22.ap-southeast-2.compute.amazonaws.com
 import os
 from pathlib import Path
 from dotenv import load_dotenv

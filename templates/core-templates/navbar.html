@@ -1,24 +1,28 @@
 <nav class="fixed top-0 left-0 right-0 z-[100] bg-gradient-to-r from-[#0f172a] via-[#1e293b] to-[#0f172a] border-b border-blue-400/20 shadow-xl shadow-blue-900/10">
-  <div class="container mx-auto px-4 md:px-8 py-3">
-    <div class="flex flex-col lg:flex-row items-center justify-between gap-4">
+  <div class="container mx-auto px-3 sm:px-4 md:px-8">
+    
+    <div class="flex items-center justify-between h-16 lg:h-20 gap-2 sm:gap-4">
       
-      <a href="/" class="text-2xl font-black tracking-tighter text-white group">
-        <span class="bg-blue-600 text-white px-2 py-1 rounded-lg mr-1 group-hover:bg-blue-500 transition-colors">C</span>
-        CORE<span class="text-blue-400">STORE</span>
+      <a href="/" class="text-base sm:text-xl md:text-2xl font-black tracking-tighter text-white group flex-shrink-0">
+        <span class="bg-blue-600 text-white px-1.5 sm:px-2 py-0.5 md:py-1 rounded-md sm:rounded-lg mr-0.5 sm:mr-1 group-hover:bg-blue-500 transition-colors">C</span>
+        <span class="hidden sm:inline">CORE</span><span class="inline sm:hidden">C-</span><span class="text-blue-400">STORE</span>
       </a>
 
-      <button class="lg:hidden p-2 rounded-xl text-blue-200 hover:bg-blue-800/50 transition-all">
-        <i class="fa-solid fa-bars-staggered text-xl"></i>
-      </button>
+      <form method="GET" action="{% url 'search' %}" class="flex-1 lg:hidden relative group">
+        <input type="text" name="q" placeholder="Search gear..." class="w-full pl-8 pr-3 py-1.5 sm:py-2 bg-white/10 border border-blue-400/20 rounded-lg text-white placeholder-blue-200/50 focus:outline-none focus:ring-1 focus:ring-blue-500/50 text-[11px] sm:text-xs font-medium backdrop-blur-sm transition-all" />
+        <button type="submit" class="absolute left-2.5 top-1/2 -translate-y-1/2 text-blue-400">
+          <i class="fa-solid fa-magnifying-glass text-[10px] sm:text-xs"></i>
+        </button>
+      </form>
 
-      <form method="GET" action="{% url 'search' %}" class="flex-1 max-w-md mx-4 lg:mx-0 relative group">
+      <form method="GET" action="{% url 'search' %}" class="hidden lg:block flex-1 max-w-md mx-8 relative group">
         <input type="text" name="q" placeholder="Search premium gear..." class="w-full pl-11 pr-4 py-2.5 bg-white/10 border border-blue-400/20 rounded-xl text-white placeholder-blue-200/50 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:bg-white/20 transition-all duration-300 text-sm font-medium backdrop-blur-sm" />
-        <button type="submit" class="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 group-focus-within:text-blue-300 transition-colors">
+        <button type="submit" class="absolute left-4 top-1/2 -translate-y-1/2 text-blue-400 group-focus-within:text-blue-300 transition-colors">
           <i class="fa-solid fa-magnifying-glass"></i>
         </button>
       </form>
 
-      <div class="hidden lg:flex items-center gap-8">
+      <div class="hidden lg:flex items-center gap-8 flex-shrink-0">
         
         <a href="/products/" class="flex items-center gap-2 transition-all duration-300 font-bold text-xs uppercase tracking-widest relative group {% if '/products/' in request.path %}text-white{% else %}text-blue-100/80 hover:text-white{% endif %}">
           <i class="fa-solid fa-layer-group"></i> Products
@@ -30,83 +34,171 @@
           <span class="absolute -bottom-1 left-0 h-0.5 bg-blue-400 transition-all duration-300 {% if request.resolver_match.url_name == 'cart' %}w-full{% else %}w-0 group-hover:w-full{% endif %}"></span>
         </a>
         
-        <div class="relative group">
+        <div class="relative group py-4">
           <button class="flex items-center gap-2 text-blue-100/80 hover:text-white transition-all duration-300 font-bold text-xs uppercase tracking-widest">
             <i class="fa-solid fa-ellipsis"></i> More
           </button>
-          <div class="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-[#1e293b] rounded-2xl p-3 shadow-2xl border border-blue-400/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 backdrop-blur-xl">
+          <div class="absolute top-full left-1/2 -translate-x-1/2 w-64 bg-[#1e293b] rounded-2xl p-3 shadow-2xl border border-blue-400/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 backdrop-blur-xl">
             <div class="grid grid-cols-1 gap-1">
               {% if not user.is_authenticated %}
-              <a href="/seller/register/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 transition-all text-sm font-semibold">
+              <a href="/seller/register/" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all text-sm font-semibold">
                 <i class="fa-solid fa-shop text-blue-400 w-5"></i> Become Vendor
               </a>
               {% endif %}
-              <a href="#" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 transition-all text-sm font-semibold">
-                <i class="fa-solid fa-bell text-amber-400 w-5"></i> Notifications
-              </a>
-              <a href="{% url 'support_or_contact' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 transition-all text-sm font-semibold">
+              <a href="{% url 'support_or_contact' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all text-sm font-semibold">
                 <i class="fa-solid fa-headset text-emerald-400 w-5"></i> Support
               </a>
             </div>
           </div>
         </div>
-      </div>
 
-      {% if user.is_authenticated %}
-      <div class="flex items-center gap-4">
-        <div class="text-sm text-right hidden md:block">
-          <p class="text-[10px] text-blue-400 font-bold uppercase tracking-tighter">Premium User</p>
-          <p class="font-bold text-white truncate max-w-[100px]">{{ user.username }}</p>
-        </div>
-        <div class="relative group">
-          <a href="{% url 'profile' %}" class="block w-11 h-11 rounded-full border-2 border-blue-400/30 p-0.5 hover:border-blue-400 transition-all duration-300 overflow-hidden shadow-lg">
-            {% if user.profile_image %}
-            <img src="{{ user.profile_image.url }}" class="w-full h-full rounded-full object-cover" alt="{{ user.username }}">
-            {% else %}
-            <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0044ff&color=ffffff&bold=true" class="w-full h-full rounded-full object-cover">
-            {% endif %}
-          </a>
-          
-          <div class="absolute top-full right-0 mt-3 w-64 bg-[#0f172a] rounded-2xl p-2 shadow-2xl border border-blue-400/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
-            <div class="px-4 py-3 mb-2 border-b border-white/10">
-                <p class="text-xs font-bold text-blue-400 uppercase">My Account</p>
-            </div>
-            <div class="space-y-0.5 text-sm font-semibold">
-              <a href="{% url 'profile' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
-                <i class="fa-solid fa-circle-user w-4 text-blue-400"></i> Profile
-              </a>
-              <a href="{% url 'cart' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
-                <i class="fa-solid fa-cart-shopping w-4 text-emerald-400"></i> Cart
-              </a>
-              <a href="/wishlist" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
-                <i class="fa-solid fa-heart w-4 text-pink-400"></i> Wishlist
-              </a>
-              <a href="/orders" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
-                <i class="fa-solid fa-box w-4 text-orange-400"></i> Orders
-              </a>
-              <a href="{% url 'user_addresses' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
-                <i class="fa-solid fa-map-pin w-4 text-indigo-400"></i> Saved Addresses
-              </a>
-              <div class="h-px bg-white/10 my-2 mx-2"></div>
-              <a href="{% url 'logout' %}" class="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20">
-                <i class="fa-solid fa-power-off w-4"></i> Logout
-              </a>
+        {% if user.is_authenticated %}
+        <a href="#" class="relative flex items-center justify-center text-blue-100/80 hover:text-white transition-all duration-300 group">
+          <i class="fa-solid fa-bell text-lg group-hover:rotate-12 transition-transform"></i>
+          <span class="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-[#0f172a]"></span>
+        </a>
+
+        <div class="flex items-center gap-4">
+          <div class="text-sm text-right hidden md:block">
+            <p class="text-[10px] text-blue-400 font-bold uppercase tracking-tighter">Premium User</p>
+            <p class="font-bold text-white truncate max-w-[100px]">{{ user.username }}</p>
+          </div>
+          <div class="relative group py-2">
+            <a href="{% url 'profile' %}" class="block w-11 h-11 rounded-full border-2 border-blue-400/30 p-0.5 hover:border-blue-400 transition-all duration-300 overflow-hidden shadow-lg">
+              {% if user.profile_image %}
+              <img src="{{ user.profile_image.url }}" class="w-full h-full rounded-full object-cover" alt="{{ user.username }}">
+              {% else %}
+              <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0044ff&color=ffffff&bold=true" class="w-full h-full rounded-full object-cover">
+              {% endif %}
+            </a>
+            
+            <div class="absolute top-full right-0 w-64 bg-[#0f172a] rounded-2xl p-2 shadow-2xl border border-blue-400/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 translate-y-2 group-hover:translate-y-0 z-50">
+              <div class="px-4 py-3 mb-2 border-b border-white/10">
+                  <p class="text-xs font-bold text-blue-400 uppercase tracking-widest">My Account</p>
+              </div>
+              <div class="space-y-0.5 text-sm font-semibold">
+                <a href="{% url 'profile' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                  <i class="fa-solid fa-circle-user w-4 text-blue-400"></i> Profile
+                </a>
+                <a href="/orders" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                  <i class="fa-solid fa-box w-4 text-orange-400"></i> Orders
+                </a>
+                <a href="/wishlist" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                  <i class="fa-solid fa-heart w-4 text-pink-400"></i> Wishlist
+                </a>
+                <a href="{% url 'user_addresses' %}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-blue-800/50 text-blue-100 hover:text-white transition-all">
+                  <i class="fa-solid fa-map-pin w-4 text-indigo-400"></i> Addresses
+                </a>
+                <div class="h-px bg-white/10 my-2 mx-2"></div>
+                <a href="{% url 'logout' %}" class="flex items-center gap-3 p-3 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all border border-red-500/20">
+                  <i class="fa-solid fa-power-off w-4"></i> Logout
+                </a>
+              </div>
             </div>
           </div>
         </div>
+        {% else %}
+        <div class="flex items-center gap-3">
+          <a href="{% url 'login' %}" class="px-5 py-2.5 text-blue-100 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
+            Sign In
+          </a>
+          <a href="{% url 'register' %}" class="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-900/40 hover:bg-blue-500 hover:scale-105 active:scale-95">
+            Join Now
+          </a>
+        </div>
+        {% endif %}
       </div>
-      {% else %}
-      <div class="flex items-center gap-3">
-        <a href="{% url 'login' %}" class="px-5 py-2.5 text-blue-100 hover:text-white font-bold text-xs uppercase tracking-widest transition-all">
-          Sign In
+
+      <div class="flex items-center gap-2 sm:gap-3 lg:hidden flex-shrink-0">
+        
+        {% if user.is_authenticated %}
+        <a href="#" class="relative flex items-center justify-center text-blue-100/80 hover:text-white transition-all duration-300 group px-1">
+          <i class="fa-solid fa-bell text-base sm:text-lg group-hover:rotate-12 transition-transform"></i>
+          <span class="absolute -top-0.5 right-0 w-2 h-2 sm:w-2.5 sm:h-2.5 bg-red-500 rounded-full border-2 border-[#0f172a]"></span>
         </a>
-        <a href="{% url 'register' %}" class="px-6 py-2.5 bg-blue-600 text-white font-bold text-xs uppercase tracking-widest rounded-xl transition-all shadow-lg shadow-blue-900/40 hover:bg-blue-500 hover:scale-105 active:scale-95">
-          Join Now
+        {% endif %}
+
+        <button id="mobile-menu-btn" class="p-1 sm:p-2 rounded-xl text-blue-200 hover:bg-blue-800/50 hover:text-white transition-all focus:outline-none">
+          <i class="fa-solid fa-bars-staggered text-lg sm:text-xl transition-transform" id="mobile-menu-icon"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+    <div id="mobile-menu" class="hidden lg:hidden flex-col gap-4 pb-6 pt-2 border-t border-white/10">
+      
+      <div class="grid grid-cols-2 gap-2 mt-2">
+        <a href="/products/" class="p-4 rounded-xl bg-white/5 text-blue-100 font-bold text-xs uppercase tracking-widest flex flex-col items-center justify-center gap-2 border border-white/5 active:bg-white/10">
+          <i class="fa-solid fa-layer-group text-blue-400 text-lg"></i> Products
+        </a>
+        <a href="{% url 'cart' %}" class="p-4 rounded-xl bg-white/5 text-blue-100 font-bold text-xs uppercase tracking-widest flex flex-col items-center justify-center gap-2 border border-white/5 active:bg-white/10">
+          <i class="fa-solid fa-bag-shopping text-emerald-400 text-lg"></i> Cart
         </a>
       </div>
-      {% endif %}
+
+      <div class="border-t border-white/10 pt-4 mt-2">
+        {% if user.is_authenticated %}
+          <div class="flex items-center gap-4 mb-4 px-2">
+            {% if user.profile_image %}
+              <img src="{{ user.profile_image.url }}" class="w-12 h-12 rounded-full object-cover border-2 border-blue-400/30">
+            {% else %}
+              <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=0044ff&color=ffffff&bold=true" class="w-12 h-12 rounded-full object-cover border-2 border-blue-400/30">
+            {% endif %}
+            <div>
+              <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest">Premium User</p>
+              <p class="font-bold text-white text-lg">{{ user.username }}</p>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-2">
+            <a href="{% url 'profile' %}" class="p-3 rounded-xl bg-white/5 text-blue-100 font-semibold text-xs flex items-center gap-3"><i class="fa-solid fa-user text-blue-400 w-4"></i> Profile</a>
+            <a href="/orders" class="p-3 rounded-xl bg-white/5 text-blue-100 font-semibold text-xs flex items-center gap-3"><i class="fa-solid fa-box text-orange-400 w-4"></i> Orders</a>
+            <a href="/wishlist" class="p-3 rounded-xl bg-white/5 text-blue-100 font-semibold text-xs flex items-center gap-3"><i class="fa-solid fa-heart text-pink-400 w-4"></i> Wishlist</a>
+            <a href="{% url 'user_addresses' %}" class="p-3 rounded-xl bg-white/5 text-blue-100 font-semibold text-xs flex items-center gap-3"><i class="fa-solid fa-map-pin text-indigo-400 w-4"></i> Addresses</a>
+            <a href="{% url 'support_or_contact' %}" class="p-3 rounded-xl bg-white/5 text-blue-100 font-semibold text-xs flex items-center gap-3 col-span-2"><i class="fa-solid fa-headset text-emerald-400 w-4"></i> Support & Help</a>
+          </div>
+
+          <a href="{% url 'logout' %}" class="mt-4 block w-full p-3.5 rounded-xl bg-red-500/10 text-red-400 text-center font-bold text-xs uppercase tracking-widest border border-red-500/20 active:bg-red-500 active:text-white">
+            <i class="fa-solid fa-power-off mr-2"></i> Logout
+          </a>
+        {% else %}
+          <div class="grid grid-cols-1 gap-3">
+            <a href="{% url 'login' %}" class="w-full p-3.5 text-center rounded-xl bg-white/5 text-blue-100 font-bold text-xs uppercase tracking-widest border border-white/10 active:bg-white/10">Sign In</a>
+            <a href="{% url 'register' %}" class="w-full p-3.5 text-center rounded-xl bg-blue-600 text-white font-bold text-xs uppercase tracking-widest shadow-lg active:bg-blue-500">Join Now</a>
+            <a href="/seller/register/" class="w-full mt-2 flex items-center justify-center gap-2 text-blue-300 font-bold text-[10px] uppercase tracking-widest">
+              <i class="fa-solid fa-shop"></i> Become a Vendor
+            </a>
+          </div>
+        {% endif %}
+      </div>
+
     </div>
   </div>
 </nav>
 
-<div class="h-[120px] lg:h-[84px]"></div>
+<div class="h-16 lg:h-20 w-full"></div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('mobile-menu-btn');
+    const menu = document.getElementById('mobile-menu');
+    const icon = document.getElementById('mobile-menu-icon');
+
+    if (btn && menu && icon) {
+      btn.addEventListener('click', () => {
+        menu.classList.toggle('hidden');
+        menu.classList.toggle('flex');
+        
+        // Swap between hamburger and X icon
+        if (menu.classList.contains('flex')) {
+          icon.classList.remove('fa-bars-staggered');
+          icon.classList.add('fa-xmark');
+        } else {
+          icon.classList.remove('fa-xmark');
+          icon.classList.add('fa-bars-staggered');
+        }
+      });
+    }
+  });
+</script>
