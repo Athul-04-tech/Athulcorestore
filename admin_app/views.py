@@ -7,29 +7,40 @@ from seller.models import SellerProfile, Product, ProductVariant ,SubCategory
 from customer.models import OrderItem 
 from django.db.models import Prefetch
 from django.db.models import Q, Min, Sum 
-from core.models import Category , SubCategory
+from core.models import Category, SubCategory, Banner
 
 
 
 # Create your views here.
 def adminlogin(request):
-    if request.method=="POST":
-        username=request.POST.get("username")
-        password=request.POST.get("password")
-        print(username)
-        print(password)
-        data=authenticate(request,username=username,password=password)
-        print(data)
-        if data:
-            if data.role=="ADMIN":
-                login(request,data)
+    error_msg = ''
+    saved_username = ''
+    if request.method == "POST":
+        username_or_email = request.POST.get("username")
+        password = request.POST.get("password")
+        saved_username = username_or_email
+        
+        try:
+            user_obj = User.objects.get(email=username_or_email)
+            username = user_obj.username
+        except User.DoesNotExist:
+            username = username_or_email
+            
+        data = authenticate(request, username=username, password=password)
+        
+        if data is not None:
+            if data.role == "ADMIN":
+                login(request, data)
+                next_url = request.GET.get('next')
+                if next_url:
+                    return redirect(next_url)
                 return redirect("/adminhome/")
-                
             else:
-                messages.error(request,"invalid username or password")
-        # else:
-        #     return redirect("selleregis")    
-    return render(request,"admin-templates/adminlogin.html")
+                error_msg = "Invalid username/email or password"
+        else:
+            error_msg = "Invalid username/email or password"
+
+    return render(request, "admin-templates/adminlogin.html", {'error_message': error_msg, 'saved_username': saved_username})
 
 
 
@@ -343,3 +354,28 @@ def delete_subcategory(request, id):
     sub = SubCategory.objects.get(id=id)
     sub.delete()
     return redirect('subcategory_management')
+
+def banner_management(request):
+    if request.method == "POST":
+        title = request.POST.get("title")
+        image_url = request.POST.get("image_url")
+        redirect_url = request.POST.get("redirect_url")
+        start_date = request.POST.get("start_date")
+        end_date = request.POST.get("end_date")
+
+        if title and image_url and start_date and end_date:
+            Banner.objects.create(
+                title=title,
+                image_url=image_url,
+                redirect_url=redirect_url,
+                start_date=start_date,
+                end_date=end_date
+            )
+        return redirect('banner_management')
+
+    banners = Banner.objects.all().order_by('-start_date')
+    return render(request, 'admin-templates/banner.html', {'banners': banners})
+
+def delete_banner(request, id):
+    Banner.objects.filter(id=id).delete()
+    return redirect('banner_management')
